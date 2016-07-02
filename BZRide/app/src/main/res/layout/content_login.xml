@@ -38,8 +38,8 @@
 
             <EditText android:layout_width="fill_parent"
                 android:layout_height="40dp"
-                android:id="@+id/txtemail"
-                android:hint="email"
+                android:id="@+id/txtmobile"
+                android:hint="mobile number"
                 android:background="#f3f3f3"
                 android:paddingLeft="5dp"
                 android:layout_marginTop="15dp"/>

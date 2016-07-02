@@ -1,5 +1,6 @@
 package bzride.com.bzride;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,13 +10,38 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.btnLoginDriver).setOnClickListener(this);
+        findViewById(R.id.btnLoginRider).setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLoginDriver:
+                BZAppManager.getInstance().isDriver = true;
+                loginaction();
+                break;
+            case R.id.btnLoginRider:
+                BZAppManager.getInstance().isDriver = false;
+                loginaction();
+                break;
+        }
+    }
+
+    private void loginaction() {
+
+        Intent myIntent = new Intent(MainActivity.this, login.class);
+
+        MainActivity.this.startActivity(myIntent);
     }
 
     @Override

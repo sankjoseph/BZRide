@@ -5,4 +5,13 @@
     <string name="title_activity_registeruser">registeruser</string>
     <string name="title_activity_usercarddetails">usercarddetails</string>
     <string name="title_activity_eul">EULA</string>
+
+    <string-array name="menuitems">
+        <item>Profile</item>
+        <item>Card Info</item>
+        <item>Last Trip</item>
+        <item>Report a Problem</item>
+        <item>Contact</item>
+        <item>About BZRide - V 1.0.0</item>
+    </string-array>
 </resources>
