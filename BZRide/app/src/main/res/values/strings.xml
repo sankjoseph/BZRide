@@ -14,4 +14,8 @@
         <item>Contact</item>
         <item>About BZRide - V 1.0.0</item>
     </string-array>
+    <string name="title_activity_driver_vehicle_info">driverVehicleInfo</string>
+    <string name="title_activity_driver_insurance_info">driverInsuranceInfo</string>
+    <string name="title_activity_driver_lic_info">driverLicInfo</string>
+    <string name="title_activity_driver_vehicle_reg_info">driverVehicleRegInfo</string>
 </resources>

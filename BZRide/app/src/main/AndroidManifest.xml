@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bzride.com.bzride" >
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -44,6 +45,26 @@
         <activity android:name=".Home" >
         </activity>
         <activity android:name=".Feedback" >
+        </activity>
+        <activity
+            android:name=".driverVehicleInfo"
+            android:label="@string/title_activity_driver_vehicle_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverInsuranceInfo"
+            android:label="@string/title_activity_driver_insurance_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverLicInfo"
+            android:label="@string/title_activity_driver_lic_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverVehicleRegInfo"
+            android:label="@string/title_activity_driver_vehicle_reg_info"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

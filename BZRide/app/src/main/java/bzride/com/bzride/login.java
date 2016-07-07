@@ -40,8 +40,8 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
 
             if (BZAppManager.getInstance().isDriver == true) {
 
-                String urlCall = Utils.BASE_URL + Utils.GET_BANK_INFO_URL + "?username="+ loginmobiletext.getText() + "&password=" + passwordtext.getText();
-                api.get(urlCall, Utils.GET_BANK_INFO_URL);
+                String urlCall = Utils.BASE_URL + Utils.LOGIN_DRIVER_URL + "?username="+ loginmobiletext.getText() + "&password=" + passwordtext.getText();
+                api.get(urlCall, Utils.LOGIN_DRIVER_URL);
             }
             else{
                 String urlCall = Utils.BASE_URL + Utils.LOGIN_RIDER_URL+ "?username="+ loginmobiletext.getText() + "&password=" + passwordtext.getText();;
@@ -54,16 +54,17 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
     }
     public void onSuccess(BZJSONResp model) {
 
-        GetbankInfoResp response = (GetbankInfoResp)model;
-        //LoginResp response = (LoginResp)model;
+        //GetbankInfoResp response = (GetbankInfoResp)model;
+        LoginResp response = (LoginResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-           Intent myIntent = new Intent(login.this, Home.class);
+           Intent myIntent = new Intent(login.this, driverLicInfo.class);
            login.this.startActivity(myIntent);
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
         }
     }
+
 
     @Override
     public void onFailure() {
