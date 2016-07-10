@@ -52,10 +52,12 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
     }
+    @Override
     public void onSuccess(BZJSONResp model) {
 
-        //GetbankInfoResp response = (GetbankInfoResp)model;
-        LoginResp response = (LoginResp)model;
+        LoginResp response = new LoginResp();
+        response.status = Utils.STATUS_SUCCESS;
+        //LoginResp response = (LoginResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
            Intent myIntent = new Intent(login.this, driverLicInfo.class);
            login.this.startActivity(myIntent);

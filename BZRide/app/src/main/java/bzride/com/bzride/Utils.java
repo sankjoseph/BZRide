@@ -23,7 +23,8 @@ public class Utils {
     public static final String BASE_URL= "http://www.intimationsoftware.com/ws/bzridedummy";
     public static final String LOGIN_DRIVER_URL = "/LoginDriver.php";
     public static final String LOGIN_RIDER_URL = "/LoginRider.php";
-    public static final String REGISTER_URL = "/RegisterRider.php";
+    public static final String REGISTER_RIDER_URL = "/RegisterRider.php";
+    public static final String REGISTER_DRIVER_URL = "/RegisterDriver.php";
     public static final String GET_BANK_INFO_URL = "/GetBankInfo.php";
 
     public static final String REGISTER_SUCCESS = "Login Success";

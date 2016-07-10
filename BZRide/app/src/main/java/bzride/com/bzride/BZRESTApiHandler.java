@@ -138,12 +138,14 @@ public class BZRESTApiHandler {
                 if (mProgressDialog != null)
                     mProgressDialog.dismiss();
 
-                if (mExecuteListener != null) {
+                // san todo edit
+                mExecuteListener.onSuccess(model);
+                /* if (mExecuteListener != null) {
                     if (model != null)
                         mExecuteListener.onSuccess(model);
                     else
                         mExecuteListener.onFailure();
-                }
+                }*/
             }
         }.execute();
     }

@@ -73,7 +73,7 @@
             android:layout_height="441dp"
             android:orientation="vertical">
             <Button android:layout_width="190dp"
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnLicDone"
                 android:layout_height="38dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"

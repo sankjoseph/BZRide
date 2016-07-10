@@ -6,10 +6,13 @@ package bzride.com.bzride;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -68,24 +71,50 @@ public class GENERICRESTApiHandler {
             URL httpUrl = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
 
-            connection.setRequestProperty( "charset", "utf-8");
+            connection.setRequestProperty("charset", "utf-8");
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
-            connection.setUseCaches(false );
+            connection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            connection.setUseCaches(false);
             connection.setDoOutput(true);
-            connection.setDoInput(true);
+            //connection.setDoInput(true);
             connection.setConnectTimeout(20000);
             connection.connect();
             //Log.i(".RestApi", "Response code = " + connection.getResponseCode());
             //if (connection.getResponseCode() == 200) {
 
+            /*OutputStreamWriter wrtest = new OutputStreamWriter(connection.getOutputStream());
+            wrtest.write( urlParams );
+            wrtest.flush();
+            wrtest.close();*/
+
             try( DataOutputStream wr = new DataOutputStream( connection.getOutputStream())) {
                 wr.write( postData );
+                wr.flush();
+                wr.close();
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
+            if (connection.getResponseCode() == 200)
+            {
+
+            }
+
+            /*mReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            int charsRead = -1;
+            char[] chars = new char[100];
+            do {
+                charsRead = mReader.read(chars,0,chars.length);
+                //if we have valid chars, append them to end of string.
+                if(charsRead>0)
+                    builder.append(chars,0,charsRead);
+            }while(charsRead>0);
+            String stringReadFromReader = builder.toString();
+            System.out.println("String read = "+stringReadFromReader);*/
+
+
             in = new BufferedInputStream(connection.getInputStream());
             mReader = new InputStreamReader(in);
 

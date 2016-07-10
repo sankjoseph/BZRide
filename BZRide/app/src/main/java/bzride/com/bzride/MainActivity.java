@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnLoginDriver).setOnClickListener(this);
         findViewById(R.id.btnLoginRider).setOnClickListener(this);
 
+        findViewById(R.id.btnRegisterDriver).setOnClickListener(this);
+        findViewById(R.id.btnRegisterRider).setOnClickListener(this);
     }
 
     @Override
@@ -34,12 +36,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 BZAppManager.getInstance().isDriver = false;
                 loginaction();
                 break;
+            case R.id.btnRegisterDriver:
+                BZAppManager.getInstance().isDriver = true;
+                resgisteractionDriver();
+                break;
+            case R.id.btnRegisterRider:
+                BZAppManager.getInstance().isDriver = false;
+                resgisteractionRider();
+                break;
         }
     }
 
     private void loginaction() {
 
         Intent myIntent = new Intent(MainActivity.this, login.class);
+
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    private void resgisteractionDriver() {
+
+        Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
+
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    private void resgisteractionRider() {
+
+        Intent myIntent = new Intent(MainActivity.this, registeruser.class);
 
         MainActivity.this.startActivity(myIntent);
     }

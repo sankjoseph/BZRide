@@ -18,4 +18,6 @@
     <string name="title_activity_driver_insurance_info">driverInsuranceInfo</string>
     <string name="title_activity_driver_lic_info">driverLicInfo</string>
     <string name="title_activity_driver_vehicle_reg_info">driverVehicleRegInfo</string>
+    <string name="title_activity_register_driver">registerDriver</string>
+    <string name="title_activity_driver_bank_info">driverBankInfo</string>
 </resources>
