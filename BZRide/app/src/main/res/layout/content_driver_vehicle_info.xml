@@ -18,7 +18,7 @@
             android:layout_alignParentTop="true">
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BZRide - Driver Details"
+                android:text="BZRide - Vehicle Details"
                 android:textColor="#2582C5"
                 android:textAlignment="center"
                 android:layout_marginLeft="25dp"

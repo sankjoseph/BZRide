@@ -11,3 +11,12 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
     }
 }
+/*
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSearchPlace"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical" />
+        */

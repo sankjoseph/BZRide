@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 public class login extends AppCompatActivity implements View.OnClickListener, OnPostExecuteListener  {
     private EditText loginmobiletext;
-    private  EditText passwordtext;
+    private EditText passwordtext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,15 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
     private void loginaction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
             BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setMessage("Authenticating...");
             api.setPostExecuteListener(this);
 
             if (BZAppManager.getInstance().isDriver == true) {
-
+                api.setMessage("Authenticating driver...");
                 String urlCall = Utils.BASE_URL + Utils.LOGIN_DRIVER_URL + "?username="+ loginmobiletext.getText() + "&password=" + passwordtext.getText();
                 api.get(urlCall, Utils.LOGIN_DRIVER_URL);
             }
             else{
+                api.setMessage("Authenticating rider...");
                 String urlCall = Utils.BASE_URL + Utils.LOGIN_RIDER_URL+ "?username="+ loginmobiletext.getText() + "&password=" + passwordtext.getText();;
                 api.get(urlCall, Utils.LOGIN_RIDER_URL);
             }
@@ -55,11 +55,10 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
     @Override
     public void onSuccess(BZJSONResp model) {
 
-        LoginResp response = new LoginResp();
-        response.status = Utils.STATUS_SUCCESS;
-        //LoginResp response = (LoginResp)model;
+        LoginResp response = (LoginResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-           Intent myIntent = new Intent(login.this, driverLicInfo.class);
+           Intent myIntent = new Intent(login.this, EULA.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
            login.this.startActivity(myIntent);
         }
         else {

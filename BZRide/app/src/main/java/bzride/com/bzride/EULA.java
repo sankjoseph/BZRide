@@ -16,20 +16,8 @@ public class EULA extends AppCompatActivity {
         setContentView(R.layout.activity_eul);
 
         WebView wv = (WebView) findViewById(R.id.webViewEULA);
-        wv.setVerticalScrollBarEnabled(false);
+        wv.setVerticalScrollBarEnabled(true);
         wv.loadUrl("file:///android_asset/BZRideTerms.html");
-
-       /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 
 }

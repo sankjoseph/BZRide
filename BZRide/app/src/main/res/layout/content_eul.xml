@@ -38,7 +38,7 @@
 
         <WebView
             android:layout_width="fill_parent"
-            android:layout_height="542dp"
+            android:layout_height="fill_parent"
             android:id="@+id/webViewEULA" />
 
         <LinearLayout

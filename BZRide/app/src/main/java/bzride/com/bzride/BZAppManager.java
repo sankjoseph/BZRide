@@ -6,9 +6,36 @@ package bzride.com.bzride;
 public class BZAppManager {
     private static BZAppManager   _instance;
     public  boolean isDriver;
-    private BZAppManager()
+    public BZDriverInfo bzDriverData;
+    public BZRiderInfo bzRiderData;
+    public  String getDriverDataParamsFlat()
+    {
+        String retData = "";
+        ;
+        retData = "&firstname="+ bzDriverData.FirstName +
+                    "&lastname=" + bzDriverData.LastName ;
+
+        ;
+
+
+        return retData;
+    }
+
+    public  String getRiderDataParamsFlat()
+    {
+        String retData = "";
+
+        return retData;
+    }
+
+    public static void clearData()
     {
 
+    }
+    private BZAppManager()
+    {
+        bzDriverData =  new BZDriverInfo();
+        bzRiderData = new BZRiderInfo();
     }
     public synchronized static BZAppManager getInstance()
     {

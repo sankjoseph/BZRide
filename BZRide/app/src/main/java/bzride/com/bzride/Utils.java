@@ -6,6 +6,7 @@ package bzride.com.bzride;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,5 +56,16 @@ public class Utils {
 
         SimpleDateFormat newFormat = new SimpleDateFormat(format);
         return newFormat.format(convertedDate);
+    }
+    public static boolean isEqualAndNotEmpty(String inputString,String strCompare)
+    {
+        if (!TextUtils.isEmpty(inputString))
+        {
+            if (inputString.equals(strCompare))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -11,10 +11,12 @@ public class ModelClassMapper {
         classHashMap = new HashMap<>();
         classHashMap.put(Utils.LOGIN_RIDER_URL, LoginResp.class);
         classHashMap.put(Utils.LOGIN_DRIVER_URL, LoginResp.class);
-        classHashMap.put(Utils.GET_BANK_INFO_URL, GetbankInfoResp.class);
-
         classHashMap.put(Utils.REGISTER_DRIVER_URL, RegisterResp.class);
         classHashMap.put(Utils.REGISTER_RIDER_URL, RegisterResp.class);
+
+        classHashMap.put(Utils.GET_BANK_INFO_URL, GetbankInfoResp.class);
+
+
 
         //classHashMap.put(Utils.NOTIFICATION_LIST_URL, NotificationRsp.class);
     }

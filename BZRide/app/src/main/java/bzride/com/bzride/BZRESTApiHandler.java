@@ -27,6 +27,8 @@ public class BZRESTApiHandler {
     private String mUrl;
     private String mKey;
     private String mParams;
+    private String mResponse;
+
     public BZRESTApiHandler(Activity a) {
         mActivity = a;
     }
@@ -60,19 +62,9 @@ public class BZRESTApiHandler {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Reader reader = GENERICRESTApiHandler.postData(mUrl, mParams);
+                String reader = GENERICRESTApiHandler.postData(mUrl, mParams);
                 if (reader != null) {
-                    model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
-                   /* if (mKey.toString().equals(Utils.NOTIFICATION_LIST_URL))
-                    {
-                         ArrayList<Product> productstList = new ArrayList<Product>();
-                        JSONObject objJson= new JSONObject();
-                    }*/
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                     model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
                 }
                 return null;
             }
@@ -115,14 +107,8 @@ public class BZRESTApiHandler {
             @Override
             protected Void doInBackground(Void... voids) {
                 Reader reader = GENERICRESTApiHandler.getData(mUrl);
-
                 if (reader != null) {
                     model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
-                   /* if (mKey.toString().equals(Utils.NOTIFICATION_LIST_URL))
-                    {
-                         ArrayList<Product> productstList = new ArrayList<Product>();
-                        JSONObject objJson= new JSONObject();
-                    }*/
                     try {
                         reader.close();
                     } catch (IOException e) {
@@ -137,15 +123,12 @@ public class BZRESTApiHandler {
                 super.onPostExecute(aVoid);
                 if (mProgressDialog != null)
                     mProgressDialog.dismiss();
-
-                // san todo edit
-                mExecuteListener.onSuccess(model);
-                /* if (mExecuteListener != null) {
+                if (mExecuteListener != null) {
                     if (model != null)
                         mExecuteListener.onSuccess(model);
                     else
                         mExecuteListener.onFailure();
-                }*/
+                }
             }
         }.execute();
     }

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.GsonBuilder;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         findViewById(R.id.btnLoginDriver).setOnClickListener(this);
         findViewById(R.id.btnLoginRider).setOnClickListener(this);
@@ -50,21 +53,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void loginaction() {
 
         Intent myIntent = new Intent(MainActivity.this, login.class);
-
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);
+
     }
 
     private void resgisteractionDriver() {
 
         Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
-
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);
     }
 
     private void resgisteractionRider() {
 
         Intent myIntent = new Intent(MainActivity.this, registeruser.class);
-
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);
     }
 
