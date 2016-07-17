@@ -1,58 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#e8e8e7"
-    android:orientation="vertical" >
-    <ImageView android:layout_width="100dp"
-        android:layout_height="250dp"
-      android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"/>
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="bzride.com.bzride.main">
 
-        <Button android:layout_width="190dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Login as Driver"
-            android:id="@+id/btnLoginDriver"
-            android:textColor="#fff"
-            android:textSize="13dp"
-            android:background="#13b586"/>
-
-        <Button android:layout_width="190dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Login as Rider"
-            android:id="@+id/btnLoginRider"
-            android:textColor="#fff"
-            android:textSize="13dp"
-            android:background="#13b586"/>
-
-
-        <Button android:layout_width="190dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Register as Driver"
-            android:id="@+id/btnRegisterDriver"
-            android:textColor="#fff"
-            android:textSize="13dp"
-            android:background="#2683c2"/>
-
-        <Button android:layout_width="190dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Register as Rider"
-            android:id="@+id/btnRegisterRider"
-            android:textColor="#fff"
-            android:textSize="13dp"
-            android:background="#2683c2"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

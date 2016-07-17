@@ -76,6 +76,11 @@
             android:label="@string/title_activity_driver_bank_info"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".BZLanding"
+            android:label="@string/title_activity_bzlanding"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

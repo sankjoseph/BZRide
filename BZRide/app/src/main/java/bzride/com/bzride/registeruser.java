@@ -63,16 +63,15 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
             BZAppManager.getInstance().bzRiderData.Address2 = address2.getText().toString();
             BZAppManager.getInstance().bzRiderData.PhoneNumber = PhoneNumber.getText().toString();
 
-            // Get all other info from drill down screens from this register screen ie  vehicle,license, registration, insurance
+            // Get all other info from drill down screens from this register screen ie  card info taken in other child screen
 
             BZRESTApiHandler api = new BZRESTApiHandler(this);
             api.setMessage("Registering new rider...");
             api.setPostExecuteListener(this);
 
             if (BZAppManager.getInstance().isDriver == false) {
-
                 String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL ;
-                String params = "&username="+ "santhosh" + "&password=" + "123456"+ "&test=" + "31231";
+                String params = BZAppManager.getInstance().getRiderDataParamsFlat();
                 api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
             }
 

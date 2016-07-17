@@ -6,7 +6,7 @@
     <string name="title_activity_usercarddetails">usercarddetails</string>
     <string name="title_activity_eul">EULA</string>
 
-    <string-array name="menuitems">
+    <string-array name="bzmenuitems">
         <item>Profile</item>
         <item>Card Info</item>
         <item>Last Trip</item>
@@ -20,4 +20,10 @@
     <string name="title_activity_driver_vehicle_reg_info">driverVehicleRegInfo</string>
     <string name="title_activity_register_driver">registerDriver</string>
     <string name="title_activity_driver_bank_info">driverBankInfo</string>
+    <string name="title_activity_bzlanding">BZLanding</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>

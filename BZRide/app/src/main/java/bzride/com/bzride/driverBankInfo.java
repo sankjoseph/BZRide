@@ -42,7 +42,11 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountNumber  = txtBankAccountNumber.getText().toString();
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountHolderName  = txtBankAccountHolderName.getText().toString();
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountRoutingNumber  = txtBankAccountRoutingNumber.getText().toString();
-        super.onBackPressed();
+
+        Intent myIntent = new Intent(driverBankInfo.this, Home.class);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        driverBankInfo.this.startActivity(myIntent);
+
 
     }
 }

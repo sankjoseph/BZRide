@@ -100,6 +100,7 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardNumber = txtCardDetailsNumber.getText().toString();
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
+
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryYear = txtCardDetailsExpYear.getText().toString();
         BZAppManager.getInstance().bzRiderData.userCardInfo.cardCVV = txtCardDetailsCVV.getText().toString();

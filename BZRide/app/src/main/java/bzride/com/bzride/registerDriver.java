@@ -65,6 +65,7 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
             BZAppManager.getInstance().bzDriverData.PhoneNumber = PhoneNumber.getText().toString();
 
             // Get all other info from drill down screens from this register screen ie  vehicle,license, registration, insurance
+            // This is done in other child drill down screens
 
             BZRESTApiHandler api = new BZRESTApiHandler(this);
             api.setMessage("Registering new driver...");
@@ -74,8 +75,6 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
 
                 String urlCall = Utils.BASE_URL + Utils.REGISTER_DRIVER_URL ;
                 String params = BZAppManager.getInstance().getDriverDataParamsFlat();
-
-
                 api.putDetails(urlCall, Utils.REGISTER_DRIVER_URL, params);
             }
 
@@ -102,12 +101,18 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
         Intent myIntent = new Intent(registerDriver.this, driverInsuranceInfo.class);
         registerDriver.this.startActivity(myIntent);
     }
+
+    private void bankDetailsaction() {
+        Intent myIntent = new Intent(registerDriver.this, driverInsuranceInfo.class);
+        registerDriver.this.startActivity(myIntent);
+    }
+
     @Override
     public void onSuccess(BZJSONResp model) {
 
         RegisterResp response = (RegisterResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-            Intent myIntent = new Intent(registerDriver.this, Home.class);
+            Intent myIntent = new Intent(registerDriver.this, EULA.class);
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             registerDriver.this.startActivity(myIntent);
         }

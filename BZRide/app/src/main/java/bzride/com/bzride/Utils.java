@@ -28,6 +28,9 @@ public class Utils {
     public static final String REGISTER_DRIVER_URL = "/RegisterDriver.php";
     public static final String GET_BANK_INFO_URL = "/GetBankInfo.php";
 
+    public static final String ACCEPT_EULA_DRIVER_URL = "/AcceptEULADriver.php";
+
+
     public static final String REGISTER_SUCCESS = "Login Success";
 
     public static final String STATUS_SUCCESS = "S";

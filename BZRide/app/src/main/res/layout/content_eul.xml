@@ -55,6 +55,7 @@
                 android:layout_marginRight="16dp"
 
                 android:text="Accept"
+                android:id="@+id/btnAcceptEULA"
                 android:textColor="#fff"
                 android:textSize="13dp"
                 android:background="#2683c2"/>
@@ -66,6 +67,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="Decline"
+                android:id="@+id/btnDeclineEULA"
                 android:textColor="#fff"
                 android:textSize="13dp"
                 android:background="#2683c2"
