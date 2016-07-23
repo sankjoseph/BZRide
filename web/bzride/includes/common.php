@@ -4,7 +4,7 @@ define("DEBUG_F","File");
 $BASE_URL = 'http://bzride.com/bzride/';
 
 
-function LOGDATA($value, $default = '')
+function LOGDATA($value, $default = null)
 {	
   if (defined('DEBUG_L')) {
       echo $value;
@@ -24,13 +24,13 @@ function LOGDATA($value, $default = '')
 	}
   }
 }
-function getIfSet($value, $default = ' ')
+function getIfSet($value, $default = null)
 {
 	
     return isset($value) ? "'".$value."'" : $default;
 }
 
-function showError($value, $default = ' ')
+function showError($value, $default = null)
 { /* Output header */
 	LOGDATA($value);
 	header('Content-type: application/json');
@@ -40,7 +40,7 @@ function showError($value, $default = ' ')
     echo json_encode($data);
     die();
 }
-function showSuccess($value, $default = ' ')
+function showSuccess($value, $default = null)
 { /* Output header */
 	LOGDATA($value);
 	header('Content-type: application/json');

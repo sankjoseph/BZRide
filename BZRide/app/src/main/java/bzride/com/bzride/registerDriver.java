@@ -2,6 +2,7 @@ package bzride.com.bzride;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
     private EditText address1;
     private EditText address2;
     private EditText PhoneNumber;
+    private EditText SSN;
+    private String deviceid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,9 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
             address1 = (EditText)findViewById(R.id.txtdriverAddress1);
             address2 = (EditText)findViewById(R.id.txtdriverAddress2);
             PhoneNumber = (EditText)findViewById(R.id.txtdriverPhoneNumber);
+            SSN = (EditText)findViewById(R.id.txtdriverSSN);
+
+
 
             BZAppManager.getInstance().bzDriverData.FirstName = firstName.getText().toString();
             BZAppManager.getInstance().bzDriverData.LastName = lastName.getText().toString();
@@ -63,6 +69,7 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
             BZAppManager.getInstance().bzDriverData.Address1 = address1.getText().toString();
             BZAppManager.getInstance().bzDriverData.Address2 = address2.getText().toString();
             BZAppManager.getInstance().bzDriverData.PhoneNumber = PhoneNumber.getText().toString();
+            BZAppManager.getInstance().bzDriverData.SSN  = SSN.getText().toString();
 
             // Get all other info from drill down screens from this register screen ie  vehicle,license, registration, insurance
             // This is done in other child drill down screens
@@ -75,6 +82,9 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
 
                 String urlCall = Utils.BASE_URL + Utils.REGISTER_DRIVER_URL ;
                 String params = BZAppManager.getInstance().getDriverDataParamsFlat();
+                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                params = params + "&deviceId=" + deviceid;
+
                 api.putDetails(urlCall, Utils.REGISTER_DRIVER_URL, params);
             }
 

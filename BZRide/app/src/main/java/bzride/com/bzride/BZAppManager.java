@@ -23,6 +23,7 @@ public class BZAppManager {
         retData += "&address1=" + bzDriverData.Address1;
         retData += "&address2=" + bzDriverData.Address2;
         retData += "&phone=" + bzDriverData.PhoneNumber;
+        retData += "&ssn=" + bzDriverData.SSN;
         retData += "&currentlat=" + bzDriverData.currentlat;
         retData += "&currentlong=" + bzDriverData.currentlong;
         retData += "&deviceType=A";
@@ -35,32 +36,30 @@ public class BZAppManager {
         retData += "&cardToken=" + "bxsabcsacb";
 
         // Bank info
-        retData += "&bankname=" + bzDriverData.driverBankInfo.BankName;
-        retData += "&bankaccountnumber=" + bzDriverData.driverBankInfo.BankAccountNumber;
-        retData += "&bankaccountholdername=" + bzDriverData.driverBankInfo.BankAccountHolderName;
-        retData += "&bankaccountroutingnumber=" + bzDriverData.driverBankInfo.BankAccountRoutingNumber;
+        retData += "&bankname=" + "testbank";
+        retData += "&bankaccountToken=" + "bzzbbz";
         // Insurance Info
-        retData += "&insuranceCompany=" + bzDriverData.driverInsuranceInfo.insuranceCompany;
-        retData += "&insuranceNumber=" + bzDriverData.driverInsuranceInfo.insuranceNumber;
-        retData += "&insurancedateFrom=" + bzDriverData.driverInsuranceInfo.insurancedateFrom;
-        retData += "&insurancedateOfExpiry=" + bzDriverData.driverInsuranceInfo.insurancedateOfExpiry;
+        retData += "&insCompany=" + bzDriverData.driverInsuranceInfo.insuranceCompany;
+        retData += "&insPolicyNumber=" + bzDriverData.driverInsuranceInfo.insuranceNumber;
+        retData += "&insValidFromDate=" + bzDriverData.driverInsuranceInfo.insurancedateFrom;
+        retData += "&insExpDate=" + bzDriverData.driverInsuranceInfo.insurancedateOfExpiry;
         //license Info
         retData += "&licenseNumber=" + bzDriverData.driverLicenseInfo.licenseNumber;
-        retData += "&licensestateIssued=" + bzDriverData.driverLicenseInfo.licensestateIssued;
-        retData += "&licensedateOfIssue=" + bzDriverData.driverLicenseInfo.licensedateOfIssue;
-        retData += "&licensedateofExpiry=" + bzDriverData.driverLicenseInfo.licensedateofExpiry;
+        retData += "&licenceStateIssued=" + bzDriverData.driverLicenseInfo.licensestateIssued;
+        retData += "&licenseDateIssued=" + bzDriverData.driverLicenseInfo.licensedateOfIssue;
+        retData += "&licenseExpDate=" + bzDriverData.driverLicenseInfo.licensedateofExpiry;
 
         //vehicle Reg Info
-        retData += "&vehicleNumberPlateNumber=" + bzDriverData.driverVehRegInfo.vehicleNumberPlateNumber;
-        retData += "&vehicleRegistrationState=" + bzDriverData.driverVehRegInfo.vehicleRegistrationState;
-        retData += "&vehicledateOfRegistration=" + bzDriverData.driverVehRegInfo.vehicledateOfRegistration;
-        retData += "&vehicledateOfExpiry=" + bzDriverData.driverVehRegInfo.vehicledateOfExpiry;
+        retData += "&vNumber=" + bzDriverData.driverVehRegInfo.vehicleNumberPlateNumber;
+        retData += "&vStateRegistered=" + bzDriverData.driverVehRegInfo.vehicleRegistrationState;
+        retData += "&vDateRegistered=" + bzDriverData.driverVehRegInfo.vehicledateOfRegistration;
+        retData += "&vExpiryDate=" + bzDriverData.driverVehRegInfo.vehicledateOfExpiry;
 
         // vehicle model info
-        retData += "&vehicleYearOfManufacture=" + bzDriverData.driverVehicleInfo.vehicleYearOfManufacture;
-        retData += "&vehicleModel=" + bzDriverData.driverVehicleInfo.vehicleModel;
-        retData += "&vehicleMake=" + bzDriverData.driverVehicleInfo.vehicleMake;
-        retData += "&vehicleColor=" + bzDriverData.driverVehicleInfo.vehicleColor;
+        retData += "&vYear=" + bzDriverData.driverVehicleInfo.vehicleYearOfManufacture;
+        retData += "&vModel=" + bzDriverData.driverVehicleInfo.vehicleModel;
+        retData += "&vMake=" + bzDriverData.driverVehicleInfo.vehicleMake;
+        retData += "&vColor=" + bzDriverData.driverVehicleInfo.vehicleColor;
 
         return retData;
     }

@@ -15,93 +15,102 @@
 
  <tr>
 <td> First Name </td>
-<td> <input type="text" name="txtfirstname" id="txtfirstname" />
+<td> <input type="text" name="txtfirstname" id="txtfirstname" placeholder="First name"  />
 <br />
 </td>
  </tr>
  
+  <tr>
+ <td> Middle Name </td>
+<td> <input type="text" name="txtmiddlename" id="txtmiddlename"  placeholder="Middle name"/>
+<br />
+</td>
+ </tr>
+ 
+ 
  <tr>
 <td> Last Name </td>
-<td> <input type="text" name="txtlastname" id="txtlastname" />
+<td> <input type="text" name="txtlastname" id="txtlastname" placeholder="Last name" />
 <br />
 </td>
  </tr>
  
   <tr>
 <td> Email ID </td>
-<td> <input type="text" name="txtemail"id="txtemail" />
+<td> <input type="text" name="txtemail"id="txtemail" placeholder="email" />
 <br />
 </td>
  </tr>
 
 <tr>
 <td> Password </td>
-<td> <input type="password" name="txtpass"id="txtpass" />
+<td> <input type="password" name="txtpass"id="txtpass" placeholder="Password" />
 <br />
 </td>
  </tr>
 
  <tr>
 <td> Confirm Password </td>
-<td> <input type="password" name="txtconpass"id="txtconpass" />
+<td> <input type="password" name="txtconpass"id="txtconpass"  placeholder="Confirm Password"/>
 <br />
 </td>
  </tr>
  
   <tr>
 <td> Address 1 </td>
-<td> <textarea rows="4" cols="50" name="txtaddr1" id="txtaddr1" ></textarea>
+<td> <textarea rows="4" cols="50" name="txtaddr1" id="txtaddr1" placeholder="Address1"  ></textarea>
 <br />
 </td>
  </tr>
  
    <tr>
 <td> Address 2 </td>
-<td> <textarea rows="4" cols="50" name="txtaddr2" id="txtaddr2" ></textarea>
+<td> <textarea rows="4" cols="50" name="txtaddr2" id="txtaddr2"  placeholder="Address2" ></textarea>
 <br />
 </td>
  </tr>
 
   <tr>
 <td> Telephone No: </td>
-<td> <input type="text" name="txtph"id="txtph" />
+<td> <input type="text" name="txtph"id="txtphone"  placeholder="Mobile number" />
 <br />
 </td>
  </tr>
  
-<!--  <tr>
+ <tr>
 <td> Social Security No: </td>
-<td> <input type="text" name="txtssn"id="txtssn" />
+<td> <input type="text" name="txtssn"id="txtssn" placeholder="SSN"  />
 <br />
 </td>
- </tr>-->
+ </tr>
+ 
  <!--------------------------------------------------------------------------->
  <tr><td></td> <td> <b>VEHICLES DETAILS</b></td></tr>
  
   <tr>
 <td> Year </td>
-<td> <input type="text" name="txtyear" id="txtyear" />
+<td> <input type="text" name="txtyear" id="txtyear" placeholder="Year" />
 <br />
 </td>
  </tr>
  
   <tr>
 <td> Model </td>
-<td> <input type="text" name="txtmodel"id="txtmodel" />
+<td> <input type="text" name="txtmodel"id="txtmodel" placeholder="Model"  />
 <br />
 </td>
  </tr>
 
 <tr>
 <td> Make </td>
-<td> <input type="text" name="txtmake"id="txtmake" />
+<td> <input type="text" name="txtmake"id="txtmake" placeholder="Make" />
 <br />
 </td>
  </tr>
 
  <tr>
 <td> Color </td>
-<td> <input type="text" name="txtcolor"id="txtcolor" />
+<td> <input type="text" name="txtcolor"id="txtcolor"  placeholder="Color" />
 <br />
 </td>
  </tr>
@@ -110,28 +119,28 @@
  
   <tr>
 <td> Registration No: </td>
-<td> <input type="text" name="txtregno" id="txtregno" />
+<td> <input type="text" name="txtregno" id="txtregno" placeholder="Number Plate Number"  />
 <br />
 </td>
  </tr>
  
   <tr>
 <td> Registration State </td>
-<td> <input type="text" name="txtregstate"id="txtregstate" />
+<td> <input type="text" name="txtregstate"id="txtregstate" placeholder="State"  />
 <br />
 </td>
  </tr>
 
 <tr>
 <td> Date of Registration </td>
-<td> <input type="text" name="txtregdate"id="txtregdate" />
+<td> <input type="text" name="txtregdate"id="txtregdate" placeholder="Date"  />
 <br />
 </td>
  </tr>
 
  <tr>
 <td> Date of Expiry </td>
-<td> <input type="text" name="txtregexpiry"id="txtregexpiry" />
+<td> <input type="text" name="txtregexpiry"id="txtregexpiry" placeholder="Expiry date" />
 <br />
 </td>
  </tr>
@@ -140,28 +149,28 @@
  
   <tr>
 <td> Insurance Company </td>
-<td> <input type="text" name="txtinscompany" id="txtinscompany" />
+<td> <input type="text" name="txtinscompany" id="txtinscompany" placeholder="Insurance Company" />
 <br />
 </td>
  </tr>
  
   <tr>
 <td> Policy No: </td>
-<td> <input type="text" name="txtpolicyno"id="txtpolicyno" />
+<td> <input type="text" name="txtpolicyno"id="txtpolicyno" placeholder="Insurance number" />
 <br />
 </td>
  </tr>
 
 <tr>
 <td> Ploicy Started from: </td>
-<td> <input type="text" name="txtinsdate"id="txtinsdate" />
+<td> <input type="text" name="txtinsdate"id="txtinsdate" placeholder="Insurance date" />
 <br />
 </td>
  </tr>
 
  <tr>
 <td> Date of Expiry </td>
-<td> <input type="text" name="txtinsexpiry"id="txtinsexpiry" />
+<td> <input type="text" name="txtinsexpiry"id="txtinsexpiry" placeholder="Insurance expiry date" />
 <br />
 </td>
  </tr>
@@ -170,28 +179,28 @@
  
   <tr>
 <td> Licence No: </td>
-<td> <input type="text" name="txtlicenseno" id="txtlicenseno" />
+<td> <input type="text" name="txtlicenseno" id="txtlicenseno" placeholder="License number"  />
 <br />
 </td>
  </tr>
  
   <tr>
 <td> State Issued </td>
-<td> <input type="text" name="txtlicensestate"id="txtlicensestate" />
+<td> <input type="text" name="txtlicensestate"id="txtlicensestate" placeholder="State"  />
 <br />
 </td>
  </tr>
 
 <tr>
 <td> Date of Issue </td>
-<td> <input type="text" name="txtlicenseissue"id="txtlicenseissue" />
+<td> <input type="text" name="txtlicenseissue"id="txtlicenseissue" placeholder="Date"  />
 <br />
 </td>
  </tr>
 
  <tr>
 <td> Date of Expiry </td>
-<td> <input type="text" name="txtlicenseexpiry"id="txtlicenseexpiry" />
+<td> <input type="text" name="txtlicenseexpiry"id="txtlicenseexpiry" placeholder="Expiry date"  />
 <br />
 </td>
  </tr>

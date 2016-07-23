@@ -21,11 +21,14 @@
 <br />
 </td>
  </tr>
+ 
+ <tr>
  <td> Middle Name </td>
 <td> <input type="text" name="txtmiddlename" id="txtmiddlename"  placeholder="Middle name"/>
 <br />
 </td>
  </tr>
+ 
  <tr>
 <td> Last Name </td>
 <td> <input type="text" name="txtlastname" id="txtlastname" placeholder="Last name" />
@@ -64,14 +67,14 @@
  
    <tr>
 <td> Address 2 </td>
-<td> <textarea rows="4" cols="50" name="txtaddr2" id="txtaddr2" ></textarea>
+<td> <textarea rows="4" cols="50" name="txtaddr2" id="txtaddr2" placeholder="Address2" ></textarea>
 <br />
 </td>
  </tr>
 
   <tr>
 <td> Mobile No: </td>
-<td> <input type="text" name="txtphone"id="txtphone" />
+<td> <input type="text" name="txtphone"id="txtphone" placeholder="mobile phone" />
 <br />
 </td>
  </tr>
@@ -80,52 +83,52 @@
   <tr><td></td><td><b> CARD DETAILS</td></tr></b>
   <tr>
 <td> Card Type </td>
-<td> <input type="radio" name="cardtype" value="credit" id="r1" />Credit Card
-     <input type="radio" name="cardtype" value="debit" id="r2" />Debit Card
+<td> <input type="radio" name="cardtype" value="C" id="r1" checked />Credit Card
+     <input type="radio" name="cardtype" value="D" id="r2" />Debit Card
 <br />
 </td>
  </tr>
  
    <tr>
 <td> Sub Type </td>
-<td> <input type="radio" name="subtype" value="master" id="r3" />Master Card
-     <input type="radio" name="subtype" value="Visa" id="r4" />Visa Card
-	 <input type="radio" name="subtype" value="Amex" id="r5" />Amex Card
+<td> <input type="radio" name="subtype" value="M" id="r3" checked />Master Card
+     <input type="radio" name="subtype" value="V" id="r4" />Visa Card
+	 <input type="radio" name="subtype" value="A" id="r5" />Amex Card
 <br />
 </td>
  </tr>
 
   <tr>
 <td> Card No: </td>
-<td> <input type="text" name="txtcardno"id="txtcardno" />
+<td> <input type="text" name="txtcardno"id="txtcardno" placeholder="card number"  />
 <br />
 </td>
  </tr>
 
   <tr>
-<td> Expiry Date </td>
-<td> <input type="text" name="txtexpirydate"id="txtexpirydate" />
+<td> Expiry month and year </td>
+<td> <input type="text" name="txtexpirydate"id="txtexpirydate" placeholder="mm/yy"  />
 <br />
 </td>
  </tr>
 
 <tr>
 <td>Billing Address 1 </td>
-<td> <textarea rows="4" cols="50" name="txtbillingaddr1" id="txtbillingaddr1" ></textarea>
+<td> <textarea rows="4" cols="50" name="txtbillingaddr1" id="txtbillingaddr1" placeholder="Billing Address1" ></textarea>
 <br />
 </td>
  </tr>
  
 <tr>
 <td> Billing Address 1 </td>
-<td> <textarea rows="4" cols="50" name="txtbillingaddr2" id="txtbillingaddr2" ></textarea>
+<td> <textarea rows="4" cols="50" name="txtbillingaddr2" id="txtbillingaddr2" placeholder="Billing Address2" ></textarea>
 <br />
 </td>
  </tr> 
  
   <tr>
 <td>CVV </td>
-<td> <input type="text" name="txtcvv"id="txtcvv" /> 
+<td> <input type="password" name="txtcvv"id="txtcvv"  placeholder="CVV" /> 
 <br />
 </td>
  </tr> 

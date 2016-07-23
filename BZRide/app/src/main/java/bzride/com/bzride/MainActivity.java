@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Intent myIntent = new Intent(MainActivity.this, registeruser.class);
+        BZAppManager.getInstance().isDriver = true;
+        Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);
 

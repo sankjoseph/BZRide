@@ -1,69 +1,59 @@
 <?php
+include("includes/common.php");
 session_start();
-$firstname= $_POST["txtfirstname"];
-$lastname= $_POST["txtlastname"];
-$email= $_POST["txtemail"];
-$password= $_POST["txtpass"];
+// call web service for putting data
+$bz_req_url = $BASE_URL . 'RegisterDriver.php?';
+$ch =  curl_init($bz_req_url);
 
-$addr1= $_POST["txtaddr1"];
-$addr2= $_POST["txtaddr2"];
-$ph= $_POST["txtph"];
-$ssn= $_POST["txtssn"];
+$postData = array('firstName' => $_POST["txtfirstname"], 
+											'middleName' => $_POST["txtmiddlename"],
+											'lastName' => $_POST["txtlastname"],
+											'email' => $_POST["txtemail"],
+											'password' => $_POST["txtpass"],
+											'address1' => $_POST["txtaddr1"],
+											'address2' => $_POST["txtaddr2"],
+											'phone' => $_POST["txtphone"],
+											
+											'ssn' => $_POST["txtssn"],
+											
+											'deviceId' => '',
+											'deviceType' => '',
+											'cardType' => '',
+											'cardProvider' => '',
+											'cardBillingAddress1' => '',
+											'cardBillingAddress2' => '',
+											'cardToken' => '',
+			
+								
+											'vModel' => $_POST["txtmodel"],
+											'vMake' => $_POST["txtmake"],
+											'vColor' => $_POST["txtcolor"],
+											'vYear' => $_POST["txtyear"],
+											'vNumber' => $_POST["txtregno"],
+											'vDateRegistered' => $_POST["txtregdate"],
+											'vStateRegistered' => $_POST["txtregstate"],
+											'vExpiryDate' => $_POST["txtregexpiry"],
+											
+											'insCompany' => $_POST["txtinscompany"],
+											'insPolicyNumber' => $_POST["txtpolicyno"],
+											'insValidFromDate' => $_POST["txtinsdate"],
+											'insExpDate' => $_POST["txtinsexpiry"],
+											
+											'licenseNumber' => $_POST["txtlicenseno"],
+											'licenceStateIssued' => $_POST["txtlicensestate"],
+											'licenseDateIssued' => $_POST["txtlicenseissue"],
+											'licenseExpDate' => $_POST["txtlicenseexpiry"]	);
 
-$vehicleyear= $_POST["txtyear"];
-$vehiclemodel= $_POST["txtmodel"];
-$vehiclemake= $_POST["txtmake"];
-$vehiclecolor= $_POST["txtcolor"];
-
-$regno= $_POST["txtregno"];
-$regstate= $_POST["txtregstate"];
-$regdate= $_POST["txtregdate"];
-$regexpiry= $_POST["txtregexpiry"];
-
-$inscompany= $_POST["txtinscompany"];
-$inspolicyno= $_POST["txtpolicyno"];
-$insdate= $_POST["txtinsdate"];
-$insexpiry= $_POST["txtinsexpiry"];
-
-$licenseno= $_POST["txtlicenseno"];
-$licensestate= $_POST["txtlicensestate"];
-$licensedate= $_POST["txtlicenseissue"];
-$licenseexpiry= $_POST["txtlicenseexpiry"];
-
-//$image=$_FILES["image"]["name"];
-move_uploaded_file($_FILES['image']['tmp_name'],"upload/".$_FILES['image']['name']);
-/*$licence= $_POST["licence"];*/
-
-include("includes/db.php");
-
-		//insert values: ID, FIRST NAME, LAST NAME, EMAIL, PASSWORD, ADDR1, ADDR2, PHONE, DEVICE ID , DEVICE TYPE, 
-		//IS LICENCE ACCEPTED, IS ACTIVE, STATUS, CURRENT LATTITTUDE, CURRENT LONGITUDE, CREATED BY DATE  //
-$driver_details="insert into bztbl_drivers values('', '$firstname', '$lastname', '$email', '$password',
-									'$addr1', '$addr2', '$ph', '', '', '', '', '', '', '', '' )";
-									
-		// insert values: ID, DRIVER ID, VEHICLE MODEL, V MAKE, V COLOUR, V YEAR, 
-		//  V REG NO, V REG STATE, V DATE REGISTERED, V EXPIRY DATE, CREATED BY DATE  //
-$driver_vehicledetais = "insert into bztbl_drivervehicledetails values('', '', '$vehiclemodel', '$vehiclemake', '$vehiclecolor', '$vehicleyear', 
-									'$regno', '$regstate', '$regdate', '$regexpiry', '')";									
-									
-		//insert values: ID, DRIVER ID, INSURANCE COMPANY, INS PLICY NO, INS DATE, INS EXPIRY DATE, CREATED BY DATE  //							
-$driver_insdetails="insert into bztbl_driverinsurancedetails values('', '', '$inscompany', '$inspolicyno', 
-									'$insdate','$insexpiry', ''  )";
-									
-		//insert values: ID, DRIVER ID, LICENCE NO, LICENCE ISSUE STATE, LIC ISSUE DATE, LIC EXPIRY DATE, CREATED BY DATE  //
-$driver_licdetails="insert into bztbl_driverlicensedetails values('', '', '$licenseno', '$licensestate', 
-									'$licensedate','$licenseexpiry', ''  )";											
-
-
-$driver_details1 = mysql_query($driver_details, $conn);
-$driver_vehicledetais1 = mysql_query($driver_vehicledetais, $conn);
-$driver_insdetails1 = mysql_query($driver_insdetails, $conn);
-$driver_licdetails1 = mysql_query($driver_licdetails, $conn);
-
-if($driver_details1 == 1)
-{
-$_SESSION['msg']="Successfully Registered";
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);										
+										
+												
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+$result = curl_exec($ch);
 header("location:home.php");
-}
 
 ?>
