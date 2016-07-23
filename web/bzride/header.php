@@ -1,6 +1,6 @@
 <?php
 echo '<div class="header">';
-echo '<div class="logo_left"> <img src="./images/imgbzride.jpg" /> </div>';
+echo '<div class="logo_left"> <img src="./images/imgbzride.jpg" alt="Img Not found" height="170" width="300" /> </div>';
 echo '<div class="header_right">';
 echo '<div class="header_right_top"> BZ Ride </div>';
 echo '<div class="header_right_bottom">';
