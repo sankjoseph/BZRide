@@ -8,4 +8,8 @@ public class BZVehicleInfo {
     public String vehicleModel;
     public String vehicleMake;
     public String vehicleColor;
+    public BZVehicleInfo()
+    {
+
+    }
 }

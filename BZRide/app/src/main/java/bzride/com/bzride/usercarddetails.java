@@ -23,12 +23,12 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         //load if data there
         RadioGroup radiogrcardType = (RadioGroup) findViewById(R.id.radioGroupCardType);
 
-        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.userCardInfo.cardType, "D"))
+        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardType, "D"))
         {
            RadioButton btn = (RadioButton) radiogrcardType.findViewById(R.id.radioButtonDC);
            btn.setChecked(true);
         }
-        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.userCardInfo.cardType, "C"))
+        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardType, "C"))
         {
            RadioButton btn = (RadioButton) radiogrcardType.findViewById(R.id.radioButtonCC);
            btn.setChecked(true);
@@ -37,12 +37,12 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         //card vendor
         RadioGroup radiogrcardVendor = (RadioGroup) findViewById(R.id.radioGroupVendor);
 
-        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.userCardInfo.cardVendor, "M"))
+        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardVendor, "M"))
         {
             RadioButton btn = (RadioButton) radiogrcardVendor.findViewById(R.id.radioButtonMC);
             btn.setChecked(true);
         }
-        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.userCardInfo.cardVendor,"V"))
+        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardVendor,"V"))
         {
             RadioButton btn = (RadioButton) radiogrcardVendor.findViewById(R.id.radioButtonVISA);
             btn.setChecked(true);
@@ -56,12 +56,12 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         txtCardDetailsCVV = (EditText)findViewById(R.id.txtCardDetailsCVV);
 
         // load values if already fit in
-        txtCardDetailsNumber.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardNumber);
-        txtCardDetailsAddress1.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress1);
-        txtCardDetailsAddress2.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress2);
-        txtCardDetailsExpMonth.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryMonth);
-        txtCardDetailsExpYear.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryYear);
-        txtCardDetailsCVV.setText(BZAppManager.getInstance().bzRiderData.userCardInfo.cardCVV);
+        txtCardDetailsNumber.setText(BZAppManager.getInstance().bzRiderData.cardData.cardNumber);
+        txtCardDetailsAddress1.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1);
+        txtCardDetailsAddress2.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2);
+        txtCardDetailsExpMonth.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth);
+        txtCardDetailsExpYear.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear);
+        txtCardDetailsCVV.setText(BZAppManager.getInstance().bzRiderData.cardData.cardCVV);
 
     }
     @Override
@@ -78,10 +78,10 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         RadioButton btn = (RadioButton) radiogrcardType.findViewById(index);
         switch (btn.getId()) {
             case R.id.radioButtonCC:
-                BZAppManager.getInstance().bzRiderData.userCardInfo.cardType = "C";
+                BZAppManager.getInstance().bzRiderData.cardData.cardType = "C";
                 break;
             case R.id.radioButtonDC:
-                BZAppManager.getInstance().bzRiderData.userCardInfo.cardType = "D";
+                BZAppManager.getInstance().bzRiderData.cardData.cardType = "D";
                 break;
         }
     /// card vendor
@@ -90,20 +90,20 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         RadioButton btnVendor = (RadioButton) radiogrcardVendor.findViewById(indexVendor);
         switch (btnVendor.getId()) {
             case R.id.radioButtonMC:
-                BZAppManager.getInstance().bzRiderData.userCardInfo.cardVendor = "M";
+                BZAppManager.getInstance().bzRiderData.cardData.cardVendor = "M";
                 break;
             case R.id.radioButtonVISA:
-                BZAppManager.getInstance().bzRiderData.userCardInfo.cardVendor = "V";
+                BZAppManager.getInstance().bzRiderData.cardData.cardVendor = "V";
                 break;
         }
         // other details
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardNumber = txtCardDetailsNumber.getText().toString();
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardNumber = txtCardDetailsNumber.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
 
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardExpiryYear = txtCardDetailsExpYear.getText().toString();
-        BZAppManager.getInstance().bzRiderData.userCardInfo.cardCVV = txtCardDetailsCVV.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear = txtCardDetailsExpYear.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardCVV = txtCardDetailsCVV.getText().toString();
 
 
       super.onBackPressed();

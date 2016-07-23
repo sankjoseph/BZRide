@@ -21,7 +21,12 @@ public class Utils {
     public static final String LOGIN_URL = "/login/";
     public static final String REGISTER_URL = "/register.php";*/
 
-    public static final String BASE_URL= "http://www.intimationsoftware.com/ws/bzridedummy";
+    //public static final String BASE_URL= "http://www.intimationsoftware.com/ws/bzridedummy";
+
+    //public static final String BASE_URL= "http://intimationsoftware.com/bzride/web/bzride";
+
+    public static final String BASE_URL= "http://bzride.com/bzride";
+
     public static final String LOGIN_DRIVER_URL = "/LoginDriver.php";
     public static final String LOGIN_RIDER_URL = "/LoginRider.php";
     public static final String REGISTER_RIDER_URL = "/RegisterRider.php";

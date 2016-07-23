@@ -1,16 +1,25 @@
 package bzride.com.bzride;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class registeruser extends AppCompatActivity  implements View.OnClickListener, OnPostExecuteListener {
     private EditText firstName;
+    private EditText middleName;
+
     private EditText lastName;
     private EditText email;
     private EditText pwd;
@@ -18,7 +27,9 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
     private EditText address1;
     private EditText address2;
     private EditText PhoneNumber;
-
+    private String deviceid;
+    private ImageView imgView;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +37,39 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
         findViewById(R.id.btnRegisterRiderAction).setOnClickListener(this);
         findViewById(R.id.btnRiderCardDetail).setOnClickListener(this);
 
+        imgView = (ImageView) findViewById(R.id.imgRiderImageView);
+
+        Context context = registeruser.this;
+        PackageManager packageManager = context.getPackageManager();
+        if(packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) == false){
+            Toast.makeText(registeruser.this, "This device does not have a camera.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
+        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }*/
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 0) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+            }
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                imgView.setImageBitmap(photo);
+            }
+        }
     }
 
     @Override
@@ -45,16 +89,18 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
     }
     private void registeraction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            firstName = (EditText)findViewById(R.id.txtdriverFirstName);
-            lastName = (EditText)findViewById(R.id.txtdriverLastName);
-            email = (EditText)findViewById(R.id.txtdriveremail);
-            pwd = (EditText)findViewById(R.id.txtdriverPwd);
-            confirmpwd = (EditText)findViewById(R.id.txtdriverConfirmPwd);
-            address1 = (EditText)findViewById(R.id.txtdriverAddress1);
-            address2 = (EditText)findViewById(R.id.txtdriverAddress2);
-            PhoneNumber = (EditText)findViewById(R.id.txtdriverPhoneNumber);
+            firstName = (EditText)findViewById(R.id.txtRiderFirstName);
+            middleName = (EditText)findViewById(R.id.txtRiderMiddleName);
+            lastName = (EditText)findViewById(R.id.txtRiderLastName);
+            email = (EditText)findViewById(R.id.txtrideremail);
+            pwd = (EditText)findViewById(R.id.txtriderPwd);
+            confirmpwd = (EditText)findViewById(R.id.txtriderConfirmPwd);
+            address1 = (EditText)findViewById(R.id.txtriderAddress1);
+            address2 = (EditText)findViewById(R.id.txtriderAddress2);
+            PhoneNumber = (EditText)findViewById(R.id.txtriderPhoneNumber);
 
             BZAppManager.getInstance().bzRiderData.FirstName = firstName.getText().toString();
+            BZAppManager.getInstance().bzRiderData.MiddleName = middleName.getText().toString();
             BZAppManager.getInstance().bzRiderData.LastName = lastName.getText().toString();
             BZAppManager.getInstance().bzRiderData.Email = email.getText().toString();
             BZAppManager.getInstance().bzRiderData.Password = pwd.getText().toString();
@@ -72,6 +118,9 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
             if (BZAppManager.getInstance().isDriver == false) {
                 String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL ;
                 String params = BZAppManager.getInstance().getRiderDataParamsFlat();
+
+                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                params = params + "&deviceId=" + deviceid;
                 api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
             }
 
@@ -84,6 +133,9 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
 
         RegisterResp response = (RegisterResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+
+            BZAppManager.getInstance().currentUserId = response.Id;
+
             Intent myIntent = new Intent(registeruser.this, Home.class);
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             registeruser.this.startActivity(myIntent);

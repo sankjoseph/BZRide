@@ -5,6 +5,7 @@ package bzride.com.bzride;
  */
 public class BZCommonUserInfo {
     public String FirstName;
+    public String MiddleName;
     public String LastName;
     public String Email;
     public String Password;
@@ -17,8 +18,9 @@ public class BZCommonUserInfo {
     public String currentlat;
     public String currentlong;
     public BZCardInfo cardData;
-    /*isLicenseAccepted, isActive,status(A,O,D,V),
-    ,,
-    CreatedByDate*/
+    public BZCommonUserInfo()
+    {
+        cardData = new BZCardInfo();
+    }
 
 }

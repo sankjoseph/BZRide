@@ -64,7 +64,13 @@ public class BZRESTApiHandler {
             protected Void doInBackground(Void... voids) {
                 String reader = GENERICRESTApiHandler.postData(mUrl, mParams);
                 if (reader != null) {
-                     model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
+                    try {
+                        model = new GsonBuilder().create().fromJson(reader, ModelClassMapper.getModelClass(mKey));
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
                 return null;
             }
@@ -106,12 +112,13 @@ public class BZRESTApiHandler {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Reader reader = GENERICRESTApiHandler.getData(mUrl);
+                String reader  = GENERICRESTApiHandler.getData(mUrl);
                 if (reader != null) {
-                    model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
                     try {
-                        reader.close();
-                    } catch (IOException e) {
+                        model = new GsonBuilder().create().fromJson(reader,  ModelClassMapper.getModelClass(mKey));
+                    }
+                    catch (Exception e)
+                    {
                         e.printStackTrace();
                     }
                 }

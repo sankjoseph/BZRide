@@ -12,4 +12,9 @@ public class BZCardInfo {
     public String cardExpiryMonth;
     public String cardExpiryYear;
     public String cardCVV;
+    public String cardToken;
+    public BZCardInfo()
+    {
+
+    }
 }

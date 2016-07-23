@@ -8,4 +8,8 @@ public class BZVehicleRegInfo {
     public String vehicleRegistrationState;
     public String vehicledateOfRegistration;
     public String vehicledateOfExpiry;
+    public BZVehicleRegInfo()
+    {
+
+    }
 }

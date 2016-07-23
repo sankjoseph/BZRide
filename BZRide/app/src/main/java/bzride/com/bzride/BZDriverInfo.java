@@ -9,7 +9,6 @@ public class BZDriverInfo extends BZCommonUserInfo {
     public BZLicenseInfo driverLicenseInfo;
     public BZVehicleRegInfo driverVehRegInfo;
     public BZVehicleInfo driverVehicleInfo;
-    public BZCardInfo userCardInfo;
 
     public BZDriverInfo()
     {
@@ -18,6 +17,5 @@ public class BZDriverInfo extends BZCommonUserInfo {
         driverLicenseInfo = new BZLicenseInfo();
         driverVehRegInfo = new BZVehicleRegInfo();
         driverVehicleInfo = new BZVehicleInfo();
-        userCardInfo = new BZCardInfo();
     }
 }

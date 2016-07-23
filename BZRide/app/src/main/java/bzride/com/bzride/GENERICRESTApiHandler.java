@@ -27,7 +27,7 @@ public class GENERICRESTApiHandler {
     private static String stringReadFromReader;
 
 
-    public static Reader getData(String url) {
+    public static String getData(String url) {
         InputStream in = null;
         try {
             URL httpUrl = new URL(url);
@@ -39,13 +39,24 @@ public class GENERICRESTApiHandler {
             if (connection.getResponseCode() == 200) {
                 in = new BufferedInputStream(connection.getInputStream());
                 mReader = new InputStreamReader(in);
+                StringBuilder builder = new StringBuilder();
+                int charsRead = -1;
+                char[] chars = new char[100];
+                do{
+                    charsRead = mReader.read(chars,0,chars.length);
+                    //if we have valid chars, append them to end of string.
+                    if(charsRead>0)
+                        builder.append(chars,0,charsRead);
+                }while(charsRead>0);
+                stringReadFromReader = builder.toString();
+                System.out.println("String read = "+stringReadFromReader);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return mReader;
+        return stringReadFromReader;
     }
 
     /////postdata

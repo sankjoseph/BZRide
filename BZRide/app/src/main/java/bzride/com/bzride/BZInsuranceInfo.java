@@ -8,4 +8,8 @@ public class BZInsuranceInfo {
     public String insuranceNumber;
     public String insurancedateFrom;
     public String insurancedateOfExpiry;
+    public BZInsuranceInfo()
+    {
+
+    }
 }

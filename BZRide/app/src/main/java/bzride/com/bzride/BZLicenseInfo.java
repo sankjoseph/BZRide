@@ -8,4 +8,8 @@ public class BZLicenseInfo {
     public String licensestateIssued;
     public String licensedateOfIssue;
     public String licensedateofExpiry;
+    public BZLicenseInfo()
+    {
+
+    }
 }
