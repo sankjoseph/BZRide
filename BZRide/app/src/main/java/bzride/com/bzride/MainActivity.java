@@ -44,15 +44,21 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BZAppManager.getInstance().isDriver = true;
+        //String pass = "Password1";
+        //String encryptedPass =  Utils.md5encrypt(pass);
+
+        /*BZAppManager.getInstance().isDriver = false;
         Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
+        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        MainActivity.this.startActivity(myIntent);*/
+
+        Intent myIntent = new Intent(MainActivity.this, Home.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);
 
-
         /*Intent myIntent = new Intent(MainActivity.this, BZLanding.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        MainActivity.this.startActivity(myIntent);*////good code
+        MainActivity.this.startActivity(myIntent);///good code*/
 
     }
 }

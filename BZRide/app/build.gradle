@@ -27,5 +27,8 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.google.code.gson:gson:+'
     compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.google.android.gms:play-services-plus:9.2.1'
+    compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.google.android.gms:play-services-places:9.2.1'
     //compile 'com.stripe:stripe-android:+'
 }

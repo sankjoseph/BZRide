@@ -12,13 +12,10 @@
     <h3>CONTACT US</h3>
     <p>Need to help creating your account, or have problem with your ride / service, we are available 24x7. You can contact us directly on the number provided or send us an email with details. All correspondence / questions will be answered within 48-72 hours. </p>
     
-    <b><p>For Drivers: - Call us at (000) 000 0000, or send us an email to partner@bzride.com.</p></b>
-    <b><p>For Riders: - Call us at (000) 000 0000, or send us and email to rider@bzride.com.</p></b>
+    <b><p>For Drivers: - send us an email to partner@bzride.com.</p></b>
+    <b><p>For Riders: - send us an email to rider@bzride.com.</p></b>
     
-    <ul class="header_menu">
-        <li><a href="register_drive.php">Register To Drive </a></li>
-        <li><a href="register_newuser.php">Register New User</a></li>
-    </ul>
+ <?php include("registermenu.php"); ?> 
     
     
   </div>

@@ -147,22 +147,20 @@ CREATE TABLE IF NOT EXISTS `bztbl_reportedproblems` (
 -- Table structure for table `bztbl_riderequests`
 --
 
-CREATE TABLE IF NOT EXISTS `bztbl_riderequests` (
+	CREATE TABLE IF NOT EXISTS `bztbl_riderequests` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
   `RequestType` varchar(2) NOT NULL,
   `RequestorId` varchar(10) NOT NULL,
   `DriverId` varchar(10) NOT NULL,
   `StartLocation` varchar(200) NOT NULL,
   `EndLocation` varchar(200) NOT NULL,
-  `StartLat` varchar(50) NOT NULL,
-  `StartLong` varchar(50) NOT NULL,
-  `EndLat` varchar(50) NOT NULL,
-  `EndLong` varchar(50) NOT NULL,
+  `StartLat` FLOAT,
+  `StartLong` FLOAT,
+  `EndLat` FLOAT,
+  `EndLong` FLOAT,
   `Status` varchar(2) NOT NULL,
-  `RideDate` datetime NOT NULL,
-  `RideTime` datetime NOT NULL,
-  `ActualRideDate` datetime NOT NULL,
-  `ActualRideTime` datetime NOT NULL,
+  `RideDateTime` datetime NOT NULL,
+  `ActualRideDateTime` datetime NOT NULL,
   `CreatedByDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;

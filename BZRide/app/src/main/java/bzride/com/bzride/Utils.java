@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +26,10 @@ public class Utils {
     //public static final String BASE_URL= "http://www.intimationsoftware.com/ws/bzridedummy";
 
     //public static final String BASE_URL= "http://intimationsoftware.com/bzride/web/bzride";
+
+    public static final String API_NOT_CONNECTED = "Google API not connected";
+    public static final String SOMETHING_WENT_WRONG = "OOPs!!! Something went wrong...";
+    public static String PlacesTag = "Google Places Auto Complete";
 
     public static final String BASE_URL= "http://bzride.com/bzride";
 
@@ -75,5 +81,29 @@ public class Utils {
             }
         }
         return false;
+    }
+    public static final String md5encrypt(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

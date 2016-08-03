@@ -156,11 +156,7 @@
  </table>
 
 <!--------------------------------------------------------------------------------------------------------------->    
-    <ul class="header_menu">
-        <li><a href="register_drive.php">Register To Drive </a></li>
-        <li><a href="register_newuser.php">Register New User</a></li>
-    </ul>
-    
+ <?php include("registermenu.php"); ?> 
     
   </div>
 

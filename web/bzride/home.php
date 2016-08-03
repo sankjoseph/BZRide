@@ -8,17 +8,11 @@
 <body>
  <?php include("header.php"); ?> 
   <div class="div_center">
-    
-    <h3>Convenience</h3>
-    <p>Book within seconds and get instant confirmations. Easy online payments or cash on delivery. Booking car rentals will never be a headache again!</p>
-    <h3>Quality</h3>
-    <p>Our cars are audited for cleanliness, safety and comfort. Our drivers are well trained and reliable. Sit back and enjoy the BZride experience! </p>
-    
-    <ul class="header_menu">
-        <li><a href="register_drive.php">Register To Drive </a></li>
-        <li><a href="register_newuser.php">Register New User</a></li>
-    </ul>
-    
+    <p> Where you want to go, after a hectic work day, or when your car struck? Always available to get you the place you wanted to be.</p>
+	<P> Download the BZ Ride App and explore it.</P>
+   
+   <p> Want to make an extra income on your free time, <a href="register_drive.php">Register To Drive </a>. Be your own Boss with freedom to choose to work when you want, where you want. <p>
+   <p> Always have problem to get you where you wanted to be, or tired of driving around the city, have difficulties finding perfect parking spot, download the BZ Ride App, and <a href="register_newuser.php">Register for Service</a>.</p>
     
   </div>
 

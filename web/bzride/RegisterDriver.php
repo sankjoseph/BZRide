@@ -39,9 +39,13 @@ $driver_details="insert into bztbl_drivers values('', $firstName, $middleName, $
 									
 LOGDATA($driver_details);
 $result = mysql_query($driver_details,$conn);
+if (!$result) {
+	showError(mysql_error());
+}
+
 $last_id = mysql_insert_id();
 LOGDATA("last inserted driver =".$last_id );
-if (!$result) {
+if (!$last_id) {
 	showError(mysql_error());
 }
 

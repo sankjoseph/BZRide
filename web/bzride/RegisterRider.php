@@ -1,7 +1,7 @@
 <?php
-
-include("includes/db.php");
 include("includes/common.php");
+include("includes/db.php");
+
  
  // Check connection
 if (!$conn) {
@@ -44,7 +44,7 @@ $last_id = mysql_insert_id();
 LOGDATA("last inserted rider =".$last_id );
 
 
-if (!$result) {
+if (!$last_id) {
 	showError(mysql_error());
 }
 $data = array();
