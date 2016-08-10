@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">BZRide</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">login</string>
+    <string name="title_activity_registeruser">registeruser</string>
+    <string name="title_activity_usercarddetails">usercarddetails</string>
+    <string name="title_activity_eul">EULA</string>
+
+    <string-array name="bzmenuitems">
+        <item>Profile</item>
+        <item>Card Info</item>
+        <item>Last Trip</item>
+        <item>Report a Problem</item>
+        <item>Contact</item>
+        <item>About BZRide - V 1.0.0</item>
+    </string-array>
+    <string name="title_activity_driver_vehicle_info">driverVehicleInfo</string>
+    <string name="title_activity_driver_insurance_info">driverInsuranceInfo</string>
+    <string name="title_activity_driver_lic_info">driverLicInfo</string>
+    <string name="title_activity_driver_vehicle_reg_info">driverVehicleRegInfo</string>
+    <string name="title_activity_register_driver">registerDriver</string>
+    <string name="title_activity_driver_bank_info">driverBankInfo</string>
+    <string name="title_activity_bzlanding">BZLanding</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+</resources>
