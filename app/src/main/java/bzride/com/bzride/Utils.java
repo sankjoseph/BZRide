@@ -3,9 +3,16 @@ package bzride.com.bzride;
 /**
  * Created by Santhosh.joseph on 29-06-2016.
  */
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import java.security.MessageDigest;
@@ -50,6 +57,8 @@ public class Utils {
     public static final String MSG_TITLE = "BZRide";
     public static final String MSG_NO_INTERNET = "You are not connected to Internet. Please try later.";
     public static final String MSG_ERROR_SERVER = "Some error occured while connecting to server.";
+
+
 
     public static void showInfoDialog(Context c, String title, String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(c)

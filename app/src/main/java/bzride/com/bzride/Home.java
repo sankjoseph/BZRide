@@ -1,8 +1,12 @@
 package bzride.com.bzride;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
@@ -11,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,17 +41,23 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 //OnMapReadyCallback
 public class Home extends FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,
+        GoogleMap.OnMarkerClickListener {
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
@@ -54,27 +65,35 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     protected  GoogleApiClient mGoogleApiClient;
     private boolean connectedstatus;
     private static final LatLngBounds BOUNDS_INDIA  = new LatLngBounds (new LatLng(-0,0), new LatLng(-0,0));
-    private EditText mTextATEdit;
-    private RecyclerView mrecyclerView;
-    private LinearLayoutManager layoutMgr;
-    private ImageView cleartext;
-    private PlacesAutoCompleteAdapter  at_adapter;
+
+    LatLng m_latLng;
+
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mTextATEdit = (EditText)findViewById(R.id.txtSearchAddress);
-        cleartext = (ImageView)findViewById(R.id.clearText);
-        cleartext.setOnClickListener(this);
-        mrecyclerView = (RecyclerView) findViewById(R.id.recycler_view_search);
+
+        findViewById(R.id.btnRequest).setOnClickListener(this);
+        findViewById(R.id.btnSchedule).setOnClickListener(this);
+        findViewById(R.id.btnPickUp).setOnClickListener(this);
+        findViewById(R.id.btnDrop).setOnClickListener(this);
+
+
+        //map related old code
 
         FragmentManager myFragmentManager = getSupportFragmentManager();
-
         SupportMapFragment mySupportMapFragment = (SupportMapFragment)myFragmentManager.findFragmentById(R.id.map);
-
         mySupportMapFragment.getMapAsync(this);
+
+
+        /*FragmentManager myFragmentManager = getSupportFragmentManager();
+        CustomMapFragment mySupportMapFragment = (CustomMapFragment)myFragmentManager.findFragmentById(R.id.mapCustom);
+        mySupportMapFragment.onCreate(savedInstanceState);*/
+       // mySupportMapFragment.getMapAsync(this);
+
+
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -95,71 +114,15 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         catch (Exception e) {
             e.printStackTrace();
         }
-        at_adapter = new PlacesAutoCompleteAdapter (this, R.layout.search_row,
-                mGoogleApiClient, BOUNDS_INDIA, null);
 
-        layoutMgr = new LinearLayoutManager(this);
-        mrecyclerView.setLayoutManager(layoutMgr);
-        mrecyclerView.setAdapter(at_adapter);
-
-        mTextATEdit.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                if (!s.toString().equals("")) {
-                    if (connectedstatus) {
-                        at_adapter.getFilter().filter(s.toString());
-                    } else {
-                        Toast.makeText(getApplicationContext(), Utils.API_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
-                        Log.e(Utils.PlacesTag, Utils.API_NOT_CONNECTED);
-
-                    }
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-            }
-
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        mrecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        final PlacesAutoCompleteAdapter.PlaceAutocomplete item = at_adapter.getItem(position);
-                        final String placeId = String.valueOf(item.placeId);
-                        Log.i("TAG", "Autocomplete item selected: " + item.description);
-                        /*
-                             Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
-                         */
-
-                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                                .getPlaceById(mGoogleApiClient, placeId);
-                        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                            @Override
-                            public void onResult(PlaceBuffer places) {
-                                if (places.getCount() == 1) {
-                                    //Do the things here on Click.....
-                                    Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
-                                    //move camera
-                                    m_map.moveCamera(CameraUpdateFactory.newLatLng(places.get(0).getLatLng()));
-
-                                } else {
-                                    Toast.makeText(getApplicationContext(), Utils.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                        Log.i("TAG", "Clicked: " + item.description);
-                        Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
-                    }
-                })
-        );
     }
+    @Override
+    public boolean onMarkerClick(Marker arg0) {
 
+
+        arg0.showInfoWindow();
+        return false;
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         m_map = googleMap;
@@ -172,9 +135,12 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         settings.setZoomControlsEnabled(true);
         settings.setZoomGesturesEnabled(true);
         settings.setMyLocationButtonEnabled(true);
+        settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
-
         m_map.setTrafficEnabled(true);
+
+        m_map.setOnMarkerClickListener(this);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             m_map.setMyLocationEnabled(true);
@@ -204,7 +170,7 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+       public void onLocationChanged(Location location) {
         handleNewLocation(location);
     }
 
@@ -237,21 +203,49 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
 
     }
 
+    public String getAddress(LatLng latlong) {
+        String addressReturn = "";
+        Geocoder geocoder = new Geocoder(Home.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latlong.latitude, latlong.longitude, 1);
+            Address obj = addresses.get(0);
+            String add = obj.getAddressLine(0);
+            /*add = add + "\n" + obj.getCountryName();
+            add = add + "\n" + obj.getCountryCode();
+            add = add + "\n" + obj.getAdminArea();
+            add = add + "\n" + obj.getPostalCode();
+            add = add + "\n" + obj.getSubAdminArea();
+            add = add + "\n" + obj.getLocality();
+            add = add + "\n" + obj.getSubThoroughfare();*/
+
+            Log.v("IGA", "Address" + add);
+            addressReturn = add;
+
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return addressReturn;
+    }
     private void handleNewLocation(Location location) {
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+        m_latLng = new LatLng(currentLatitude, currentLongitude);
+
+       String mylocationAddress = getAddress(m_latLng);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
         MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title("I am here!");
+                .position(m_latLng)
+                .title(mylocationAddress);
         m_map.addMarker(options);
         //m_map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         float zoomLevel = 16; //This goes up to 21
-        m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+        m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(m_latLng, zoomLevel));
 
     }
     @Override
@@ -275,12 +269,68 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
                 m_map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
             }
     }
-
-
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnRequest:
+                requestNowAction();
+                break;
+            case R.id.btnSchedule:
+                scheduleNowAction();
+                break;
+            case R.id.btnPickUp:
+                PickUpAction();
+                break;
+            case R.id.btnDrop:
+                DropAction();
+                break;
+        }
+    }
+    private void PickUpAction() {
+        final CharSequence[] items = { "Automatically", "Manually",
+                "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+        builder.setTitle("Select Pickup location!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                String userChoosenTask;
+
+                if (items[item].equals("Automatically")) {
+                    //start location as m_latLng
+                } else if (items[item].equals("Manually")) {
+                    //show place finder
+                    Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                    //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    myIntent.putExtra("LocationOption", "PickUp");
+                    Home.this.startActivity(myIntent);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
 
     }
+    private void DropAction() {
+        //show place finder
+        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        myIntent.putExtra("LocationOption", "Drop");
+        Home.this.startActivity(myIntent);
+
+    }
+    private void scheduleNowAction() {
+
+    }
+    private void requestNowAction() {
+        //check for valid pickup and drop
+        //call web service
+
+
+
+    }
+
     public GoogleApiClient getAPIClient() {
         return mGoogleApiClient;
     }

@@ -2,6 +2,8 @@ package bzride.com.bzride;
 
 import android.provider.Settings;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Santhosh.Joseph on 01-07-2016.
  */
@@ -11,7 +13,8 @@ public class BZAppManager {
     public String currentUserId;
     public BZDriverInfo bzDriverData;
     public BZRiderInfo bzRiderData;
-
+    public LatLng selectedPickUpLocation;
+    public LatLng selectedDropLocation;
     public  String getDriverDataParamsFlat()
     {
         String retData = "";

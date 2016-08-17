@@ -5,14 +5,18 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  android:maxSdkVersion="18" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="bzride.com.bzride.permission.MAPS_RECEIVE" />
-
 
     <application
         android:allowBackup="true"
@@ -23,14 +27,13 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB0Vcr-J6ZqU1qg-yQ04rP2avZdpBBBsA8"/>
+            android:value="AIzaSyB0Vcr-J6ZqU1qg-yQ04rP2avZdpBBBsA8" />
 
         <uses-feature
             android:glEsVersion="0x00020000"
-            android:required="true"/>
+            android:required="true" />
 
         <activity
             android:name=".MainActivity"
@@ -99,6 +102,11 @@
         <activity
             android:name=".BZLanding"
             android:label="@string/title_activity_bzlanding"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".PlaceFinder"
+            android:label="@string/title_activity_place_finder"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
