@@ -47,14 +47,21 @@ public class MainActivity extends AppCompatActivity  {
         //String pass = "Password1";
         //String encryptedPass =  Utils.md5encrypt(pass);
 
-        /*BZAppManager.getInstance().isDriver = false;
-        Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
+        BZAppManager.getInstance().isDriver = true;
+        /*Intent myIntent = new Intent(MainActivity.this, registerDriver.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(myIntent);*/
 
-        Intent myIntent = new Intent(MainActivity.this, Home.class);
-        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        MainActivity.this.startActivity(myIntent);
+        if (BZAppManager.getInstance().isDriver ) {
+            Intent myIntent = new Intent(MainActivity.this, HomeDriver.class);
+            //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
+            MainActivity.this.startActivity(myIntent);
+        }
+        else {
+            Intent myIntent = new Intent(MainActivity.this, Home.class);
+            //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
+            MainActivity.this.startActivity(myIntent);
+        }
 
         /*Intent myIntent = new Intent(MainActivity.this, BZLanding.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

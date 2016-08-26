@@ -6,20 +6,18 @@ session_start();
 $bz_req_url = $BASE_URL . 'RequestHandler.php?';
 $ch =  curl_init($bz_req_url);
 // insert request in DB
-$requestorId = $_POST["requestorId"];
-$startLocation = $_POST["startLocation"];
-$endLocation = $_POST["endLocation"];
-$startLat = $_POST["startLat"];
-$startLong = $_POST["startLong"];
-$endLat = $_POST["endLat"];
-$endLong = $_POST["endLong"];
+$requestorId = getIfSet($_REQUEST['requestorId']);
+$startLocation = getIfSet($_REQUEST['startLocation']);
+$endLocation = getIfSet($_REQUEST['endLocation']);
+$startLat = getIfSet($_REQUEST['startLat']);
+$startLong = getIfSet($_REQUEST['startLong']);
+$endLat = getIfSet($_REQUEST['endLat']);
+$endLong = getIfSet($_REQUEST['endLong']);
 
-
-	
-// insert ride request values in DB
-$ride_request_details="insert into bztbl_riderequests values('', 'I', $requestorId, '',$startLocation, $endLocation, $startLat,$startLong,$endLat,$endLong
-									'', '', '', now())";
-									
+// insert ride request values in DB - I for immediate
+$ride_request_details="insert into bztbl_riderequests values('', 'I', $requestorId, '',$startLocation, $endLocation, 
+$startLat,$startLong,$endLat,$endLong,'', '', '', now())";
+																
 LOGDATA($ride_request_details);
 $result = mysql_query($ride_request_details,$conn);
 if (!$result) {

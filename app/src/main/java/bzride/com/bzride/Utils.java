@@ -40,6 +40,8 @@ public class Utils {
 
     public static final String BASE_URL= "http://bzride.com/bzride";
 
+    public static final String RIDE_REQUEST_I_URL = "/CreateRideRequestImmediate.php";
+
     public static final String LOGIN_DRIVER_URL = "/LoginDriver.php";
     public static final String LOGIN_RIDER_URL = "/LoginRider.php";
     public static final String REGISTER_RIDER_URL = "/RegisterRider.php";

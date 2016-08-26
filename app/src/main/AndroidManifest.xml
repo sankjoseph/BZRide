@@ -109,6 +109,11 @@
             android:label="@string/title_activity_place_finder"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".HomeDriver"
+            android:label="@string/title_activity_home_driver"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -9,6 +9,9 @@ public class ModelClassMapper {
     private static HashMap<String, Class> classHashMap;
     static {
         classHashMap = new HashMap<>();
+
+        classHashMap.put(Utils.RIDE_REQUEST_I_URL, BZJSONResp.class);
+
         classHashMap.put(Utils.LOGIN_RIDER_URL, LoginResp.class);
         classHashMap.put(Utils.LOGIN_DRIVER_URL, LoginResp.class);
         classHashMap.put(Utils.REGISTER_DRIVER_URL, RegisterResp.class);

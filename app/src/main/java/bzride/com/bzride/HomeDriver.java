@@ -1,47 +1,34 @@
 package bzride.com.bzride;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.provider.SyncStateContract;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -54,45 +41,45 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-//OnMapReadyCallback
-public class Home extends FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,
+public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener, OnPostExecuteListener,
         GoogleMap.OnMarkerClickListener {
+
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
 
     protected  GoogleApiClient mGoogleApiClient;
     private boolean connectedstatus;
+    private boolean isOffline;
     private static final LatLngBounds BOUNDS_INDIA  = new LatLngBounds (new LatLng(-0,0), new LatLng(-0,0));
 
     LatLng m_latLng;
 
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_driver);
+        isOffline = false;
+        findViewById(R.id.btnToggleOffline).setOnClickListener(this);
+        findViewById(R.id.btnFinish).setOnClickListener(this);
 
-        findViewById(R.id.btnRequest).setOnClickListener(this);
-        findViewById(R.id.btnSchedule).setOnClickListener(this);
-        findViewById(R.id.btnPickUp).setOnClickListener(this);
-        findViewById(R.id.btnDrop).setOnClickListener(this);
+        BZRESTApiHandler api = new BZRESTApiHandler(this);
+        api.setMessage("Creating Ride request...");
+        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL + "?requestorId="+ "1" + "&startLocation=" + "roseville" + "&endLocation=" + "sacramento" +
+                "&startLat=" + 38.7521 +  "&startLong=" + 121.2880 +
+                "&endLat=" + 38.5816 +  "&endLong=" + 121.4944;
+        api.get(urlCall, Utils.RIDE_REQUEST_I_URL);
 
 
-        //map related old code
+        /// get offline status and set;
 
+        //?isOffline =
         FragmentManager myFragmentManager = getSupportFragmentManager();
-        SupportMapFragment mySupportMapFragment = (SupportMapFragment)myFragmentManager.findFragmentById(R.id.map);
+        SupportMapFragment mySupportMapFragment = (SupportMapFragment)myFragmentManager.findFragmentById(R.id.mapdriver);
         mySupportMapFragment.getMapAsync(this);
-
-
-        /*FragmentManager myFragmentManager = getSupportFragmentManager();
-        CustomMapFragment mySupportMapFragment = (CustomMapFragment)myFragmentManager.findFragmentById(R.id.mapCustom);
-        mySupportMapFragment.onCreate(savedInstanceState);*/
-       // mySupportMapFragment.getMapAsync(this);
-
-
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -113,7 +100,23 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public void onSuccess(BZJSONResp model) {
 
+        BZJSONResp response = (BZJSONResp)model;
+        if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
+        }
+    }
+
+
+    @Override
+    public void onFailure() {
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);
     }
     @Override
     public boolean onMarkerClick(Marker arg0) {
@@ -151,9 +154,9 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         connectedstatus = true;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        ACCESS_MAPS_PERMISSIONS_REQUEST);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    ACCESS_MAPS_PERMISSIONS_REQUEST);
         }
         else {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -169,7 +172,7 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     }
 
     @Override
-       public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {
         handleNewLocation(location);
     }
 
@@ -204,7 +207,7 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
 
     public String getAddress(LatLng latlong) {
         String addressReturn = "";
-        Geocoder geocoder = new Geocoder(Home.this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(HomeDriver.this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latlong.latitude, latlong.longitude, 1);
             Address obj = addresses.get(0);
@@ -265,72 +268,38 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     }
 
     private void setUpMapIfNeeded() {
-            if (m_map != null) {
-                m_map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-            }
+        if (m_map != null) {
+            m_map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        }
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnRequest:
-                requestNowAction();
+            case R.id.btnToggleOffline:
+                ToggleAction();
                 break;
-            case R.id.btnSchedule:
-                scheduleNowAction();
-                break;
-            case R.id.btnPickUp:
-                PickUpAction();
-                break;
-            case R.id.btnDrop:
-                DropAction();
+            case R.id.btnFinish:
+                FinishAction();
                 break;
         }
     }
-    private void PickUpAction() {
-        final CharSequence[] items = { "Automatically", "Manually",
-                "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-        builder.setTitle("Select Pickup location!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                String userChoosenTask;
 
-                if (items[item].equals("Automatically")) {
-                    //start location as m_latLng
-                } else if (items[item].equals("Manually")) {
-                    //show place finder
-                    Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-                    //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    myIntent.putExtra("LocationOption", "PickUp");
-                    Home.this.startActivity(myIntent);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-
-    }
-    private void DropAction() {
-        //show place finder
-        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        myIntent.putExtra("LocationOption", "Drop");
-        Home.this.startActivity(myIntent);
-
-    }
-    private void scheduleNowAction() {
-    //call web service
-    }
-    private void requestNowAction() {
-        //check for valid pickup and drop
-        //call web service
-
-
-
+    private void ToggleAction() {
+        if (isOffline)
+        {
+            //change online and call webs ervice
+            isOffline = false;
+        }
+        else
+        {
+            //change online and call webs ervice
+            isOffline = true;
+        }
     }
 
+    private void FinishAction() {
+        // call service for endride
+    }
     public GoogleApiClient getAPIClient() {
         return mGoogleApiClient;
     }
