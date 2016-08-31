@@ -3,8 +3,8 @@ include("includes/common.php");
 include("includes/db.php");
 session_start();
 // call web service for putting data
-$bz_req_url = $BASE_URL . 'RequestHandler.php?';
-$ch =  curl_init($bz_req_url);
+$bz_req_url = $BASE_URL . 'RequestHandler.php';
+$ch =  curl_init();
 // insert request in DB
 $requestorId = getIfSet($_REQUEST['requestorId']);
 $startLocation = getIfSet($_REQUEST['startLocation']);
@@ -30,10 +30,12 @@ if (!$last_id) {
 	showError(mysql_error());
 }
 
-$postData = array('rideRequestId' => $last_id,
-					'startLat' => $_POST["startLat"],
-					'startLong' => $_POST["startLong"]	);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);																						
+$postData = http_build_query(array('rideRequestId' => $last_id,
+					'startLat' => getIfSet($_REQUEST['startLat']),
+					'startLong' => getIfSet($_REQUEST['startLong'])	));
+curl_setopt($ch, CURLOPT_URL, $bz_req_url);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+curl_setopt($ch, CURLOPT_POST, 1);																							
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -41,7 +43,10 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 $result = curl_exec($ch);
- if (preg_match("/OK/i", $result)) {
-        showError("Failed to handle the ride request, Please retry.");
-    } 
+
+showSuccess("Immediate Ride request successfully created at server.");
+		
+// if (preg_match("/OK/i", $result)) {
+  //      showError("Failed to handle the ride request, Please retry.");
+    //} 
 ?>

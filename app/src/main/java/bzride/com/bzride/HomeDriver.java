@@ -68,12 +68,14 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         BZRESTApiHandler api = new BZRESTApiHandler(this);
         api.setMessage("Creating Ride request...");
-        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL + "?requestorId="+ "1" + "&startLocation=" + "roseville" + "&endLocation=" + "sacramento" +
+        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+
+        String params = "&requestorId="+ "1" + "&startLocation=" + "roseville" + "&endLocation=" + "sacramento" +
                 "&startLat=" + 38.7521 +  "&startLong=" + 121.2880 +
                 "&endLat=" + 38.5816 +  "&endLong=" + 121.4944;
-        api.get(urlCall, Utils.RIDE_REQUEST_I_URL);
 
-
+        api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
+        api.setPostExecuteListener(this);
         /// get offline status and set;
 
         //?isOffline =
