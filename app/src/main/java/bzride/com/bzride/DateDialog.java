@@ -1,5 +1,6 @@
 package bzride.com.bzride;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -19,6 +20,7 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
     {
 
     }
+    @SuppressLint("ValidFragment")
     public DateDialog(View view){
         txtDate = (EditText) view;
     }

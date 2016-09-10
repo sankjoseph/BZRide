@@ -36,9 +36,9 @@ public class CustomMapView extends MapView {
     public CustomMapView(Context context, AttributeSet attrs, int style) {
         super(context, attrs, style);
     }
-    public GoogleMap getMap() {
-        return googleMap;
-    }
+   /*  public GoogleMap getMap() {
+        return googleMap;//todo
+    }*/
     public CustomMapView(Context context, GoogleMapOptions options) {
         super(context, options);
     }

@@ -5,44 +5,47 @@ session_start();
 $bz_req_url = $BASE_URL . 'RegisterDriver.php?';
 $ch =  curl_init($bz_req_url);
 
+LOGDATA($_POST["txtphone"]);
 $postData = array('firstName' => $_POST["txtfirstname"], 
-											'middleName' => $_POST["txtmiddlename"],
-											'lastName' => $_POST["txtlastname"],
-											'email' => $_POST["txtemail"],
-											'password' => $_POST["txtpass"],
-											'address1' => $_POST["txtaddr1"],
-											'address2' => $_POST["txtaddr2"],
-											'phone' => $_POST["txtphone"],
-											
-											'ssn' => $_POST["txtssn"],
-											
-											'deviceId' => '',
-											'deviceType' => '',
-											'cardType' => '',
-											'cardProvider' => '',
-											'cardBillingAddress1' => '',
-											'cardBillingAddress2' => '',
-											'cardToken' => '',
-			
-								
-											'vModel' => $_POST["txtmodel"],
-											'vMake' => $_POST["txtmake"],
-											'vColor' => $_POST["txtcolor"],
-											'vYear' => $_POST["txtyear"],
-											'vNumber' => $_POST["txtregno"],
-											'vDateRegistered' => $_POST["txtregdate"],
-											'vStateRegistered' => $_POST["txtregstate"],
-											'vExpiryDate' => $_POST["txtregexpiry"],
-											
-											'insCompany' => $_POST["txtinscompany"],
-											'insPolicyNumber' => $_POST["txtpolicyno"],
-											'insValidFromDate' => $_POST["txtinsdate"],
-											'insExpDate' => $_POST["txtinsexpiry"],
-											
-											'licenseNumber' => $_POST["txtlicenseno"],
-											'licenceStateIssued' => $_POST["txtlicensestate"],
-											'licenseDateIssued' => $_POST["txtlicenseissue"],
-											'licenseExpDate' => $_POST["txtlicenseexpiry"]	);
+				'middleName' => $_POST["txtmiddlename"],
+				'lastName' => $_POST["txtlastname"],
+				'email' => $_POST["txtemail"],
+				'password' => $_POST["txtpass"],
+				'address1' => $_POST["txtaddr1"],
+				'address2' => $_POST["txtaddr2"],
+				'city' => $_POST["txtcity"],
+				'state' => $_POST["txtstate"],
+				'zip' => $_POST["txtzip"],
+				'phone' => $_POST["txtphone"],
+				'ssn' => $_POST["txtssn"],
+				
+				'deviceId' => '',
+				'deviceType' => '',
+				'cardType' => '',
+				'cardProvider' => '',
+				'cardBillingAddress1' => '',
+				'cardBillingAddress2' => '',
+				'cardToken' => '',
+
+	
+				'vModel' => $_POST["txtmodel"],
+				'vMake' => $_POST["txtmake"],
+				'vColor' => $_POST["txtcolor"],
+				'vYear' => $_POST["txtyear"],
+				'vNumber' => $_POST["txtregno"],
+				'vDateRegistered' => $_POST["txtregdate"],
+				'vStateRegistered' => $_POST["txtregstate"],
+				'vExpiryDate' => $_POST["txtregexpiry"],
+				
+				'insCompany' => $_POST["txtinscompany"],
+				'insPolicyNumber' => $_POST["txtpolicyno"],
+				'insValidFromDate' => $_POST["txtinsdate"],
+				'insExpDate' => $_POST["txtinsexpiry"],
+				
+				'licenseNumber' => $_POST["txtlicenseno"],
+				'licenceStateIssued' => $_POST["txtlicensestate"],
+				'licenseDateIssued' => $_POST["txtlicenseissue"],
+				'licenseExpDate' => $_POST["txtlicenseexpiry"]	);
 
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);										
 										

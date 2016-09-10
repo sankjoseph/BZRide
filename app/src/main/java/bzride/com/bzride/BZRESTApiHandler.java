@@ -29,6 +29,9 @@ public class BZRESTApiHandler {
     private String mParams;
     private String mResponse;
 
+    public BZRESTApiHandler() {
+
+    }
     public BZRESTApiHandler(Activity a) {
         mActivity = a;
     }
@@ -52,6 +55,10 @@ public class BZRESTApiHandler {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                if (mActivity==null)
+                {
+                    return;
+                }
                 if (mProgressDialogMessage != null) {
                     mProgressDialog = new ProgressDialog(mActivity);
                     mProgressDialog.setCancelable(false);
@@ -102,6 +109,10 @@ public class BZRESTApiHandler {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                if (mActivity==null)
+                {
+                    return;
+                }
                 if (mProgressDialogMessage != null) {
                     mProgressDialog = new ProgressDialog(mActivity);
                     mProgressDialog.setCancelable(false);

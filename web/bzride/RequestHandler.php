@@ -8,6 +8,7 @@ $startLat = $_REQUEST['startLat'];
 $startLong = $_REQUEST['startLong'];
 
 //fixed values testing
+$requestId = '1';
 $startLat = '38.7521';
 $startLong = '121.2880';
 
@@ -37,29 +38,64 @@ if (!$result) {
 }
 $num_rows = mysql_num_rows($result);
 LOGDATA($num_rows);
+$goodcount= 0;
 
 if ( $num_rows > 0) {
     // output data of each row
 	LOGDATA('fetching driver');
     while($row = mysql_fetch_array($result)) {
 		LOGDATA('fetching driver data');
-		$deviceId = $row["DeviceId"];
-		$DeviceType = $row["DeviceType"];
+
+		$deviceType = $row["DeviceType"];
+		$status = $row["status"];
+		$isActive = $row["isActive"];
+		$isLicenseAccepted = $row["isLicenseAccepted"]; 
 		
-		LOGDATA($deviceId);
-		LOGDATA($DeviceType);
+		/*if ($status != 'A') continue;
+		if ($isActive != true) continue;
+		if ($isLicenseAccepted != true) continue;*/
 		
-		if ($DeviceType == 'A')
+		LOGDATA($deviceType);
+		LOGDATA(status);
+		LOGDATA($isActive);
+		LOGDATA($isLicenseAccepted);
+		
+		
+		if ($deviceType == 'A')
 		{
+			$requestSQL = "SELECT R.StartLocation, R.EndLocation, U.FirstName FROM  bztbl_riderequests AS R INNER JOIN  bztbl_riders U ON R.RequestorId = U.Id where R.Id = ".$requestId;
+			LOGDATA($requestSQL);
+			
+			$resultIn = mysql_query($requestSQL,$conn);
+			if (!$resultIn) {
+				showError(mysql_error());
+			}
+			$num_rows = mysql_num_rows($resultIn);
+			LOGDATA($num_rows);
+			if ( $num_rows > 0) {
+				$rowIn = mysql_fetch_array($resultIn);
+				$start = $rowIn["StartLocation"];
+				$end = $rowIn["EndLocation"];
+				$firstName = $rowIn["FirstName"];
+				LOGDATA($start);
+				LOGDATA($end);
+				LOGDATA($firstName);
+			}
+			$goodcount= $goodcount+1;
 			//Android notification
-			$devicetoken = '';  // Give device token here.
-			$pushMessage = ''; // Give push message here.
-			$apikey = ''; // Give api key here.
+			$deviceToken = $row["DeviceId"];
+			//'dGxQW_4WW6M:APA91bHa_pRIqqH8SpO5LH7kiDAsFwErVkp4hYQTkxcZHSv0i-5FVByKKYhRIvybep6Q_X9rARa8VG5ycxbu6LEw4wihSA5MK4Yup6ZbchUAq2TdkLIjilKUXMnF8D_66hcb5-CHQfIi';
+			//$row["DeviceId"];	
+			LOGDATA($deviceToken);			
+			$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end. " Id:".$requestId;
+			LOGDATA($pushMessage);
+			$apiKey = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40'; // Give api key here.
 			LOGDATA('Android notification');
-			androidpush($devicetoken,$pushMessage,$apikey);
+			androidpush($deviceToken,$pushMessage,$apiKey);
+			
 
 		}
-		else if ($DeviceType == 'I')
+		else if ($deviceType == 'I')
 		{
 			//ios notification
 			$devicetoken = '';  // Give device token here.
@@ -68,16 +104,53 @@ if ( $num_rows > 0) {
 			LOGDATA('IOS notification');
 			apns($deviceToken,$from,$fromname);
 		}
+		
+		sleep(20);//sleep for response from driver
+		if (checkIfRequestAccepted($requestId))
+		{
+			break;
+		}
     }
+	if($goodcount<=0)
+	{
+		showError("Could not find any drivers avilable at this time. Please retry.");
+	}
 } else {
    showError("Could not find any drivers avilable at this time. Please retry.");
 }
+
+function checkIfRequestAccepted($requestId )
+{
+	$statSQL = "SELECT Status FROM  bztbl_riderequests where Id = ".$requestId;
+	LOGDATA($requestSQL);
+	
+	$resultstat = mysql_query($statSQL,$conn);
+	if (!$resultstat) {
+		showError(mysql_error());
+	}
+	$num_rows = mysql_num_rows($resultstat);
+	LOGDATA($num_rows);
+	if ( $num_rows > 0) {
+		$rowIn = mysql_fetch_array($resultstat);
+		$Status = $rowIn["Status"];
+		LOGDATA($Status);
+		if ($Status == 'A')// Accepted
+		{
+			return true;
+		}
+	}
+	return false;
+}
 // For Android devices
-function androidpush($devicetoken,$pushMessage,$apikey)
+function androidpush($deviceToken,$pushMessage,$apiKey)
 {
 	LOGDATA('Android push notification begin');		
-    $gcmRegID  = $devicetoken;
-    if (isset($gcmRegID) && isset($pushMessage)) {    
+    $gcmRegID  = $deviceToken;
+	LOGDATA($gcmRegID);	
+	LOGDATA($pushMessage);	
+	LOGDATA($apiKey);	
+	
+    if ($gcmRegID && $pushMessage) {    
             $registatoin_ids = array($gcmRegID);
             $message = array("m" => $pushMessage,'x' => 'call');
             
@@ -86,10 +159,9 @@ function androidpush($devicetoken,$pushMessage,$apikey)
              'registration_ids' => $registatoin_ids,
              'data' => $message,
              'priority' => 'high'
-          );
-          define("GOOGLE_API_KEY", "$apikey");    
+          ); 
           $headers = array(
-              'Authorization: key=' . GOOGLE_API_KEY,
+              'Authorization: key=' . $apiKey,
               'Content-Type: application/json'
           );
           $ch = curl_init();
@@ -104,12 +176,18 @@ function androidpush($devicetoken,$pushMessage,$apikey)
 		  LOGDATA($result);		  
           curl_close($ch);
 	
+	
 		if (!$result)
 			showError("Ride request message not delivered. Please retry.");
 		else
 			showSuccess("Ride request message successfully delivered.");
 		
     }
+	else
+	{
+		showError("Message or device token not set. Please retry.");
+		 return false;
+	}
     return true;
 }
 // For apple devices

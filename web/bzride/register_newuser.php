@@ -72,6 +72,26 @@
 </td>
  </tr>
 
+   <tr>
+<td> City </td>
+<td> <input type="text" name="txtcity"id="txtcity"  placeholder="City" />
+<br />
+</td>
+ </tr>
+ 
+  <tr>
+<td> State </td>
+<td> <input type="text" name="txtstate"id="txtstate"  placeholder="State" />
+<br />
+</td>
+ </tr>
+ 
+   <tr>
+<td> Zip </td>
+<td> <input type="text" name="txtzip"id="txtzip"  placeholder="Zip" />
+<br />
+</td>
+ </tr>
   <tr>
 <td> Mobile No: </td>
 <td> <input type="text" name="txtphone"id="txtphone" placeholder="mobile phone" />

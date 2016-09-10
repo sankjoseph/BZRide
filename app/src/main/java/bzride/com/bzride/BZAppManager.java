@@ -25,6 +25,10 @@ public class BZAppManager {
         retData += "&password=" + bzDriverData.Password;
         retData += "&address1=" + bzDriverData.Address1;
         retData += "&address2=" + bzDriverData.Address2;
+        retData += "&city=" + bzDriverData.City;
+        retData += "&state=" + bzDriverData.State;
+        retData += "&zip=" + bzDriverData.Zip;
+
         retData += "&phone=" + bzDriverData.PhoneNumber;
         retData += "&ssn=" + bzDriverData.SSN;
         retData += "&currentlat=" + bzDriverData.currentlat;
@@ -36,11 +40,11 @@ public class BZAppManager {
 
         retData += "&cardBillingAddress1=" + bzDriverData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzDriverData.cardData.cardBillingAddress2;
-        retData += "&cardToken=" + "bxsabcsacb";
+        retData += "&cardToken=" + "bxsabcsacb";//todo
 
         // Bank info
-        retData += "&bankname=" + "testbank";
-        retData += "&bankaccountToken=" + "bzzbbz";
+        retData += "&BankName=" + "testbank";//todo
+        retData += "&AccountToken=" + "bzzbbz";//todo
         // Insurance Info
         retData += "&insCompany=" + bzDriverData.driverInsuranceInfo.insuranceCompany;
         retData += "&insPolicyNumber=" + bzDriverData.driverInsuranceInfo.insuranceNumber;
@@ -66,6 +70,14 @@ public class BZAppManager {
 
         return retData;
     }
+    public  String getDriverBankDataParamsFlat()
+    {
+        String retData = "";
+        retData += "&AccountType=" +"Savings";
+        retData += "&BankName=" + bzDriverData.driverBankInfo.BankName;
+        retData += "&AccountToken=" + "tokenest";
+        return retData;
+    }
 
     public  String getRiderDataParamsFlat()
     {
@@ -77,6 +89,11 @@ public class BZAppManager {
         retData += "&password=" + bzRiderData.Password;
         retData += "&address1=" + bzRiderData.Address1;
         retData += "&address2=" + bzRiderData.Address2;
+
+        retData += "&city=" + bzRiderData.City;
+        retData += "&state=" + bzRiderData.State;
+        retData += "&zip=" + bzRiderData.Zip;
+
         retData += "&phone=" + bzRiderData.PhoneNumber;
         retData += "&currentlat=" + bzRiderData.currentlat;
         retData += "&currentlong=" + bzRiderData.currentlong;
@@ -87,7 +104,7 @@ public class BZAppManager {
         retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;
         retData += "&cardBillingAddress1=" + bzRiderData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzRiderData.cardData.cardBillingAddress2;
-        retData += "&cardToken=" + "bxsabcsacb";
+        retData += "&cardToken=" + "bxsabcsacb";//todo
         /*
         retData += "&cardexpirymonth=" + bzRiderData.userCardInfo.cardExpiryMonth;
         retData += "&cardexpiryyear=" + bzRiderData.userCardInfo.cardExpiryYear;

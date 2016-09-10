@@ -28,4 +28,5 @@
     <string name="drawer_close">Close Drawer</string>
     <string name="title_activity_place_finder">PlaceFinder</string>
     <string name="title_activity_home_driver">HomeDriver</string>
+    <string name="title_activity_ride_request_notified_details">RideRequestNotifiedDetails</string>
 </resources>

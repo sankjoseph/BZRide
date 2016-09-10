@@ -16,7 +16,7 @@ $endLong = getIfSet($_REQUEST['endLong']);
 
 // insert ride request values in DB - I for immediate
 $ride_request_details="insert into bztbl_riderequests values('', 'I', $requestorId, '',$startLocation, $endLocation, 
-$startLat,$startLong,$endLat,$endLong,'', '', '', now())";
+$startLat,$startLong,$endLat,$endLong,'', '', '', now(),now())";
 																
 LOGDATA($ride_request_details);
 $result = mysql_query($ride_request_details,$conn);

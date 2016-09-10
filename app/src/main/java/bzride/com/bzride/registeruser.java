@@ -26,6 +26,10 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
     private EditText confirmpwd;
     private EditText address1;
     private EditText address2;
+    private EditText city;
+    private EditText state;
+    private EditText zip;
+
     private EditText PhoneNumber;
     private String deviceid;
     private ImageView imgView;
@@ -90,14 +94,44 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
     private void registeraction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
             firstName = (EditText)findViewById(R.id.txtRiderFirstName);
+            String name = ((EditText) findViewById(R.id.txtRiderFirstName)).getText().toString();
+            if (Utils.isEmpty(name)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NAME_EMPTY, null);
+                return;
+            }
+
             middleName = (EditText)findViewById(R.id.txtRiderMiddleName);
             lastName = (EditText)findViewById(R.id.txtRiderLastName);
             email = (EditText)findViewById(R.id.txtrideremail);
+            String emailText = ((EditText) findViewById(R.id.txtrideremail)).getText().toString();
+            if (!Utils.isValidEmail(emailText)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_EMAIL_INVALID, null);
+                return;
+            }
+
             pwd = (EditText)findViewById(R.id.txtriderPwd);
             confirmpwd = (EditText)findViewById(R.id.txtriderConfirmPwd);
+
+            String strpwd = ((EditText) findViewById(R.id.txtriderPwd)).getText().toString();
+            String strconfirpwd = ((EditText) findViewById(R.id.txtriderConfirmPwd)).getText().toString();
+
+            if (!Utils.isEqualAndNotEmpty(strconfirpwd, strpwd)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_PWD_MISMATCH, null);
+                return;
+            }
+
             address1 = (EditText)findViewById(R.id.txtriderAddress1);
             address2 = (EditText)findViewById(R.id.txtriderAddress2);
+            city = (EditText)findViewById(R.id.txtriderCity);
+            state = (EditText)findViewById(R.id.txtriderState);
+            zip = (EditText)findViewById(R.id.txtriderZip);
+
             PhoneNumber = (EditText)findViewById(R.id.txtriderPhoneNumber);
+            String phone = ((EditText) findViewById(R.id.txtriderPhoneNumber)).getText().toString();
+            if (Utils.isEmpty(phone)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_PHONE_EMPTY, null);
+                return;
+            }
 
             BZAppManager.getInstance().bzRiderData.FirstName = firstName.getText().toString();
             BZAppManager.getInstance().bzRiderData.MiddleName = middleName.getText().toString();
@@ -107,6 +141,12 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
             BZAppManager.getInstance().bzRiderData.ConfirmPassword = confirmpwd.getText().toString();
             BZAppManager.getInstance().bzRiderData.Address1 = address1.getText().toString();
             BZAppManager.getInstance().bzRiderData.Address2 = address2.getText().toString();
+
+            BZAppManager.getInstance().bzRiderData.City = city.getText().toString();
+            BZAppManager.getInstance().bzRiderData.State = state.getText().toString();
+            BZAppManager.getInstance().bzRiderData.Zip = zip.getText().toString();
+
+
             BZAppManager.getInstance().bzRiderData.PhoneNumber = PhoneNumber.getText().toString();
 
             // Get all other info from drill down screens from this register screen ie  card info taken in other child screen
@@ -115,15 +155,12 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
             api.setMessage("Registering new rider...");
             api.setPostExecuteListener(this);
 
-            if (BZAppManager.getInstance().isDriver == false) {
-                String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL ;
-                String params = BZAppManager.getInstance().getRiderDataParamsFlat();
+            String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL ;
+            String params = BZAppManager.getInstance().getRiderDataParamsFlat();
 
-                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                params = params + "&deviceId=" + deviceid;
-                api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
-            }
-
+            deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            params = params + "&deviceId=" + deviceid;
+            api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
@@ -136,9 +173,7 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
 
             BZAppManager.getInstance().currentUserId = response.Id;
 
-            Intent myIntent = new Intent(registeruser.this, Home.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            registeruser.this.startActivity(myIntent);
+            startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);

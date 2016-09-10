@@ -18,8 +18,10 @@ public class ModelClassMapper {
         classHashMap.put(Utils.REGISTER_RIDER_URL, RegisterResp.class);
 
         classHashMap.put(Utils.GET_BANK_INFO_URL, GetbankInfoResp.class);
-        classHashMap.put(Utils.ACCEPT_EULA_DRIVER_URL, BZJSONResp.class);
-
+        classHashMap.put(Utils.UPDATE_DEVICE_TOKEN_URL, BZJSONResp.class);
+        classHashMap.put(Utils.UPDATE_DRIVER_AVAILABILITY_URL, BZJSONResp.class);
+        classHashMap.put(Utils.UPDATE_DRIVER_LOCATION_URL, BZJSONResp.class);
+        classHashMap.put(Utils.UPDATE_BANK_INITIAL_INFO_URL, BZJSONResp.class);
 
         //classHashMap.put(Utils.NOTIFICATION_LIST_URL, NotificationRsp.class);
     }

@@ -10,17 +10,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
-public class registerDriver extends AppCompatActivity implements View.OnClickListener, OnPostExecuteListener {
+public class registerDriver extends AppCompatActivity implements View.OnClickListener {
     private EditText firstName;
+    private EditText middleName;
     private EditText lastName;
     private EditText email;
     private EditText pwd;
     private EditText confirmpwd;
     private EditText address1;
     private EditText address2;
+    private EditText city;
+    private EditText state;
+    private EditText zip;
+
     private EditText PhoneNumber;
     private EditText SSN;
-    private String deviceid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,47 +54,75 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
     }
     private void registeraction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            firstName = (EditText)findViewById(R.id.txtdriverFirstName);
-            lastName = (EditText)findViewById(R.id.txtdriverLastName);
-            email = (EditText)findViewById(R.id.txtdriveremail);
-            pwd = (EditText)findViewById(R.id.txtdriverPwd);
-            confirmpwd = (EditText)findViewById(R.id.txtdriverConfirmPwd);
-            address1 = (EditText)findViewById(R.id.txtdriverAddress1);
-            address2 = (EditText)findViewById(R.id.txtdriverAddress2);
-            PhoneNumber = (EditText)findViewById(R.id.txtdriverPhoneNumber);
-            SSN = (EditText)findViewById(R.id.txtdriverSSN);
+            firstName = (EditText) findViewById(R.id.txtdriverFirstName);
+            middleName = (EditText) findViewById(R.id.txtdrivermiddleName);
+            lastName = (EditText) findViewById(R.id.txtdriverLastName);
 
+            pwd = (EditText) findViewById(R.id.txtdriverPwd);
+            confirmpwd = (EditText) findViewById(R.id.txtdriverConfirmPwd);
 
+            String name = ((EditText) findViewById(R.id.txtdriverFirstName)).getText().toString();
+            if (Utils.isEmpty(name)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NAME_EMPTY, null);
+                return;
+            }
+
+            email = (EditText) findViewById(R.id.txtdriveremail);
+            String emailText = ((EditText) findViewById(R.id.txtdriveremail)).getText().toString();
+            if (!Utils.isValidEmail(emailText)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_EMAIL_INVALID, null);
+                return;
+            }
+
+            String strpwd = ((EditText) findViewById(R.id.txtdriverPwd)).getText().toString();
+            String strconfirpwd = ((EditText) findViewById(R.id.txtdriverConfirmPwd)).getText().toString();
+
+            if (!Utils.isEqualAndNotEmpty(strconfirpwd, strpwd)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_PWD_MISMATCH, null);
+                return;
+            }
+
+            address1 = (EditText) findViewById(R.id.txtdriverAddress1);
+            address2 = (EditText) findViewById(R.id.txtdriverAddress2);
+
+            city = (EditText) findViewById(R.id.txtdriverCity);
+            state = (EditText) findViewById(R.id.txtdriverState);
+            zip = (EditText) findViewById(R.id.txtdriverZip);
+
+            PhoneNumber = (EditText) findViewById(R.id.txtdriverPhoneNumber);
+
+            String phone = ((EditText) findViewById(R.id.txtdriverPhoneNumber)).getText().toString();
+            if (Utils.isEmpty(phone)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_PHONE_EMPTY, null);
+                return;
+            }
+
+            SSN = (EditText) findViewById(R.id.txtdriverSSN);
+            String ssn = ((EditText) findViewById(R.id.txtdriverSSN)).getText().toString();
+            if (Utils.isEmpty(ssn)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_SSN_EMPTY, null);
+                return;
+            }
 
             BZAppManager.getInstance().bzDriverData.FirstName = firstName.getText().toString();
+            BZAppManager.getInstance().bzDriverData.MiddleName = middleName.getText().toString();
             BZAppManager.getInstance().bzDriverData.LastName = lastName.getText().toString();
             BZAppManager.getInstance().bzDriverData.Email = email.getText().toString();
             BZAppManager.getInstance().bzDriverData.Password = pwd.getText().toString();
             BZAppManager.getInstance().bzDriverData.ConfirmPassword = confirmpwd.getText().toString();
             BZAppManager.getInstance().bzDriverData.Address1 = address1.getText().toString();
             BZAppManager.getInstance().bzDriverData.Address2 = address2.getText().toString();
+
+            BZAppManager.getInstance().bzDriverData.City = city.getText().toString();
+            BZAppManager.getInstance().bzDriverData.State = state.getText().toString();
+            BZAppManager.getInstance().bzDriverData.Zip = zip.getText().toString();
+
             BZAppManager.getInstance().bzDriverData.PhoneNumber = PhoneNumber.getText().toString();
-            BZAppManager.getInstance().bzDriverData.SSN  = SSN.getText().toString();
-
-            // Get all other info from drill down screens from this register screen ie  vehicle,license, registration, insurance
-            // This is done in other child drill down screens
-
-            BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setMessage("Registering new driver...");
-            api.setPostExecuteListener(this);
-
-            if (BZAppManager.getInstance().isDriver == true) {
-
-                String urlCall = Utils.BASE_URL + Utils.REGISTER_DRIVER_URL ;
-                String params = BZAppManager.getInstance().getDriverDataParamsFlat();
-                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                params = params + "&deviceId=" + deviceid;
-
-                api.putDetails(urlCall, Utils.REGISTER_DRIVER_URL, params);
-            }
-
-        } else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+            BZAppManager.getInstance().bzDriverData.SSN = SSN.getText().toString();
+            //call EULA and if accepted start the reg
+            Intent myIntent = new Intent(registerDriver.this, EULA.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            registerDriver.this.startActivity(myIntent);
         }
     }
 
@@ -110,30 +143,5 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
     private void vehicleInsuranceDetailsaction() {
         Intent myIntent = new Intent(registerDriver.this, driverInsuranceInfo.class);
         registerDriver.this.startActivity(myIntent);
-    }
-
-    private void bankDetailsaction() {
-        Intent myIntent = new Intent(registerDriver.this, driverInsuranceInfo.class);
-        registerDriver.this.startActivity(myIntent);
-    }
-
-    @Override
-    public void onSuccess(BZJSONResp model) {
-
-        RegisterResp response = (RegisterResp)model;
-        if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-            Intent myIntent = new Intent(registerDriver.this, EULA.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            registerDriver.this.startActivity(myIntent);
-        }
-        else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
-        }
-    }
-
-
-    @Override
-    public void onFailure() {
-        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);
     }
 }

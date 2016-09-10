@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -56,7 +58,7 @@ import java.util.Locale;
 
 //OnMapReadyCallback
 public class Home extends FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,OnPostExecuteListener,
         GoogleMap.OnMarkerClickListener {
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
@@ -79,6 +81,20 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         findViewById(R.id.btnPickUp).setOnClickListener(this);
         findViewById(R.id.btnDrop).setOnClickListener(this);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+        String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
+        String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
+
+        //keep the token
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler();
+            api.setPostExecuteListener(this);
+            String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL + "?token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
+            api.get(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL);
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
 
         //map related old code
 
@@ -115,6 +131,26 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         }
 
     }
+
+
+    @Override
+    public void onSuccess(BZJSONResp model) {
+
+        BZJSONResp response = (BZJSONResp)model;
+        if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
+        }
+    }
+
+
+    @Override
+    public void onFailure() {
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);
+    }
+
     @Override
     public boolean onMarkerClick(Marker arg0) {
 
@@ -322,9 +358,21 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     }
     private void scheduleNowAction() {
     //call web service
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
     }
     private void requestNowAction() {
         //check for valid pickup and drop
+        LatLng defzeroLocation = new LatLng(0.0,0.0);
+        if(BZAppManager.getInstance().selectedPickUpLocation.equals(defzeroLocation))
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
+            return;
+        }
+        if (BZAppManager.getInstance().selectedDropLocation.equals(defzeroLocation))
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
+            return;
+        }
         //call web service
 
 

@@ -1,13 +1,18 @@
 package bzride.com.bzride;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,14 +20,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -48,6 +60,10 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
 
+    public static final int gcm_defaultSenderId=0x7f060034;
+    ////
+
+    ///////
     protected  GoogleApiClient mGoogleApiClient;
     private boolean connectedstatus;
     private boolean isOffline;
@@ -62,12 +78,33 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_driver);
-        isOffline = false;
+        isOffline = false;//default online
         findViewById(R.id.btnToggleOffline).setOnClickListener(this);
         findViewById(R.id.btnFinish).setOnClickListener(this);
 
-        BZRESTApiHandler api = new BZRESTApiHandler(this);
-        api.setMessage("Creating Ride request...");
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+        String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
+        String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
+
+        //keep the token
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler();
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL + "?token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
+                api.get(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL);
+            }
+
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+
+       /* BZRESTApiHandler api = new BZRESTApiHandler(this);
+        api.setMessage("Registering device and generating token...");
+
         String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
 
         String params = "&requestorId="+ "1" + "&startLocation=" + "roseville" + "&endLocation=" + "sacramento" +
@@ -75,7 +112,10 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 "&endLat=" + 38.5816 +  "&endLong=" + 121.4944;
 
         api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
-        api.setPostExecuteListener(this);
+        api.setPostExecuteListener(this);*/
+        //todo
+
+
         /// get offline status and set;
 
         //?isOffline =
@@ -103,6 +143,9 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
+
+
+
     @Override
     public void onSuccess(BZJSONResp model) {
 
@@ -243,19 +286,39 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         String locationAddress = getAddress(m_latLng);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-        MarkerOptions options = new MarkerOptions()
+
+       /* MarkerOptions options = new MarkerOptions()
                 .position(m_latLng)
                 .title(locationAddress);
-        m_map.addMarker(options);
+        m_map.addMarker(options);*///marker removed
+
         //m_map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         float zoomLevel = 16; //This goes up to 21
         m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(m_latLng, zoomLevel));
         //update location in server
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+        //keep the token
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler();
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_LOCATION_URL + "?token="+ usertoken + "&Lat=" + currentLatitude +"&Long=" + currentLongitude ;
+                api.get(urlCall, Utils.UPDATE_DRIVER_LOCATION_URL);
+            }
+
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+
     }
     @Override
     protected void onResume() {
         super.onResume();
+
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
     }
@@ -263,6 +326,8 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
+
+
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
@@ -271,6 +336,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
     private void setUpMapIfNeeded() {
         if (m_map != null) {
+            //todo marker not to be created
             m_map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         }
     }
@@ -286,21 +352,57 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
 
+    private void UpdateAvailability (Boolean isOffline)
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler();
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                if (isOffline)
+                {
+                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL + "?token="+ usertoken + "&Flag=" + "FALSE" ;
+                    api.get(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL);
+                }
+                else
+                {
+                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL + "?token="+ usertoken + "&Flag=" + "TRUE" ;
+                    api.get(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL);
+                }
+
+            }
+
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+    }
     private void ToggleAction() {
-        if (isOffline)
+        Button btnToggle=  (Button)findViewById(R.id.btnToggleOffline);
+
+        if (isOffline)// offline
         {
+            // change btn caption
+             btnToggle.setText("Offline");
             //change online and call webs ervice
+            UpdateAvailability(true);
             isOffline = false;
         }
         else
         {
-            //change online and call webs ervice
+            // change btn caption
+            btnToggle.setText("Online");
+            //change to offline and call webs ervice
+            UpdateAvailability(false);
             isOffline = true;
         }
     }
 
     private void FinishAction() {
         // call service for endride
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
     }
     public GoogleApiClient getAPIClient() {
         return mGoogleApiClient;
@@ -334,4 +436,6 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             Log.i("TAG", "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
+
+
 }

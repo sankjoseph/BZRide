@@ -12,6 +12,9 @@ public class BZCommonUserInfo {
     public String ConfirmPassword;
     public String Address1;
     public String Address2;
+    public String City;
+    public String State;
+    public String Zip;
     public String PhoneNumber;
     public String SSN;
     public String DeviceId;

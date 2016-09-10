@@ -18,10 +18,13 @@ $email = getIfSet($_REQUEST['email']);
 $password = getIfSet($_REQUEST['password']);
 $address1 = getIfSet($_REQUEST['address1']);
 $address2 = getIfSet($_REQUEST['address2']);
+$city = getIfSet($_REQUEST['city']);
+$state = getIfSet($_REQUEST['state']);
+$zip = getIfSet($_REQUEST['zip']);
 $phone = getIfSet($_REQUEST['phone']);
+LOGDATA($phone);
 
 $ssn = getIfSet($_REQUEST['ssn']);
-
 $deviceId = getIfSet($_REQUEST['deviceId']);
 $deviceType = getIfSet($_REQUEST['deviceType']);
 $cardType = getIfSet($_REQUEST['cardType']);
@@ -34,8 +37,8 @@ $cardToken = getIfSet($_REQUEST['cardToken']);
 									
 // insert driver values in DB
 $driver_details="insert into bztbl_drivers values('', $firstName, $middleName, $lastName, $email, $password,
-									$address1, $address2, $phone,$ssn, $deviceId, $deviceType, 0,0,
-									'V', 0.0,0.0,$cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardToken, now())";
+									$address1, $address2,$city,$state,$zip, $phone,$ssn, $deviceId, $deviceType, 1,1,
+									'V', 0.0,0.0,$cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardToken, now(),now())";
 									
 LOGDATA($driver_details);
 $result = mysql_query($driver_details,$conn);
@@ -53,7 +56,7 @@ if (!$last_id) {
 // bank details blank
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // insert values: ID, USER ID, TYPE, BANK NAME, AccountToken, CREATED BY DATE
-$bank_details="insert into bztbl_driverbankdetails values('', $last_id, '', '','', now() )";
+$bank_details="insert into bztbl_driverbankdetails values('', $last_id, '', '','', now(),now() )";
 LOGDATA($bank_details);
 $result  = mysql_query($bank_details,$conn);
 if (!$result) {
@@ -72,7 +75,7 @@ $vExpiryDate = getIfSet($_REQUEST['vExpiryDate']);
 
 // insert values: ID, DRIVER ID, VEHICLE MODEL, V MAKE, V COLOUR, V YEAR, V REG NO, V REG STATE, V DATE REGISTERED, V EXPIRY DATE, CREATED BY DATE 
 $driver_vehicledetais = "insert into bztbl_drivervehicledetails values('', $last_id, $vModel, $vMake, $vColor, $vYear , 
-									$vNumber, $vStateRegistered ,$vDateRegistered, $vExpiryDate,  now() )";			
+									$vNumber, $vStateRegistered ,$vDateRegistered, $vExpiryDate,  now(),now() )";			
 
 LOGDATA($driver_vehicledetais);
 $result = mysql_query($driver_vehicledetais,$conn);
@@ -87,7 +90,7 @@ $insValidFromDate = getIfSet($_REQUEST['insValidFromDate']);
 $insExpDate = getIfSet($_REQUEST['insExpDate']);
 
 //insert values: ID, DRIVER ID, INSURANCE COMPANY, INS PLICY NO, INS DATE, INS EXPIRY DATE, CREATED BY DATE  //
-$driver_insdetails="insert into bztbl_driverinsurancedetails values('', $last_id, $insCompany, $insPolicyNumber, $insValidFromDate,$insExpDate, now() )";
+$driver_insdetails="insert into bztbl_driverinsurancedetails values('', $last_id, $insCompany, $insPolicyNumber, $insValidFromDate,$insExpDate, now(),now() )";
 LOGDATA($driver_insdetails);
 $result = mysql_query($driver_insdetails,$conn);
 if (!$result) {
@@ -100,7 +103,7 @@ $licenseDateIssued = getIfSet($_REQUEST['licenseDateIssued']);
 $licenseExpDate = getIfSet($_REQUEST['licenseExpDate']);
 							
 //insert values: ID, DRIVER ID, LICENCE NO, LICENCE ISSUE STATE,LIC ISSUE DATE, LIC EXPIRY DATE, CREATED BY DATE  //
-$driver_licdetails="insert into bztbl_driverlicensedetails values('', $last_id, $licenseNumber, $licenceStateIssued,$licenseDateIssued,$licenseExpDate, now())";
+$driver_licdetails="insert into bztbl_driverlicensedetails values('', $last_id, $licenseNumber, $licenceStateIssued,$licenseDateIssued,$licenseExpDate, now(),now())";
 LOGDATA($driver_licdetails);
 $result = mysql_query($driver_licdetails,$conn);
 if (!$result) {

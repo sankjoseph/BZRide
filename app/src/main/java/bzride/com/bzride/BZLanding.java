@@ -36,7 +36,7 @@ public class BZLanding extends AppCompatActivity implements View.OnClickListener
                 loginaction();
                 break;
             case R.id.btnRegisterDriver:
-                BZAppManager.getInstance().isDriver = true;
+                BZAppManager.getInstance().isDriver = false;
                 resgisteractionDriver();
                 break;
             case R.id.btnRegisterRider:

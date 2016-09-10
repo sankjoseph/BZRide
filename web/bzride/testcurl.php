@@ -18,18 +18,19 @@ curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
-$result = curl_exec($ch);
+$return = curl_exec($ch);
 
 /*LOGDATA($bz_req_url);
-LOGDATA($postData);
-LOGDATA($result);*/
+LOGDATA($postData);*/
+LOGDATA('Result coming');
+LOGDATA($return);
 
-if (!$result)
+/*if (!$return)
 	showError("Failed to handle the immediate ride request, Please retry.");
 else
-	showSuccess("Immediate Ride request successfully created.");
+	showSuccess("Immediate Ride request successfully created.");*/
 		
-// if (preg_match("/OK/i", $result)) {
+// if (preg_match("/OK/i", $return)) {
   //      showError("Failed to handle the ride request, Please retry.");
     //} 
 ?>

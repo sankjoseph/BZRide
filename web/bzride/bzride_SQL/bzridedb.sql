@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `bztbl_driverinsurancedetails` (
   `InsValidFrom` datetime NOT NULL,
   `InsExpDate` datetime NOT NULL,
   `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -51,9 +52,10 @@ CREATE TABLE IF NOT EXISTS `bztbl_driverlicensedetails` (
   `driverid` int(10) NOT NULL,
   `licNumber` varchar(15) NOT NULL,
   `licStateIssued` varchar(20) NOT NULL,
-  `licDateIssued` varchar(15) NOT NULL,
-  `licExpDate` varchar(15) NOT NULL,
-  `CreatedByDate` varchar(15) NOT NULL,
+  `licDateIssued` datetime NOT NULL,
+  `licExpDate` datetime NOT NULL,
+  `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -78,9 +80,13 @@ CREATE TABLE IF NOT EXISTS `bztbl_drivers` (
   `Password` varchar(200) NOT NULL,
   `Address1` varchar(500) NOT NULL,
   `Address2` varchar(500) NOT NULL,
+  `City` varchar(500) NOT NULL,
+  `State` varchar(500) NOT NULL,
+  `Zip` varchar(50) NOT NULL,
   `Phone` varchar(20) NOT NULL,
   `SSN` varchar(20) NOT NULL,
   `DeviceId` varchar(200) NOT NULL,
+  `DeviceToken` varchar(200) NOT NULL,
   `DeviceType` varchar(20) NOT NULL,
   `isLicenseAccepted` tinyint(1) NOT NULL,
   `isActive` tinyint(1) NOT NULL,
@@ -92,7 +98,8 @@ CREATE TABLE IF NOT EXISTS `bztbl_drivers` (
   `cardBillingAddress1` varchar(500) NOT NULL,
   `cardBillingAddress2` varchar(500) NOT NULL,
   `CardToken` varchar(200) NOT NULL,
-  `CreatedByDate` varchar(20) NOT NULL,
+  `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -115,9 +122,10 @@ CREATE TABLE IF NOT EXISTS `bztbl_drivervehicledetails` (
   `VYear` varchar(5) NOT NULL,
   `VehicleNumber` varchar(20) NOT NULL,
   `VRegState` varchar(20) NOT NULL,
-  `VDateRegistered` varchar(15) NOT NULL,
-  `VExpDate` varchar(15) NOT NULL,
-  `CreatedByDate` varchar(15) NOT NULL,
+  `VDateRegistered` datetime NOT NULL,
+  `VExpDate` datetime NOT NULL,
+  `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -132,9 +140,11 @@ CREATE TABLE IF NOT EXISTS `bztbl_drivervehicledetails` (
 
 CREATE TABLE IF NOT EXISTS `bztbl_reportedproblems` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `UserId` varchar(10) NOT NULL,
   `ReportTitle` varchar(200) NOT NULL,
   `ReportDescription` varchar(500) NOT NULL,
   `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -147,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `bztbl_reportedproblems` (
 -- Table structure for table `bztbl_riderequests`
 --
 
-	CREATE TABLE IF NOT EXISTS `bztbl_riderequests` (
+CREATE TABLE IF NOT EXISTS `bztbl_riderequests` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
   `RequestType` varchar(2) NOT NULL,
   `RequestorId` varchar(10) NOT NULL,
@@ -158,10 +168,18 @@ CREATE TABLE IF NOT EXISTS `bztbl_reportedproblems` (
   `StartLong` FLOAT,
   `EndLat` FLOAT,
   `EndLong` FLOAT,
+  `ActualStartLat` FLOAT,
+  `ActualStartLong` FLOAT,
+  `ActualEndLat` FLOAT,
+  `ActualEndLong` FLOAT,
+  `ChargeDistance` FLOAT,
+  `ChargeTime` FLOAT,
   `Status` varchar(2) NOT NULL,
   `RideDateTime` datetime NOT NULL,
-  `ActualRideDateTime` datetime NOT NULL,
+  `ActualRideDateTimeStart` datetime NOT NULL,
+  `ActualRideDateTimeEnd` datetime NOT NULL,
   `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
@@ -183,8 +201,12 @@ CREATE TABLE IF NOT EXISTS `bztbl_riders` (
   `Password` varchar(200) NOT NULL,
   `Address1` varchar(500) NOT NULL,
   `Address2` varchar(500) NOT NULL,
+  `City` varchar(500) NOT NULL,
+  `State` varchar(500) NOT NULL,
+  `Zip` varchar(50) NOT NULL,
   `Phone` varchar(15) NOT NULL,
   `DeviceId` varchar(200) NOT NULL,
+  `DeviceToken` varchar(200) NOT NULL,
   `DeviceType` varchar(20) NOT NULL,
   `isLicenseAccepted` tinyint(1) NOT NULL,
   `isActive` tinyint(1) NOT NULL,
@@ -193,7 +215,8 @@ CREATE TABLE IF NOT EXISTS `bztbl_riders` (
   `cardBillingAddress1` varchar(500) NOT NULL,
   `cardBillingAddress2` varchar(500) NOT NULL,
   `CardToken` varchar(200) NOT NULL,
-  `CreatedByDate` varchar(20) NOT NULL,
+  `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
@@ -212,7 +235,8 @@ CREATE TABLE IF NOT EXISTS `bztbl_driverbankdetails` (
   `AccountType` varchar(20) NOT NULL,
   `BankName` varchar(50) NOT NULL,
   `AccountToken` varchar(50) NOT NULL,
-  `CreatedByDate` varchar(15) NOT NULL,
+  `CreatedByDate` datetime NOT NULL,
+  `LastModifiedDate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

@@ -47,8 +47,12 @@ public class Utils {
     public static final String REGISTER_RIDER_URL = "/RegisterRider.php";
     public static final String REGISTER_DRIVER_URL = "/RegisterDriver.php";
     public static final String GET_BANK_INFO_URL = "/GetBankInfo.php";
-
-    public static final String ACCEPT_EULA_DRIVER_URL = "/AcceptEULADriver.php";
+    public static final String UPDATE_BANK_INITIAL_INFO_URL = "/UpdateInitialBankInfo.php";
+   // public static final String ACCEPT_EULA_DRIVER_URL = "/AcceptEULADriver.php";
+//
+    public static final String UPDATE_DEVICE_TOKEN_URL = "/UpdateDeviceToken.php";
+    public static final String UPDATE_DRIVER_AVAILABILITY_URL = "/UpdateDriverAvailability.php";
+    public static final String UPDATE_DRIVER_LOCATION_URL = "/ UpdateDriverLocation.php";
 
 
     public static final String REGISTER_SUCCESS = "Login Success";
@@ -58,8 +62,14 @@ public class Utils {
 
     public static final String MSG_TITLE = "BZRide";
     public static final String MSG_NO_INTERNET = "You are not connected to Internet. Please try later.";
+    public static final String MSG_ACC_EULA= "Please accept the license agreement to continue registration.";
+    public static final String MSG_PWD_MISMATCH = "Password mismatch.";
+    public static final String MSG_EMAIL_INVALID = "Please enter a valid email id.";
+    public static final String MSG_NAME_EMPTY = "Please enter your name.";
+    public static final String MSG_PHONE_EMPTY = "Please enter your phone number.";
+    public static final String MSG_SSN_EMPTY = "Please enter your SSN.";
     public static final String MSG_ERROR_SERVER = "Some error occured while connecting to server.";
-
+    public static final String MSG_ERROR_NOT_READY = "Not implemented now.Please wait for future release.";
 
 
     public static void showInfoDialog(Context c, String title, String message, DialogInterface.OnClickListener okListener) {
@@ -81,6 +91,25 @@ public class Utils {
 
         SimpleDateFormat newFormat = new SimpleDateFormat(format);
         return newFormat.format(convertedDate);
+    }
+    public static boolean isEmpty(String inputString)
+    {
+        if (TextUtils.isEmpty(inputString)){
+            return true;
+        }
+        return false;
+    }
+    public static boolean isValidEmail(String inputEmailString)
+    {
+        if (!TextUtils.isEmpty(inputEmailString))
+        {
+            String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+            if (inputEmailString.matches(emailPattern))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     public static boolean isEqualAndNotEmpty(String inputString,String strCompare)
     {

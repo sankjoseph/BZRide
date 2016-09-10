@@ -70,16 +70,38 @@
 </td>
  </tr>
 
+ 
+   <tr>
+<td> City </td>
+<td> <input type="text" name="txtcity"id="txtcity"  placeholder="City" />
+<br />
+</td>
+ </tr>
+ 
   <tr>
-<td> Telephone No: </td>
-<td> <input type="text" name="txtph"id="txtphone"  placeholder="Mobile number" />
+<td> State </td>
+<td> <input type="text" name="txtstate"id="txtstate"  placeholder="State" />
+<br />
+</td>
+ </tr>
+ 
+   <tr>
+<td> Zip </td>
+<td> <input type="text" name="txtzip"id="txtzip"  placeholder="Zip" />
+<br />
+</td>
+ </tr>
+ 
+  <tr>
+<td> Mobile No:  </td>
+<td> <input type="text" name="txtphone"id="txtphone" placeholder="mobile phone" />
 <br />
 </td>
  </tr>
  
  <tr>
 <td> Social Security No: </td>
-<td> <input type="text" name="txtssn"id="txtssn" placeholder="SSN"  />
+<td> <input type="password" name="txtssn"id="txtssn" placeholder="000-00-0000"  />
 <br />
 </td>
  </tr>
@@ -118,8 +140,8 @@
   <tr><td></td> <td> <b>REGISTRATION DETAILS</td></tr></b>
  
   <tr>
-<td> Registration No: </td>
-<td> <input type="text" name="txtregno" id="txtregno" placeholder="Number Plate Number"  />
+<td> License Plate Number </td>
+<td> <input type="text" name="txtregno" id="txtregno" placeholder="License Plate Number"  />
 <br />
 </td>
  </tr>

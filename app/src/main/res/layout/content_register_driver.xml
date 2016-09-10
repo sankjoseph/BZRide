@@ -46,6 +46,14 @@
 
             <EditText android:layout_width="fill_parent"
                 android:layout_height="40dp"
+                android:hint="middlename"
+                android:id="@+id/txtdrivermiddleName"
+                android:background="#f3f3f3"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="15dp"/>
+
+            <EditText android:layout_width="fill_parent"
+                android:layout_height="40dp"
                 android:hint="lastname"
                 android:id="@+id/txtdriverLastName"
                 android:background="#f3f3f3"
@@ -90,6 +98,29 @@
                 android:background="#f3f3f3"
                 android:paddingLeft="5dp"
                 android:layout_marginTop="15dp"/>
+
+            <EditText android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:hint="city"
+                android:id="@+id/txtdriverCity"
+                android:background="#f3f3f3"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="15dp"/>
+            <EditText android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:hint="state"
+                android:id="@+id/txtdriverState"
+                android:background="#f3f3f3"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="15dp"/>
+            <EditText android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:hint="zip"
+                android:id="@+id/txtdriverZip"
+                android:background="#f3f3f3"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="15dp"/>
+
             <EditText android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:hint="phone number"
@@ -100,8 +131,9 @@
 
             <EditText android:layout_width="fill_parent"
                 android:layout_height="40dp"
-                android:hint="SSN"
+                android:hint="000-00-0000"
                 android:id="@+id/txtdriverSSN"
+                android:inputType="textPassword"
                 android:background="#f3f3f3"
                 android:paddingLeft="5dp"
                 android:layout_marginTop="15dp"/>
