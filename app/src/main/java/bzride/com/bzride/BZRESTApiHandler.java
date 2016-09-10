@@ -73,6 +73,7 @@ public class BZRESTApiHandler {
                 if (reader != null) {
                     try {
                         model = new GsonBuilder().create().fromJson(reader, ModelClassMapper.getModelClass(mKey));
+                        int a =0;
                     }
                     catch (Exception e)
                     {

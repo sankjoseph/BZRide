@@ -73,7 +73,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
-
+    private boolean onlineOption;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,25 +94,16 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             api.setPostExecuteListener(this);
 
             if (BZAppManager.getInstance().isDriver == true) {
-                String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL + "?token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
-                api.get(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL);
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
+                String params = "&token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
+                api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
             }
 
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
 
-       /* BZRESTApiHandler api = new BZRESTApiHandler(this);
-        api.setMessage("Registering device and generating token...");
 
-        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
-
-        String params = "&requestorId="+ "1" + "&startLocation=" + "roseville" + "&endLocation=" + "sacramento" +
-                "&startLat=" + 38.7521 +  "&startLong=" + 121.2880 +
-                "&endLat=" + 38.5816 +  "&endLong=" + 121.4944;
-
-        api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
-        api.setPostExecuteListener(this);*/
         //todo
 
 
@@ -149,9 +140,23 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     @Override
     public void onSuccess(BZJSONResp model) {
 
+        Button btnToggle=  (Button)findViewById(R.id.btnToggleOffline);
+
         BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-
+            if (onlineOption)
+            {
+                if (isOffline)// offline
+                {
+                    // change btn caption
+                    btnToggle.setText("Offline");
+                    isOffline = false;
+                } else {//now online
+                    // change btn caption
+                    btnToggle.setText("Online");
+                    isOffline = true;
+                }
+            }
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
@@ -302,12 +307,13 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         //keep the token
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            BZRESTApiHandler api = new BZRESTApiHandler();
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
             api.setPostExecuteListener(this);
 
             if (BZAppManager.getInstance().isDriver == true) {
-                String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_LOCATION_URL + "?token="+ usertoken + "&Lat=" + currentLatitude +"&Long=" + currentLongitude ;
-                api.get(urlCall, Utils.UPDATE_DRIVER_LOCATION_URL);
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_LOCATION_URL;
+                String params= "token="+ usertoken + "&Lat=" + currentLatitude +"&Long=" + currentLongitude ;
+                api.putDetails(urlCall, Utils.UPDATE_DRIVER_LOCATION_URL,params);
             }
 
         } else {
@@ -352,25 +358,29 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
 
-    private void UpdateAvailability (Boolean isOffline)
+    private void UpdateAvailability (Boolean bStatus)
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
 
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            BZRESTApiHandler api = new BZRESTApiHandler();
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Changing status...");
             api.setPostExecuteListener(this);
 
             if (BZAppManager.getInstance().isDriver == true) {
-                if (isOffline)
+                if (bStatus)
                 {
-                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL + "?token="+ usertoken + "&Flag=" + "FALSE" ;
-                    api.get(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL);
+                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL ;
+                    String params =  "token="+ usertoken + "&Flag=" + "TRUE";
+                    api.putDetails(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL, params);
+
                 }
                 else
                 {
-                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL + "?token="+ usertoken + "&Flag=" + "TRUE" ;
-                    api.get(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL);
+                    String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_AVAILABILITY_URL;
+                    String params = "token=" + usertoken + "&Flag=" + "FALSE";
+                    api.putDetails(urlCall, Utils.UPDATE_DRIVER_AVAILABILITY_URL, params);
                 }
 
             }
@@ -380,23 +390,23 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
     private void ToggleAction() {
-        Button btnToggle=  (Button)findViewById(R.id.btnToggleOffline);
 
-        if (isOffline)// offline
-        {
-            // change btn caption
-             btnToggle.setText("Offline");
-            //change online and call webs ervice
-            UpdateAvailability(true);
-            isOffline = false;
+        onlineOption = true;
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            if (isOffline)// offline
+            {
+                //change online and call webs ervice
+                UpdateAvailability(true);
+
+            } else {
+
+                //change to offline and call webs ervice
+                UpdateAvailability(false);
+
+            }
         }
-        else
-        {
-            // change btn caption
-            btnToggle.setText("Online");
-            //change to offline and call webs ervice
-            UpdateAvailability(false);
-            isOffline = true;
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
     }
 

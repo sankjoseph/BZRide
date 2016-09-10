@@ -5,4 +5,5 @@ package bzride.com.bzride;
  */
 public class LoginResp extends BZJSONResp {
     public String token;
+    public String userid;
 }

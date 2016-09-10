@@ -25,7 +25,6 @@ else{
 // update driver values in DB as offline
 $driver_details="UPDATE bztbl_drivers SET status = 'O',LastModifiedDate=now() where Id = ".$driverID;
 }
-
 									
 LOGDATA($driver_details);
 $result = mysql_query($driver_details,$conn);
@@ -33,21 +32,10 @@ if (!$result) {
 	showError(mysql_error());
 }
 
-$num_rows = mysql_affected_rows($result);
-LOGDATA($num_rows);
-if ( $num_rows > 0) {
-	$data = array();
-	$data["status"] ="S";
-	$data["info"] = "Update driver status success";
-	echo json_encode($data);
-}
-else
-{
-	$data = array();
-	$data["status"] ="F";
-	$data["info"] = "Update driver status failed";
-	echo json_encode($data);
-}
+$data = array();
+$data["status"] ="S";
+$data["info"] = "Update driver status success";
+echo json_encode($data);
 
 mysql_close();
 }

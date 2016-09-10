@@ -8,9 +8,9 @@ $startLat = $_REQUEST['startLat'];
 $startLong = $_REQUEST['startLong'];
 
 //fixed values testing
-$requestId = '1';
-$startLat = '38.7521';
-$startLong = '121.2880';
+//$requestId = '1';
+//$startLat = '38.7521';
+//$startLong = '121.2880';
 
 
 //$requestId = mysql_real_escape_string($requestId);

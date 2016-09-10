@@ -81,9 +81,13 @@ public class MainActivity extends AppCompatActivity  {
             MainActivity.this.startActivity(myIntent);
         }*/
 
+        /*BZAppManager.getInstance().currentUserId ="5";
+        Intent myIntent = new Intent(MainActivity.this, driverBankInfo.class);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        MainActivity.this.startActivity(myIntent);
+        return;*/
 
-
-        if (!Utils.isEmpty(usertoken))
+       if (!Utils.isEmpty(usertoken))
         {
             if (BZAppManager.getInstance().isDriver == true)
             {
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity  {
         {
             Intent myIntent = new Intent(MainActivity.this, BZLanding.class);
             //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            MainActivity.this.startActivity(myIntent);///good code*/
+            MainActivity.this.startActivity(myIntent);
         }
     }
 

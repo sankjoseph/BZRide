@@ -134,6 +134,9 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
         LoginResp response = (LoginResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
             sharedPreferences.edit().putString(QuickstartPreferences.USER_TOKEN, response.token).apply();
+            sharedPreferences.edit().putString(QuickstartPreferences.USER_ID,response.userid).apply();
+
+            BZAppManager.getInstance().currentUserId = response.userid;
 
             if (BZAppManager.getInstance().isDriver == true) {
                 Intent myIntent = new Intent(login.this, HomeDriver.class);

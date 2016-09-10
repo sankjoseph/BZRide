@@ -34,7 +34,7 @@ public class BZAppManager {
         retData += "&currentlat=" + bzDriverData.currentlat;
         retData += "&currentlong=" + bzDriverData.currentlong;
         retData += "&deviceType=A";
-
+        retData += "&devicetoken=x";
         retData += "&cardType=" + bzDriverData.cardData.cardType;
         retData += "&cardProvider=" + bzDriverData.cardData.cardVendor;
 
@@ -98,7 +98,7 @@ public class BZAppManager {
         retData += "&currentlat=" + bzRiderData.currentlat;
         retData += "&currentlong=" + bzRiderData.currentlong;
         retData += "&deviceType=A";
-
+        retData += "&devicetoken=x";
 
         retData += "&cardType=" + bzRiderData.cardData.cardType;
         retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;

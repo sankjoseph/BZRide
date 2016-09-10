@@ -16,7 +16,8 @@ $endLong = getIfSet($_REQUEST['endLong']);
 
 // insert ride request values in DB - I for immediate
 $ride_request_details="insert into bztbl_riderequests values('', 'I', $requestorId, '',$startLocation, $endLocation, 
-$startLat,$startLong,$endLat,$endLong,'', '', '', now(),now())";
+$startLat,$startLong,$endLat,$endLong,'','','','','','','', '', '','', now(),now())";
+
 																
 LOGDATA($ride_request_details);
 $result = mysql_query($ride_request_details,$conn);
@@ -43,7 +44,7 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 $result = curl_exec($ch);
-
+LOGDATA($result);
 showSuccess("Immediate Ride request successfully created at server.");
 		
 // if (preg_match("/OK/i", $result)) {

@@ -52,7 +52,7 @@ public class Utils {
 //
     public static final String UPDATE_DEVICE_TOKEN_URL = "/UpdateDeviceToken.php";
     public static final String UPDATE_DRIVER_AVAILABILITY_URL = "/UpdateDriverAvailability.php";
-    public static final String UPDATE_DRIVER_LOCATION_URL = "/ UpdateDriverLocation.php";
+    public static final String UPDATE_DRIVER_LOCATION_URL = "/UpdateDriverLocation.php";
 
 
     public static final String REGISTER_SUCCESS = "Login Success";

@@ -46,6 +46,7 @@ if ( $num_rows > 0) {
 	$data["status"] ="S";
 	$data["info"] = "Login success for rider";
 	$data["token"] = $token;
+	$data["userid"] = $Id;
 	echo json_encode($data);
 }
 else

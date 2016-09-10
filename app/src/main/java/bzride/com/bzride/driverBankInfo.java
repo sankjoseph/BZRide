@@ -60,13 +60,10 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
     } else {
         Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
     }
-
-
 }
     @Override
     public void onSuccess(BZJSONResp model) {
-
-        RegisterResp response = (RegisterResp)model;
+        BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
             startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
@@ -74,8 +71,6 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
         }
     }
-
-
     @Override
     public void onFailure() {
         Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);

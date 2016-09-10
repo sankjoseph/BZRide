@@ -26,6 +26,7 @@ LOGDATA($phone);
 
 $ssn = getIfSet($_REQUEST['ssn']);
 $deviceId = getIfSet($_REQUEST['deviceId']);
+$devicetoken = getIfSet($_REQUEST['devicetoken']);
 $deviceType = getIfSet($_REQUEST['deviceType']);
 $cardType = getIfSet($_REQUEST['cardType']);
 $cardProvider = getIfSet($_REQUEST['cardProvider']);
@@ -37,7 +38,7 @@ $cardToken = getIfSet($_REQUEST['cardToken']);
 									
 // insert driver values in DB
 $driver_details="insert into bztbl_drivers values('', $firstName, $middleName, $lastName, $email, $password,
-									$address1, $address2,$city,$state,$zip, $phone,$ssn, $deviceId, $deviceType, 1,1,
+									$address1, $address2,$city,$state,$zip, $phone,$ssn, $deviceId,$devicetoken, $deviceType, 1,1,
 									'V', 0.0,0.0,$cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardToken, now(),now())";
 									
 LOGDATA($driver_details);

@@ -90,8 +90,10 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
             BZRESTApiHandler api = new BZRESTApiHandler();
             api.setPostExecuteListener(this);
-            String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL + "?token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
-            api.get(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL);
+
+            String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
+            String params = "&token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
+            api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
@@ -277,7 +279,7 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
         MarkerOptions options = new MarkerOptions()
                 .position(m_latLng)
                 .title(locationAddress);
-        m_map.addMarker(options);
+        //m_map.addMarker(options);
         //m_map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         float zoomLevel = 16; //This goes up to 21
         m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(m_latLng, zoomLevel));
@@ -334,6 +336,7 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
 
                 if (items[item].equals("Automatically")) {
                     //start location as m_latLng
+                    BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
                 } else if (items[item].equals("Manually")) {
                     //show place finder
                     Intent myIntent = new Intent(Home.this, PlaceFinder.class);
@@ -363,18 +366,36 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
     private void requestNowAction() {
         //check for valid pickup and drop
         LatLng defzeroLocation = new LatLng(0.0,0.0);
-        if(BZAppManager.getInstance().selectedPickUpLocation.equals(defzeroLocation))
+        LatLng selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
+        if(selectedpick.equals(defzeroLocation))
         {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
             return;
         }
-        if (BZAppManager.getInstance().selectedDropLocation.equals(defzeroLocation))
+        LatLng selecteddrop = BZAppManager.getInstance().selectedDropLocation;
+        if (selecteddrop.equals(defzeroLocation))
         {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
             return;
         }
         //call web service
 
+        BZRESTApiHandler api = new BZRESTApiHandler(this);
+        api.setMessage("Creating ride request...");
+
+        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+
+        String locationStartAddress = getAddress(selectedpick);
+        String locationEndAddress = getAddress(selecteddrop);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
+
+        String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
+                "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
+                "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
+
+        api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
+        api.setPostExecuteListener(this);
 
 
     }
