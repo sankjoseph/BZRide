@@ -60,7 +60,10 @@ public class MainActivity extends AppCompatActivity  {
         }
 
 
-
+        /*Intent myIntent = new Intent(MainActivity.this, HomeDriver.class);
+        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
+        MainActivity.this.startActivity(myIntent);
+        return;*/
 
         //String pass = "Password1";
         //String encryptedPass =  Utils.md5encrypt(pass);

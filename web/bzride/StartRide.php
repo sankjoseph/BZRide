@@ -14,10 +14,14 @@ else
 //basic driver details
 $requestId = $_REQUEST['rideRequestId'];
 $token = $_REQUEST['token'];
+$currentLat = $_REQUEST['currentLat'];
+$currentLong = $_REQUEST['currentLong'];
+
 LOGDATA($token);
 $driverID = GetIdByCheckforTimeout($token);
+//set as riding
+$requestSQL = "UPDATE bztbl_riderequests SET status = 'R', ActualStartLat = $currentLat,ActualStartLong = $currentLong, ActualRideDateTimeStart = now() where Id = " .$requestId ;
 
-$requestSQL = "UPDATE bztbl_riderequests SET status = 'R' where Id = " .$requestId ;
 
 LOGDATA($requestSQL);
 
@@ -26,35 +30,10 @@ if (!$resultUpdate) {
 	showError(mysql_error());
 }
 
-$num_rowsrequest = mysql_affected_rows($resultUpdate);
-LOGDATA($num_rowsrequest);
-//////
-$requestSQLDriver = "UPDATE bztbl_Drivers SET status = 'D' where Id = " .$driverID ;
-
-LOGDATA($requestSQLDriver);
-
-$resultUpdateDriver = mysql_query($requestSQLDriver,$conn);
-if (!$resultUpdateDriver) {
-	showError(mysql_error());
-}
-
-$num_rowsDriver = mysql_affected_rows($resultUpdateDriver);
-LOGDATA($num_rowsDriver);
-//////
-
-if ( $num_rowsrequest > 0 && num_rowsDriver >0) {
-	$data = array();
-	$data["status"] ="S";
-	$data["info"] = "Start ride success for driver";
-	echo json_encode($data);
-}
-else
-{
-	$data = array();
-	$data["status"] ="F";
-	$data["info"] = "Start ride failed for driver";
-	echo json_encode($data);
-}
+$data = array();
+$data["status"] ="S";
+$data["info"] = "Start ride success for driver";
+echo json_encode($data);
 mysql_close();
 }
 ?>

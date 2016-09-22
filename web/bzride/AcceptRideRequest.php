@@ -16,7 +16,7 @@ $requestId = $_REQUEST['rideRequestId'];
 $token = $_REQUEST['token'];
 LOGDATA($token);
 $driverID = GetIdByCheckforTimeout($token);
-
+//request accepted
 $requestSQL = "UPDATE bztbl_riderequests SET Status = 'A',DriverId = ".$driverID. " where Id = " .$requestId ;
 
 LOGDATA($requestSQL);
@@ -26,24 +26,21 @@ if (!$resultUpdate) {
 	showError(mysql_error());
 }
 
-$num_rows = mysql_affected_rows($resultUpdate);
-LOGDATA($num_rows);
-if ( $num_rows > 0) {
-	$data = array();
-	$data["status"] ="S";
-	$data["info"] = "Accepting ride request success for driver";
-	$data["firstName"] = $firstName;
-	$data["middleName"] = $middleName;
-	$data["lastName"] = $lastName;
-	echo json_encode($data);
+//driver status as driving
+$requestSQLDriver = "UPDATE bztbl_drivers SET status = 'D' where Id = " .$driverID ;
+
+LOGDATA($requestSQLDriver);
+
+$resultUpdateDriver = mysql_query($requestSQLDriver,$conn);
+if (!$resultUpdateDriver) {
+	showError(mysql_error());
 }
-else
-{
-	$data = array();
-	$data["status"] ="F";
-	$data["info"] = "Get Profile failed for driver";
-	echo json_encode($data);
-}
+
+$data = array();
+$data["status"] ="S";
+$data["info"] = "Accepting ride request success for driver";
+echo json_encode($data);
+	
 mysql_close();
 }
 ?>

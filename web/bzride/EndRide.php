@@ -8,6 +8,22 @@ function distanceCalculationGoogleAPI($point1_lat, $point1_long, $point2_lat, $p
 function TimeCalculationGoogleAPI($point1_lat, $point1_long, $point2_lat, $point2_long, $unit = 'minute', $decimals = 2) {
 	
 }
+function haversineGreatCircleDistance(
+  $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000)
+{
+  // convert from degrees to radians
+  $latFrom = deg2rad($latitudeFrom);
+  $lonFrom = deg2rad($longitudeFrom);
+  $latTo = deg2rad($latitudeTo);
+  $lonTo = deg2rad($longitudeTo);
+
+  $latDelta = $latTo - $latFrom;
+  $lonDelta = $lonTo - $lonFrom;
+
+  $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+    cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+  return $angle * $earthRadius;
+}
 
 function distanceCalculation($point1_lat, $point1_long, $point2_lat, $point2_long, $unit = 'km', $decimals = 2) {
 	// Calculate the distance in degrees
@@ -30,6 +46,11 @@ function distanceCalculation($point1_lat, $point1_long, $point2_lat, $point2_lon
 /////
 LOGDATA("Ending ride");
 
+/* test $result = haversineGreatCircleDistance(10.0268,76.3487,9.59157,76.5222);
+LOGDATA($result);
+$result = distanceCalculation(10.0268,76.3487,9.59157,76.5222);
+LOGDATA($result); */
+
 // Check connection
 if (!$conn) {
       showError("Data base connection error");
@@ -41,13 +62,18 @@ $requestId = $_REQUEST['rideRequestId'];
 $ActualEndLat = $_REQUEST['ActualEndLat'];
 $ActualEndLong = $_REQUEST['ActualEndLong'];
 
+$requestId = '5';
+$ActualEndLat = 9.59157;
+$ActualEndLong = 76.5222;
 
 $token = $_REQUEST['token'];
 LOGDATA($token);
 $driverID = GetIdByCheckforTimeout($token);
 
+
+$updateSQL = "UPDATE bztbl_riderequests SET status = 'C', ActualRideDateTimeEnd = now()".", ActualEndLat = ". $ActualEndLat. ", ActualEndLong = ". $ActualEndLong. " where Id = " .$requestId ;
+
 // update time for table
-$updateSQL = "UPDATE bztbl_riderequests SET status = 'C', ActualRideDateTimeEnd = now(), ActualEndLong = ".$ActualEndLong.",ActualEndLat = ".$ActualEndLat. " where Id = " .$requestId ;
 LOGDATA($updateSQL);
 
 $result = mysql_query($updateSQL,$conn);
@@ -66,19 +92,24 @@ if (!$result) {
 }
 
 $row = mysql_fetch_array($result);
-$ActualStartLat = $row["ActualStartLat"];
-$ActualStartLong = $row["ActualStartLong"];
-$ActualEndLat = $row["ActualEndLat"];
-$ActualEndLong = $row["ActualEndLong"];
+
+$ActualStartLat = doubleval($row["ActualStartLat"]);
+$ActualStartLong = doubleval($row["ActualStartLong"]);
+$ActualEndLat = doubleval($row["ActualEndLat"]);
+$ActualEndLong = doubleval($row["ActualEndLong"]);
+
+LOGDATA($ActualStartLat);
+LOGDATA($ActualStartLong);
+LOGDATA($ActualEndLat);
+LOGDATA($ActualEndLong);
 
 $ActualRideDateTimeStart = $row["ActualRideDateTimeStart"];
 $ActualRideDateTimeEnd = $row["ActualRideDateTimeEnd"];
 
-$ActualRideDateTimeEnd = $row["ActualRideDateTimeEnd"];
 $riderId = $row["RequestorId"];
 
 // find distance
-$distancetraveledmi = distanceCalculation(ActualStartLat,ActualStartLong,ActualEndLat,ActualEndLong,'mi');
+$distancetraveledmi = distanceCalculation($ActualStartLat,$ActualStartLong,$ActualEndLat,$ActualEndLong,'mi');
 
 $rateforDistanceCents = $distancetraveledmi * 1.28; //cents
 
@@ -94,7 +125,7 @@ $finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)
 // sum total fare and update in table
 
 // update fare for table
-$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = rateforDistanceCents, ChargeTime = rateForTimeCents where Id = " .$requestId ;
+$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents where Id = " .$requestId ;
 LOGDATA($updateFareSQL);
 
 $result = mysql_query($updateFareSQL,$conn);
@@ -117,7 +148,7 @@ $CardToken = $rowToken["CardToken"];
 // last ride will have fare details for user
 
 //////
-$requestSQLDriver = "UPDATE bztbl_Drivers SET status = 'A' where Id = " .$driverID ;
+$requestSQLDriver = "UPDATE bztbl_drivers SET status = 'A' where Id = " .$driverID ;
 
 LOGDATA($requestSQLDriver);
 

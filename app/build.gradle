@@ -32,5 +32,6 @@ dependencies {
     //compile 'com.google.android.gms:play-services-location:8.4.0'
    // compile 'com.google.android.gms:play-services-places:8.4.0'
     //compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.stripe:stripe-android:+'
 }
 apply plugin: 'com.google.gms.google-services'

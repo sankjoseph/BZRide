@@ -3,6 +3,7 @@ package bzride.com.bzride;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -21,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -74,6 +77,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
     private boolean onlineOption;
+    Button btnFinishStart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         findViewById(R.id.btnToggleOffline).setOnClickListener(this);
         findViewById(R.id.btnFinish).setOnClickListener(this);
 
+        btnFinishStart =  (Button) findViewById(R.id.btnFinish);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
@@ -99,9 +104,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
             }
 
-        } else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
-        }
+        } //update silent
 
 
         //todo
@@ -135,7 +138,29 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
 
+    private String getDirectionsUrl(LatLng origin,LatLng dest){
 
+
+        // Origin of route
+        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Building the parameters to the web service
+        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+
+        return url;
+    }
 
     @Override
     public void onSuccess(BZJSONResp model) {
@@ -144,6 +169,17 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+            if (response.info.toString().contains("Start ride"))
+            {
+                btnFinishStart.setText("Finish");
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f", m_latLng.latitude, m_latLng.longitude,
+                        BZAppManager.getInstance().selectedDropLocation.latitude, BZAppManager.getInstance().selectedDropLocation.longitude);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent);
+                //String url = getDirectionsUrl( BZAppManager.getInstance().selectedPickUpLocation , BZAppManager.getInstance().selectedDropLocation);
+                return;
+            }
+
             if (onlineOption)
             {
                 if (isOffline)// offline
@@ -196,6 +232,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             m_map.setMyLocationEnabled(true);
+
         }
 
     }
@@ -305,6 +342,10 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
 
+        if (Utils.isEmpty(usertoken))
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INVALID_USER_LOGIN, null);
+        }
         //keep the token
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
             BZRESTApiHandler api = new BZRESTApiHandler(this);
@@ -410,9 +451,55 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
 
+    private void startRideAction() {
+        double currentLat = m_latLng.latitude;
+        double currentLong = m_latLng.longitude;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Starting ride...");
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.START_RIDE_URL;
+                String params = "token=" + usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId +
+                        "&currentLat=" +currentLat + "&currentLong=" +currentLong ;
+                api.putDetails(urlCall, Utils.START_RIDE_URL, params);
+            }
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+    }
     private void FinishAction() {
         // call service for endride
-        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
+        if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("BZRide")
+                    .setMessage(BZAppManager.getInstance().currentRideRequestMessage)
+                    .setCancelable(false)
+                    .setPositiveButton("Start Now", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            startRideAction();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
+        }
     }
     public GoogleApiClient getAPIClient() {
         return mGoogleApiClient;

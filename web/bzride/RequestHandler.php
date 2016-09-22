@@ -13,6 +13,15 @@ $startLong = $_REQUEST['startLong'];
 //$startLong = '121.2880';
 
 
+/*$requestId = '5';
+$startLat = '10.0268';
+$startLong = '76.3487';*/
+
+$requestId = '5';
+$startLat = '9.8';
+$startLong = '76.7487';
+
+
 //$requestId = mysql_real_escape_string($requestId);
 //$startLat = mysql_real_escape_string($startLat);
 //$startLong = mysql_real_escape_string($startLong);
@@ -28,7 +37,7 @@ $startLongFloat = floatval($startLong);
 LOGDATA($startLatFloat);
 LOGDATA($startLongFloat);
 			 
-$findriverSQL = "SELECT * , (3956 * 2 * ASIN(SQRT( POWER(SIN(( $startLatFloat - currentlat) *  pi()/180 / 2), 2) +COS( $startLatFloat * pi()/180) * COS(currentlat * pi()/180) * POWER(SIN(( $startLongFloat - currentlong) * pi()/180 / 2), 2) ))) as distance  from bztbl_drivers having  distance <= 10 order by distance";
+$findriverSQL = "SELECT * , (3956 * 2 * ASIN(SQRT( POWER(SIN(( $startLatFloat - currentlat) *  pi()/180 / 2), 2) +COS( $startLatFloat * pi()/180) * COS(currentlat * pi()/180) * POWER(SIN(( $startLongFloat - currentlong) * pi()/180 / 2), 2) ))) as distance  from bztbl_drivers WHERE STATUS =  'A'  AND isActive =1 having  distance <= 10 order by distance";
 
 LOGDATA($findriverSQL);
 
@@ -45,15 +54,9 @@ if ( $num_rows > 0) {
 	LOGDATA('fetching driver');
     while($row = mysql_fetch_array($result)) {
 		LOGDATA('fetching driver data');
-
 		$deviceType = $row["DeviceType"];
-		$status = $row["status"];
-		$isActive = $row["isActive"];
-		$isLicenseAccepted = $row["isLicenseAccepted"]; 
-		
-		/*if ($status != 'A') continue;
-		if ($isActive != true) continue;
-		if ($isLicenseAccepted != true) continue;*/
+
+		/*if ($isLicenseAccepted != true) continue;*/
 		
 		LOGDATA($deviceType);
 		LOGDATA(status);
@@ -63,7 +66,7 @@ if ( $num_rows > 0) {
 		
 		if ($deviceType == 'A')
 		{
-			$requestSQL = "SELECT R.StartLocation, R.EndLocation, U.FirstName FROM  bztbl_riderequests AS R INNER JOIN  bztbl_riders U ON R.RequestorId = U.Id where R.Id = ".$requestId;
+			$requestSQL = "SELECT R.StartLocation,R.StartLat,R.StartLong, R.EndLocation,R.EndLat,R.EndLong, U.FirstName, U.Phone FROM  bztbl_riderequests AS R INNER JOIN  bztbl_riders U ON R.RequestorId = U.Id where R.Id = ".$requestId;
 			LOGDATA($requestSQL);
 			
 			$resultIn = mysql_query($requestSQL,$conn);
@@ -75,19 +78,24 @@ if ( $num_rows > 0) {
 			if ( $num_rows > 0) {
 				$rowIn = mysql_fetch_array($resultIn);
 				$start = $rowIn["StartLocation"];
+				$startLat = $rowIn["StartLat"];
+				$startLong = $rowIn["StartLong"];
 				$end = $rowIn["EndLocation"];
+				$endLat = $rowIn["EndLat"];
+				$endLong = $rowIn["EndLong"];
 				$firstName = $rowIn["FirstName"];
+				$phone = $rowIn["Phone"];
 				LOGDATA($start);
 				LOGDATA($end);
 				LOGDATA($firstName);
 			}
-			$goodcount= $goodcount+1;
+			
 			//Android notification
-			$deviceToken = $row["DeviceId"];
+			$deviceToken = $row["DeviceToken"];
 			//'dGxQW_4WW6M:APA91bHa_pRIqqH8SpO5LH7kiDAsFwErVkp4hYQTkxcZHSv0i-5FVByKKYhRIvybep6Q_X9rARa8VG5ycxbu6LEw4wihSA5MK4Yup6ZbchUAq2TdkLIjilKUXMnF8D_66hcb5-CHQfIi';
 			//$row["DeviceId"];	
 			LOGDATA($deviceToken);			
-			$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end. " Id:".$requestId;
+			$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end. ":".$requestId. ":".$firstName.":".$phone.":".$startLat.":".$startLong.":".$endLat.":".$endLong;
 			LOGDATA($pushMessage);
 			$apiKey = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40'; // Give api key here.
 			LOGDATA('Android notification');
@@ -105,11 +113,14 @@ if ( $num_rows > 0) {
 			apns($deviceToken,$from,$fromname);
 		}
 		
-		sleep(20);//sleep for response from driver
-		if (checkIfRequestAccepted($requestId))
+		sleep(8);//sleep for response from driver
+		if (checkIfRequestAccepted($requestId,$conn))
 		{
+			LOGDATA('Request accepted '.$requestId);
+			$goodcount= $goodcount+1;
 			break;
 		}
+		LOGDATA('Request not accepted '.$requestId);
     }
 	if($goodcount<=0)
 	{
@@ -119,14 +130,14 @@ if ( $num_rows > 0) {
    showError("Could not find any drivers avilable at this time. Please retry.");
 }
 
-function checkIfRequestAccepted($requestId )
+function checkIfRequestAccepted($requestId,$conn )
 {
 	$statSQL = "SELECT Status FROM  bztbl_riderequests where Id = ".$requestId;
-	LOGDATA($requestSQL);
+	LOGDATA($statSQL);
 	
 	$resultstat = mysql_query($statSQL,$conn);
 	if (!$resultstat) {
-		showError(mysql_error());
+		return false;
 	}
 	$num_rows = mysql_num_rows($resultstat);
 	LOGDATA($num_rows);
@@ -180,7 +191,8 @@ function androidpush($deviceToken,$pushMessage,$apiKey)
 		if (!$result)
 			showError("Ride request message not delivered. Please retry.");
 		else
-			showSuccess("Ride request message successfully delivered.");
+			//showSuccess("Ride request message successfully delivered.");
+		return true;
 		
     }
 	else

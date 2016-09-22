@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -53,6 +55,9 @@ public class Utils {
     public static final String UPDATE_DEVICE_TOKEN_URL = "/UpdateDeviceToken.php";
     public static final String UPDATE_DRIVER_AVAILABILITY_URL = "/UpdateDriverAvailability.php";
     public static final String UPDATE_DRIVER_LOCATION_URL = "/UpdateDriverLocation.php";
+    public static final String READ_RIDE_REQUEST_URL = "/ReadRideRequest.php";
+    public static final String ACCEPT_RIDE_REQUEST_URL = "/AcceptRideRequest.php";
+    public static final String START_RIDE_URL = "/StartRide.php";
 
 
     public static final String REGISTER_SUCCESS = "Login Success";
@@ -70,7 +75,11 @@ public class Utils {
     public static final String MSG_SSN_EMPTY = "Please enter your SSN.";
     public static final String MSG_ERROR_SERVER = "Some error occured while connecting to server.";
     public static final String MSG_ERROR_NOT_READY = "Not implemented now.Please wait for future release.";
-
+    public static final String MSG_INVALID_USER_LOGIN= "Invalid user login. Please login again.";
+    public static final String MSG_INVALID_CARD_NUMBER= "Invalid card number. Please try again.";
+    public static final String MSG_INVALID_CARD_CVV= "Invalid cvv code . Please try again.";
+    public static final String MSG_INVALID_CARD_EXPDATE= "Invalid expiry date for card. Please try again.";
+    public static final String MSG_ERROR_NO_ACTIVE_RIDE = "No active rides at this time.";
 
     public static void showInfoDialog(Context c, String title, String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(c)
@@ -91,6 +100,21 @@ public class Utils {
 
         SimpleDateFormat newFormat = new SimpleDateFormat(format);
         return newFormat.format(convertedDate);
+    }
+    public static boolean isEmptyLocation(LatLng inputLatLng)
+    {
+        if (inputLatLng == null)
+            return  true;
+        else
+        {
+            LatLng defzeroLocation = new LatLng(0.0,0.0);
+            if(inputLatLng.equals(defzeroLocation))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
     public static boolean isEmpty(String inputString)
     {

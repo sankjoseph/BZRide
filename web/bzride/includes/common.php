@@ -1,6 +1,7 @@
 <?php
 //define("DEBUG_L","Console");
 define("DEBUG_F","File");
+define("TEST_CARD","CARD");
 define('SECRET_KEY', "zxcvbnmasdfghjkl");//16 digit key
 
 $BASE_URL = 'http://bzride.com/bzride/';

@@ -11,6 +11,8 @@ public class BZAppManager {
     private static BZAppManager   _instance;
     public  boolean isDriver;
     public String currentUserId;
+    public String currentRideRequestId;
+    public String currentRideRequestMessage;
     public BZDriverInfo bzDriverData;
     public BZRiderInfo bzRiderData;
     public LatLng selectedPickUpLocation;
@@ -40,7 +42,7 @@ public class BZAppManager {
 
         retData += "&cardBillingAddress1=" + bzDriverData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzDriverData.cardData.cardBillingAddress2;
-        retData += "&cardToken=" + "bxsabcsacb";//todo
+        retData += "&cardToken=" +  bzDriverData.cardData.cardToken;
 
         // Bank info
         retData += "&BankName=" + "testbank";//todo
@@ -104,7 +106,7 @@ public class BZAppManager {
         retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;
         retData += "&cardBillingAddress1=" + bzRiderData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzRiderData.cardData.cardBillingAddress2;
-        retData += "&cardToken=" + "bxsabcsacb";//todo
+        retData += "&cardToken=" + bzRiderData.cardData.cardToken;
         /*
         retData += "&cardexpirymonth=" + bzRiderData.userCardInfo.cardExpiryMonth;
         retData += "&cardexpiryyear=" + bzRiderData.userCardInfo.cardExpiryYear;

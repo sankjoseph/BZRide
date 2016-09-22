@@ -5,10 +5,21 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.stripe.android.Stripe.*;
+import com.stripe.android.*;
+import com.stripe.android.model.Card;
+import com.stripe.android.model.Token;
+import com.stripe.exception.AuthenticationException;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class usercarddetails extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,6 +74,7 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         txtCardDetailsExpYear.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear);
         txtCardDetailsCVV.setText(BZAppManager.getInstance().bzRiderData.cardData.cardCVV);
 
+
     }
     @Override
     public void onClick(View v) {
@@ -96,6 +108,65 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
                 BZAppManager.getInstance().bzRiderData.cardData.cardVendor = "V";
                 break;
         }
+
+
+        Card card = new Card(txtCardDetailsNumber.getText().toString(),
+                Integer.parseInt(txtCardDetailsExpMonth.getText().toString()),
+                Integer.parseInt(txtCardDetailsExpYear.getText().toString()),
+                txtCardDetailsCVV.getText().toString());
+
+        if (!card.validateNumber())
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INVALID_CARD_NUMBER, null);
+            return;
+        }
+        else {
+            int b =0;
+        }
+        if (!card.validateExpiryDate())
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INVALID_CARD_EXPDATE, null);
+        }
+        if (!card.validateCVC())
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INVALID_CARD_CVV, null);
+            return;
+        }
+        else{
+            int b =0;
+        }
+
+
+        new Stripe().createToken(card, "pk_test_LL1jchCoTe2qzVPx5GfwGY4o",
+                new TokenCallback() {
+                    public void onSuccess(Token token) {
+                        // Send token to your server
+                        String tokenString =   tokenString = token.getId();
+
+                        BZAppManager.getInstance().bzRiderData.cardData.cardToken = tokenString;
+                        Log.d("Stripesample", tokenString);
+                        try {
+                            Toast.makeText(getApplicationContext(),
+                                    "Success",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            // showAlert("Exception while charging the card!",
+                            // e.getLocalizedMessage());
+                        }
+                    }
+
+                    public void onError(Exception error) {
+                        // Show localized error message
+                        Toast.makeText(getApplicationContext(),
+                                "Some error",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        );
         // other details
         BZAppManager.getInstance().bzRiderData.cardData.cardNumber = txtCardDetailsNumber.getText().toString();
         BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();

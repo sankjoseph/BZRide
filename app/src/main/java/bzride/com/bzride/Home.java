@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -360,42 +362,62 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
 
     }
     private void scheduleNowAction() {
-    //call web service
+    //call web service //to do
         Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
     }
     private void requestNowAction() {
         //check for valid pickup and drop
-        LatLng defzeroLocation = new LatLng(0.0,0.0);
+
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabledGPS = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        // Check if enabled and if not send user to the GSP settings
+        // Better solution would be to display a dialog and suggesting to
+        // go to the settings
+        if (!enabledGPS) {
+            Toast.makeText(this, "GPS signal not found", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+            return;
+        }
+
         LatLng selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
-        if(selectedpick.equals(defzeroLocation))
+
+        if(Utils.isEmptyLocation(selectedpick))
         {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
             return;
         }
         LatLng selecteddrop = BZAppManager.getInstance().selectedDropLocation;
-        if (selecteddrop.equals(defzeroLocation))
+
+        if(Utils.isEmptyLocation(selecteddrop))
         {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
             return;
         }
         //call web service
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Creating ride request...");
 
-        BZRESTApiHandler api = new BZRESTApiHandler(this);
-        api.setMessage("Creating ride request...");
+            String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
 
-        String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+            String locationStartAddress = getAddress(selectedpick);
+            String locationEndAddress = getAddress(selecteddrop);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
 
-        String locationStartAddress = getAddress(selectedpick);
-        String locationEndAddress = getAddress(selecteddrop);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
+            String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
+                    "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
+                    "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
 
-        String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
-                "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
-                "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
-
-        api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
-        api.setPostExecuteListener(this);
+            api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
+            api.setPostExecuteListener(this);
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
 
 
     }

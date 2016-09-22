@@ -36,7 +36,7 @@ if ( $num_rows > 0) {
 	
 	$data = array();
 	$data["status"] ="S";
-	$data["info"] = "Get Card details success for rider";
+	$data["info"] = "Get ride details success for driver";
 	$data["StartLocation"] = $StartLocation;
 	$data["EndLocation"] = $EndLocation;
 	$data["FirstName"] = $FirstName;
@@ -48,7 +48,7 @@ else
 {
 	$data = array();
 	$data["status"] ="F";
-	$data["info"] = "Get Last ride failed for rider";
+	$data["info"] = "Get ride detail failed for driver";
 	echo json_encode($data);
 }
 mysql_close();

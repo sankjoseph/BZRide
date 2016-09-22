@@ -22,6 +22,8 @@ public class ModelClassMapper {
         classHashMap.put(Utils.UPDATE_DRIVER_AVAILABILITY_URL, BZJSONResp.class);
         classHashMap.put(Utils.UPDATE_DRIVER_LOCATION_URL, BZJSONResp.class);
         classHashMap.put(Utils.UPDATE_BANK_INITIAL_INFO_URL, BZJSONResp.class);
+        classHashMap.put(Utils.ACCEPT_RIDE_REQUEST_URL, BZJSONResp.class);
+        classHashMap.put(Utils.START_RIDE_URL, BZJSONResp.class);
 
         //classHashMap.put(Utils.NOTIFICATION_LIST_URL, NotificationRsp.class);
     }

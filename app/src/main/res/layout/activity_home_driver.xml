@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
                 android:layout_weight="0.5"
-                android:text="Finish"
+                android:text="Start Ride"
                 android:background="#2683c2"
                 />
 

@@ -45,9 +45,12 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 $result = curl_exec($ch);
 LOGDATA($result);
-showSuccess("Immediate Ride request successfully created at server.");
 		
-// if (preg_match("/OK/i", $result)) {
-  //      showError("Failed to handle the ride request, Please retry.");
-    //} 
+if (preg_match("/Could not/i", $result)) {
+    showError("Failed to handle the ride request, Please retry.");
+ } 
+ else
+ {
+	showSuccess("Immediate Ride request successfully created at server.");
+ }
 ?>
