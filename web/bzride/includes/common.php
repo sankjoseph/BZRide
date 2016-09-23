@@ -4,8 +4,105 @@ define("DEBUG_F","File");
 define("TEST_CARD","CARD");
 define('SECRET_KEY', "zxcvbnmasdfghjkl");//16 digit key
 
-$BASE_URL = 'http://bzride.com/bzride/';
+$BASE_URL = 'http://bzride.com/bzride/'; //change when production
 
+// For Android devices
+function androidpush($deviceToken,$pushMessage,$apiKey)
+{
+	LOGDATA('Android push notification begin');		
+    $gcmRegID  = $deviceToken;
+	LOGDATA($gcmRegID);	
+	LOGDATA($pushMessage);	
+	LOGDATA($apiKey);	
+	
+    if ($gcmRegID && $pushMessage) {    
+            $registatoin_ids = array($gcmRegID);
+            $message = array("m" => $pushMessage,'x' => 'call');
+            
+            $url = 'https://android.googleapis.com/gcm/send';
+			$fields = array(
+             'registration_ids' => $registatoin_ids,
+             'data' => $message,
+             'priority' => 'high'
+          ); 
+          $headers = array(
+              'Authorization: key=' . $apiKey,
+              'Content-Type: application/json'
+          );
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); 
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+          $result = curl_exec($ch);    
+		  LOGDATA($result);		  
+          curl_close($ch);
+	
+	
+		if (!$result)
+			showError("Ride request message not delivered. Please retry.");
+		else
+			//showSuccess("Ride request message successfully delivered.");
+		return true;
+		
+    }
+	else
+	{
+		showError("Message or device token not set. Please retry.");
+		 return false;
+	}
+    return true;
+}
+// For apple devices
+function apns($deviceToken,$from,$fromname)
+{
+	LOGDATA('IOS push notification begin');	
+      $passphrase = 'xxxxxxx';      
+      $message['loc-key'] = "IC_MSG";
+      $message['message'] = "$fromname";
+      
+      $ctx = stream_context_create();
+      stream_context_set_option($ctx, 'ssl', 'local_cert', 'production.pem');
+      stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+      
+      // Open a connection to the APNS server
+      $fp = stream_socket_client(
+          'ssl://gateway.push.apple.com:2195', $err,
+          $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+      
+      if (!$fp)
+		  showError("Failed to connect. Please retry.");
+          //exit("Failed to connect: $err $errstr" . PHP_EOL);
+      else
+	  {
+		  showSuccess("Connected to APNS.");
+	  }
+      
+      $body['aps'] = array(
+          'alert' => "You have a ride request from ".$fromname,
+          'sound' => "default"
+    );
+      
+      // Encode the payload as JSON
+      $payload = json_encode($body);
+      
+      // Build the binary notification
+      $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+      
+      // Send it to the server
+      $result = fwrite($fp, $msg, strlen($msg));
+            
+      if (!$result)
+			showError("Ride request message not delivered. Please retry.");
+      else
+			showSuccess("Ride request message successfully delivered.");
+      
+      // Close the connection to the server
+      fclose($fp);
+}
 
 function GetIdByCheckforTimeout($token)
 {

@@ -75,9 +75,13 @@ public class BZAppManager {
     public  String getDriverBankDataParamsFlat()
     {
         String retData = "";
-        retData += "&AccountType=" +"Savings";
+        retData += "&AccountType=" +"individual";
         retData += "&BankName=" + bzDriverData.driverBankInfo.BankName;
-        retData += "&AccountToken=" + "tokenest";
+        retData += "&accountholdername=" + bzDriverData.driverBankInfo.BankAccountHolderName;
+        retData += "&routingnumber=" + bzDriverData.driverBankInfo.BankAccountRoutingNumber;
+        retData += "&accountnumber=" + bzDriverData.driverBankInfo.BankAccountNumber;
+
+
         return retData;
     }
 

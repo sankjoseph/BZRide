@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `bztbl_riders` (
 --
 -- Table structure for table `bztbl_userbankdetails`
 --
-
+// new item
 CREATE TABLE IF NOT EXISTS `bztbl_driverbankdetails` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` varchar(10) NOT NULL,

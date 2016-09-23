@@ -16,6 +16,28 @@ $requestId = $_REQUEST['rideRequestId'];
 $token = $_REQUEST['token'];
 LOGDATA($token);
 $driverID = GetIdByCheckforTimeout($token);
+
+$requestSQLCheck = "select * from bztbl_riderequests where Id = " .$requestId ;
+LOGDATA($requestSQLCheck);
+$resultCheck = mysql_query($requestSQLCheck,$conn);
+if (!$resultCheck) {
+	showError(mysql_error());
+}
+
+$num_rows = mysql_num_rows($resultCheck);
+LOGDATA($num_rows);
+if ( $num_rows > 0) {
+	$rowIn = mysql_fetch_array($resultCheck);
+	$status = $rowIn["Status"];
+	if ($status == 'A')
+	{
+		$data = array();
+		$data["status"] ="F";
+		$data["info"] = "Timeout. Request already accepted by another driver";
+		echo json_encode($data);
+		die();
+	}
+}
 //request accepted
 $requestSQL = "UPDATE bztbl_riderequests SET Status = 'A',DriverId = ".$driverID. " where Id = " .$requestId ;
 

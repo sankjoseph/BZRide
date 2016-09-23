@@ -1,14 +1,28 @@
 package bzride.com.bzride;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Token;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class driverBankInfo extends AppCompatActivity  implements   View.OnClickListener, OnPostExecuteListener {
 
@@ -44,6 +58,34 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountNumber  = txtBankAccountNumber.getText().toString();
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountHolderName  = txtBankAccountHolderName.getText().toString();
         BZAppManager.getInstance().bzDriverData.driverBankInfo.BankAccountRoutingNumber  = txtBankAccountRoutingNumber.getText().toString();
+
+            // todo test from app
+            /*Stripe.apiKey = "sk_test_2rCnQT2VGQl5ndFbgfEas7g2";
+
+            Map<String, Object> tokenParams = new HashMap<String, Object>();
+            Map<String, Object> bank_accountParams = new HashMap<String, Object>();
+            bank_accountParams.put("country", "US");
+            bank_accountParams.put("currency", "usd");
+            bank_accountParams.put("account_holder_name", "Jane Austen");
+            bank_accountParams.put("account_holder_type", "individual");
+            bank_accountParams.put("routing_number", "11000000");
+            bank_accountParams.put("account_number", "000123456789");
+            tokenParams.put("bank_account", bank_accountParams);
+
+            try {
+                Token s = Token.create(tokenParams);
+                Log.d("Token", s.getId());
+            } catch (AuthenticationException e) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, e.getMessage(), null);
+            } catch (CardException e) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, e.getMessage(), null);
+            } catch (APIException e) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, e.getMessage(), null);
+            } catch (InvalidRequestException e) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, e.getMessage(), null);
+            } catch (APIConnectionException e) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE,e.getMessage(), null);
+            }*/
 
         BZRESTApiHandler api = new BZRESTApiHandler(this);
         api.setMessage("updating bank details for driver...");

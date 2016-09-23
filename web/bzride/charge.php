@@ -6,7 +6,7 @@ session_start();
 
 $token = $_REQUEST['token'];
 $currency = $_REQUEST['currency'];
-$amount = $_REQUEST['amount'];
+$amount = $_REQUEST['amount'] *100;
 
 LOGDATA ('inside charge card operation');
 try {
@@ -38,7 +38,10 @@ if (defined('TEST_CARD')) {
   "description" => "Charge for BZRide."
 ));
  //send the file, this line will be reached if no error was thrown above
- echo "<h1>Payment Processed</h1>";
+$data = array();
+$data["status"] ="S";
+$data["info"] = "charging successful";
+echo json_encode($data);
 }
 //catch the errors in any way you like
  

@@ -58,7 +58,7 @@ public class Utils {
     public static final String READ_RIDE_REQUEST_URL = "/ReadRideRequest.php";
     public static final String ACCEPT_RIDE_REQUEST_URL = "/AcceptRideRequest.php";
     public static final String START_RIDE_URL = "/StartRide.php";
-
+    public static final String END_RIDE_URL = "/EndRide.php";
 
     public static final String REGISTER_SUCCESS = "Login Success";
 

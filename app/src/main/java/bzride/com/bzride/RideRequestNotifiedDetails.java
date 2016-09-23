@@ -40,7 +40,7 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
 
         bRequestAccepted = false;
 
-        new CountDownTimer(8000, 1000) {
+        new CountDownTimer(20000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 txtTimer.setText("Seconds remaining: " + millisUntilFinished / 1000);

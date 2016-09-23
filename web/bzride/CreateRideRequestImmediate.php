@@ -47,7 +47,7 @@ $result = curl_exec($ch);
 LOGDATA($result);
 		
 if (preg_match("/Could not/i", $result)) {
-    showError("Failed to handle the ride request, Please retry.");
+    showError("Failed to handle the ride request or Could not find any drivers available at this time, Please retry.");
  } 
  else
  {

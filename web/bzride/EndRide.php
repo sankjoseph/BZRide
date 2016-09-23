@@ -62,9 +62,6 @@ $requestId = $_REQUEST['rideRequestId'];
 $ActualEndLat = $_REQUEST['ActualEndLat'];
 $ActualEndLong = $_REQUEST['ActualEndLong'];
 
-$requestId = '5';
-$ActualEndLat = 9.59157;
-$ActualEndLong = 76.5222;
 
 $token = $_REQUEST['token'];
 LOGDATA($token);
@@ -78,6 +75,17 @@ LOGDATA($updateSQL);
 
 $result = mysql_query($updateSQL,$conn);
 if (!$result) {
+	showError(mysql_error());
+}
+
+//////
+//update the driver as available
+$requestSQLDriver = "UPDATE bztbl_drivers SET status = 'A' where Id = " .$driverID ;
+
+LOGDATA($requestSQLDriver);
+
+$resultUpdateDriver = mysql_query($requestSQLDriver,$conn);
+if (!$resultUpdateDriver) {
 	showError(mysql_error());
 }
 
@@ -120,7 +128,7 @@ $timetakenminutes = round(abs($ActualRideDateTimeEnd - $ActualRideDateTimeStart)
 $rateForTimeCents = $timetakenminutes * 15.0;
 // calculate rate for above and fit in table
 $baseFare = 12.0;// 12Dollar
-$stateFee = 1.75;
+$stateFee = 2.0;//dollar
 $finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)/100;
 // sum total fare and update in table
 
@@ -135,7 +143,7 @@ if (!$result) {
 
 // get card details
 // get data from request table for calculation
-$requestCardSQL = "Select CardToken from bztbl_riders where Id = " .$riderId ;
+$requestCardSQL = "Select CardToken from bztbl_riders where Id = " .$riderId ;//RequestorId
 LOGDATA($requestCardSQL);
 $result = mysql_query($requestCardSQL,$conn);
 if (!$result) {
@@ -146,34 +154,34 @@ $CardToken = $rowToken["CardToken"];
 
 // charge card for the amount usinhg card token todo
 // last ride will have fare details for user
+// call web service for putting data
+$bz_req_url = $BASE_URL . 'charge.php';
+$ch =  curl_init();
 
-//////
-$requestSQLDriver = "UPDATE bztbl_drivers SET status = 'A' where Id = " .$driverID ;
+$postData = http_build_query(array('token' => $CardToken,	
+					'amount' => $finalFare,
+					'currency' => 'usd'	));
+curl_setopt($ch, CURLOPT_URL, $bz_req_url);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+curl_setopt($ch, CURLOPT_POST, 1);																							
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+$result = curl_exec($ch);
+LOGDATA($result);
+		
+if (preg_match("/Could not/i", $result)) {
+    showError("Failed to handle charge, Please retry.");
+ } 
 
-LOGDATA($requestSQLDriver);
-
-$resultUpdateDriver = mysql_query($requestSQLDriver,$conn);
-if (!$resultUpdateDriver) {
-	showError(mysql_error());
-}
-
-$num_rowsDriver = mysql_affected_rows($resultUpdateDriver);
-LOGDATA($num_rowsDriver);
-
-
-if ( $num_rows > 0 && num_rowsDriver > 0 ) {
-	$data = array();
-	$data["status"] ="S";
-	$data["info"] = "End ride success for driver";
-	echo json_encode($data);
-}
-else
-{
-	$data = array();
-	$data["status"] ="F";
-	$data["info"] = "End ride failed for driver";
-	echo json_encode($data);
-}
+$data = array();
+$data["status"] ="S";
+$data["fare"] =  "".$finalFare."";
+$data["info"] = "End ride success for driver";
+echo json_encode($data);
 mysql_close();
 }
 ?>
