@@ -38,18 +38,36 @@ public class EULA extends AppCompatActivity implements View.OnClickListener, OnP
     }
     private void acceptEULAaction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+
+
+            // Get all other info from drill down screens from this register screen ie  card info taken in other child screen
+            if (BZAppManager.getInstance().isDriver == true) {
+                BZRESTApiHandler api = new BZRESTApiHandler(this);
+                api.setMessage("Registering new driver...");
+                api.setPostExecuteListener(this);
+
+                String urlCall = Utils.BASE_URL + Utils.REGISTER_DRIVER_URL ;
+                String params = BZAppManager.getInstance().getDriverDataParamsFlat();
+                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                params = params + "&deviceId=" + deviceid;
+                api.putDetails(urlCall, Utils.REGISTER_DRIVER_URL, params);
+            }
+            else{
+                BZRESTApiHandler api = new BZRESTApiHandler(this);
+                api.setMessage("Registering new rider...");
+                api.setPostExecuteListener(this);
+
+                String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL;
+                String params = BZAppManager.getInstance().getRiderDataParamsFlat();
+
+                deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                params = params + "&deviceId=" + deviceid;
+                api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
+            }
             // Get all other info from drill down screens from this register screen ie  vehicle,license, registration, insurance
             // This is done in other child drill down screens
 
-            BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setMessage("Registering new driver...");
-            api.setPostExecuteListener(this);
 
-            String urlCall = Utils.BASE_URL + Utils.REGISTER_DRIVER_URL ;
-            String params = BZAppManager.getInstance().getDriverDataParamsFlat();
-            deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            params = params + "&deviceId=" + deviceid;
-            api.putDetails(urlCall, Utils.REGISTER_DRIVER_URL, params);
         } else
         {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
@@ -66,10 +84,19 @@ public class EULA extends AppCompatActivity implements View.OnClickListener, OnP
         RegisterResp response = (RegisterResp)model;
         if (model.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
             // store driver id for filling bank info
-            BZAppManager.getInstance().currentUserId = response.Id;
-            Intent myIntent = new Intent(EULA.this, driverBankInfo.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            EULA.this.startActivity(myIntent);
+            if (BZAppManager.getInstance().isDriver == true) {
+                BZAppManager.getInstance().currentUserId = response.Id;
+                Intent myIntent = new Intent(EULA.this, driverBankInfo.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                myIntent.putExtra("mode", "new");
+                EULA.this.startActivity(myIntent);
+            }
+            else {//rider response
+
+                BZAppManager.getInstance().currentUserId = response.Id;
+                startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, model.info, null);

@@ -11,6 +11,13 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
+
+CREATE TABLE IF NOT EXISTS `bztbl_test` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `DOB` datetime NOT NULL,
+   PRIMARY KEY (`Id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -19,6 +26,17 @@ SET time_zone = "+00:00";
 --
 -- Database: `bzridedb`
 --
+
+alter table add DOB
+ALTER TABLE bztbl_drivers
+ADD DOB date NOT NULL
+
+FinalCharge bztbl_riderequests added
+
+ALTER TABLE bztbl_riderequests
+ADD FinalCharge FLOAT
+
+
 INSERT INTO `bztbl_drivers` (`Id`, `Firstname`, `MiddleName`,`Lastname`, `Email`, `Password`, `Address1`, `Address2`, `Phone`,`SSN`,`DeviceId`,`DeviceType`,`isLicenseAccepted`, 
  `isActive`,`status`, `currentlat`, `currentlong`, `CardType`, `CardProvider`, `cardBillingAddress1`, `cardBillingAddress2`, `CardToken`, CreatedByDate) VALUES
 (1, 'Shenjin', 'Thomas','Sacramento', 'shenjin@outlook.com', 'passs', 'muttom', 'tpz', '0000-0000', 'sssn1', 'xxzxzxzczc', 'A', 1, 1, 'A',38.7521, 121.2880,'C', 'VISA','passs', 'muttom','zxxxx', now());

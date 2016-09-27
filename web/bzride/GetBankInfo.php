@@ -31,18 +31,17 @@ if ( $num_rows > 0) {
 	$Id = $rowIn["Id"];
 	$AccountType = $rowIn["AccountType"];
 	$BankName = $rowIn["BankName"];
-	$AccountToken = $rowIn["AccountToken"];
+
 	
 	LOGDATA($AccountType);
 	LOGDATA($BankName);
-	LOGDATA($AccountToken);// how to get details from token
+
 
 	$data = array();
 	$data["status"] ="S";
 	$data["info"] = "Get Bank Info success for driver";
 	$data["AccountType"] = $AccountType;
 	$data["BankName"] = $BankName;
-	$data["AccountToken"] = $AccountToken;
 	echo json_encode($data);
 }
 else

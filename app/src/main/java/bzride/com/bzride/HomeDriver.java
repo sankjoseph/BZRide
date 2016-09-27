@@ -1,5 +1,6 @@
 package bzride.com.bzride;
-// <!--android:value="AIzaSyB0Vcr-J6ZqU1qg-yQ04rP2avZdpBBBsA8" />-->
+// android:value="AIzaSyB0Vcr-J6ZqU1qg-yQ04rP2avZdpBBBsA8"
+//android:value="AIzaSyCeUKXWdk9-P8kapOznl3cWyWVppLk7w7M" /> prod
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,17 +19,25 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +67,7 @@ import java.util.Locale;
 
 public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener, OnPostExecuteListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
@@ -79,6 +88,10 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     private boolean onlineOption;
     Button btnFinishStart;
     boolean bFinishRide;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +106,23 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
         String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
         String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        setTitle("BZRide");
 
         //keep the token
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
@@ -139,6 +169,81 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+
+        /*if (id == R.id.nav_geninfo) {
+
+        } else if (id == R.id.nav_vehicle) {
+
+        } else if (id == R.id.nav_insurance) {
+
+        } else if (id == R.id.nav_registration) {
+
+        } else if (id == R.id.nav_license) {
+
+        } else
+         */
+        if (id == R.id.nav_bankinfo) {
+            Intent myIntent = new Intent(HomeDriver.this, driverBankInfo.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            myIntent.putExtra("mode", "edit");
+            HomeDriver.this.startActivity(myIntent);
+        }
+
+
+        else if (id == R.id.nav_contact) {
+
+        }
+        else if (id == R.id.nav_request_ride) {
+
+        }
+        else if (id == R.id.nav_about) {
+
+        }
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
     private String getDirectionsUrl(LatLng origin,LatLng dest){
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single" android:title = "Update">
+    </group>
+    <item android:title="Profile">
+        <menu>
+
+            <item android:id="@+id/nav_bankinfo"
+                android:title="Bank Details" />
+
+        </menu>
+    </item>
+    <item android:title="Support">
+        <menu>
+            <item android:id="@+id/nav_contact"
+                android:title="Contact" />
+            <item android:id="@+id/nav_request_ride"
+                android:title="Request" />
+            <item android:id="@+id/nav_about"
+                android:title="About BZRide 1.0" />
+        </menu>
+    </item>
+    <item android:title="About">
+        <menu>
+                 android:title="About BZRide 1.0" />
+        </menu>
+    </item>
+</menu>

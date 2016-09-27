@@ -33,22 +33,7 @@ import com.google.gson.GsonBuilder;
 
 public class MainActivity extends AppCompatActivity  {
 
-    DrawerLayout dLayout;
-    ListView mDrawerList;
-    ArrayAdapter<String> adapter;
-    /* ActionBarDrawerToggle indicates the presence of Navigation Drawer in the action bar */
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    /* Title of the action bar */
-    private String mTitle = "Navigation Drawer";
-
-    private int selectedPosition;
-
-    /* Getting navigation items from array */
-    private String[] items;
-
-
-    @Override
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -58,6 +43,15 @@ public class MainActivity extends AppCompatActivity  {
         if (Utils.isEqualAndNotEmpty(usertype, "Driver")) {
             BZAppManager.getInstance().isDriver = true;
         }
+
+       /* Intent myIntent = new Intent(MainActivity.this, Home.class);
+        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
+        MainActivity.this.startActivity(myIntent);
+        return;*/
+         /*       Intent myIntent2 = new Intent(MainActivity.this, BZLanding.class);
+        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
+        MainActivity.this.startActivity(myIntent2);
+        return;*/
 
         /*Intent myIntent2 = new Intent(MainActivity.this, driverBankInfo.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
@@ -96,7 +90,7 @@ public class MainActivity extends AppCompatActivity  {
 
         //good
 
-       if (!Utils.isEmpty(usertoken))
+      if (!Utils.isEmpty(usertoken))
         {
             if (BZAppManager.getInstance().isDriver == true)
             {
@@ -116,7 +110,8 @@ public class MainActivity extends AppCompatActivity  {
             Intent myIntent = new Intent(MainActivity.this, BZLanding.class);
             //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             MainActivity.this.startActivity(myIntent);
-        } //good
+        }
+        //good
     }
 
 

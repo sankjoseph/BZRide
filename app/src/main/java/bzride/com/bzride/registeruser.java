@@ -141,26 +141,16 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
             BZAppManager.getInstance().bzRiderData.ConfirmPassword = confirmpwd.getText().toString();
             BZAppManager.getInstance().bzRiderData.Address1 = address1.getText().toString();
             BZAppManager.getInstance().bzRiderData.Address2 = address2.getText().toString();
-
             BZAppManager.getInstance().bzRiderData.City = city.getText().toString();
             BZAppManager.getInstance().bzRiderData.State = state.getText().toString();
             BZAppManager.getInstance().bzRiderData.Zip = zip.getText().toString();
-
-
             BZAppManager.getInstance().bzRiderData.PhoneNumber = PhoneNumber.getText().toString();
 
-            // Get all other info from drill down screens from this register screen ie  card info taken in other child screen
+            //call EULA and if accepted start the reg
+            Intent myIntent = new Intent(registeruser.this, EULA.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            registeruser.this.startActivity(myIntent);
 
-            BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setMessage("Registering new rider...");
-            api.setPostExecuteListener(this);
-
-            String urlCall = Utils.BASE_URL + Utils.REGISTER_RIDER_URL ;
-            String params = BZAppManager.getInstance().getRiderDataParamsFlat();
-
-            deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            params = params + "&deviceId=" + deviceid;
-            api.putDetails(urlCall, Utils.REGISTER_RIDER_URL, params);
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
@@ -171,9 +161,6 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
         RegisterResp response = (RegisterResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
 
-            BZAppManager.getInstance().currentUserId = response.Id;
-
-            startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);

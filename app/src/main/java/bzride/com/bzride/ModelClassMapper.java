@@ -27,6 +27,8 @@ public class ModelClassMapper {
         classHashMap.put(Utils.END_RIDE_URL, EndRideRsp.class);
 
 
+
+
         //classHashMap.put(Utils.NOTIFICATION_LIST_URL, NotificationRsp.class);
     }
 

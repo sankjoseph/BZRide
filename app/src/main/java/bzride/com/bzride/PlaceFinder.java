@@ -54,6 +54,17 @@ public class PlaceFinder extends AppCompatActivity implements   GoogleApiClient.
         mrecyclerView = (RecyclerView) findViewById(R.id.recycler_view_search);
 
 
+        String Option;
+        Bundle extras = getIntent().getExtras();
+        Option= extras.getString("LocationOption");
+        if (Option.equals("PickUp"))
+        {
+            mTextATEdit.setHint("select pickup location");
+        }
+        else if (Option.equals("Drop"))
+        {
+            mTextATEdit.setHint("select drop location");
+        }
         try {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)

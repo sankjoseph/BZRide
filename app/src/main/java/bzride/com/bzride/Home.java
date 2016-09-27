@@ -1,11 +1,13 @@
 package bzride.com.bzride;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,21 +17,31 @@ import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,9 +71,10 @@ import java.util.List;
 import java.util.Locale;
 
 //OnMapReadyCallback
-public class Home extends FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
+public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,OnPostExecuteListener,
         GoogleMap.OnMarkerClickListener {
+
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
 
@@ -73,15 +86,22 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
 
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+
+
+
         findViewById(R.id.btnRequest).setOnClickListener(this);
         findViewById(R.id.btnSchedule).setOnClickListener(this);
-        findViewById(R.id.btnPickUp).setOnClickListener(this);
-        findViewById(R.id.btnDrop).setOnClickListener(this);
+
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
@@ -318,108 +338,109 @@ public class Home extends FragmentActivity  implements OnMapReadyCallback, Googl
             case R.id.btnSchedule:
                 scheduleNowAction();
                 break;
-            case R.id.btnPickUp:
-                PickUpAction();
-                break;
-            case R.id.btnDrop:
-                DropAction();
-                break;
         }
     }
-    private void PickUpAction() {
+
+    private void scheduleNowAction() {
+    //call web service //to do
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {//after pickup location
+            //show place finder
+            Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+            //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            myIntent.putExtra("LocationOption", "Drop");
+            Home.this.startActivityForResult(myIntent, 2);
+        }
+        if (requestCode == 2)//after drop location
+        {
+            //check for valid pickup and drop
+            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+            boolean enabledGPS = service
+                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            // Check if enabled and if not send user to the GSP settings
+            // Better solution would be to display a dialog and suggesting to
+            // go to the settings
+            if (!enabledGPS) {
+                Toast.makeText(this, "GPS signal not found", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+                return;
+            }
+
+            LatLng selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
+
+            if(Utils.isEmptyLocation(selectedpick))
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
+                return;
+            }
+            LatLng selecteddrop = BZAppManager.getInstance().selectedDropLocation;
+
+            if(Utils.isEmptyLocation(selecteddrop))
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
+                return;
+            }
+            //call web service
+            if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+                BZRESTApiHandler api = new BZRESTApiHandler(this);
+                api.setMessage("Creating ride request...");
+
+                String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+
+                String locationStartAddress = getAddress(selectedpick);
+                String locationEndAddress = getAddress(selecteddrop);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
+
+                String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
+                        "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
+                        "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
+
+                api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
+                api.setPostExecuteListener(this);
+            }
+            else {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+            }
+
+        }
+    }//onActivityResult
+    private void requestNowAction() {
+
         final CharSequence[] items = { "Automatically", "Manually",
                 "Cancel" };
         AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
         builder.setTitle("Select Pickup location!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int item) {
+            public void onClick(DialogInterface dialog, int index) {
                 String userChoosenTask;
 
-                if (items[item].equals("Automatically")) {
+                if (items[index].equals("Automatically")) {
                     //start location as m_latLng
                     BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
-                } else if (items[item].equals("Manually")) {
+                    Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                    //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    myIntent.putExtra("LocationOption", "Drop");
+                    Home.this.startActivityForResult(myIntent, 2);
+                } else if (items[index].equals("Manually")) {
                     //show place finder
                     Intent myIntent = new Intent(Home.this, PlaceFinder.class);
                     //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     myIntent.putExtra("LocationOption", "PickUp");
-                    Home.this.startActivity(myIntent);
-                } else if (items[item].equals("Cancel")) {
+                    Home.this.startActivityForResult(myIntent, 1);
+                } else if (items[index].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
         });
         builder.show();
-
-    }
-    private void DropAction() {
-        //show place finder
-        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        myIntent.putExtra("LocationOption", "Drop");
-        Home.this.startActivity(myIntent);
-
-    }
-    private void scheduleNowAction() {
-    //call web service //to do
-        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
-    }
-    private void requestNowAction() {
-        //check for valid pickup and drop
-
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean enabledGPS = service
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        // Check if enabled and if not send user to the GSP settings
-        // Better solution would be to display a dialog and suggesting to
-        // go to the settings
-        if (!enabledGPS) {
-            Toast.makeText(this, "GPS signal not found", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-            return;
-        }
-
-        LatLng selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
-
-        if(Utils.isEmptyLocation(selectedpick))
-        {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
-            return;
-        }
-        LatLng selecteddrop = BZAppManager.getInstance().selectedDropLocation;
-
-        if(Utils.isEmptyLocation(selecteddrop))
-        {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
-            return;
-        }
-        //call web service
-        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setMessage("Creating ride request...");
-
-            String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
-
-            String locationStartAddress = getAddress(selectedpick);
-            String locationEndAddress = getAddress(selecteddrop);
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
-
-            String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
-                    "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
-                    "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
-
-            api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
-            api.setPostExecuteListener(this);
-        }
-        else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
-        }
-
-
     }
 
     public GoogleApiClient getAPIClient() {

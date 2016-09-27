@@ -25,7 +25,8 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
 
     private EditText PhoneNumber;
     private EditText SSN;
-
+    private EditText DOB;
+    private DateValidator dateValidator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,7 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
     }
     private void registeraction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            dateValidator = new DateValidator();
             firstName = (EditText) findViewById(R.id.txtdriverFirstName);
             middleName = (EditText) findViewById(R.id.txtdrivermiddleName);
             lastName = (EditText) findViewById(R.id.txtdriverLastName);
@@ -97,6 +99,20 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
                 return;
             }
 
+            DOB = (EditText) findViewById(R.id.txtDOB);
+            String dob = ((EditText) findViewById(R.id.txtDOB)).getText().toString();
+            if (Utils.isEmpty(dob)) {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_DOB_EMPTY, null);
+                return;
+            }
+
+            boolean validDOB = dateValidator.validate(dob);
+            if (!validDOB)
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INVALID_DOB, null);
+                return;
+            }
+
             SSN = (EditText) findViewById(R.id.txtdriverSSN);
             String ssn = ((EditText) findViewById(R.id.txtdriverSSN)).getText().toString();
             if (Utils.isEmpty(ssn)) {
@@ -118,6 +134,7 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
             BZAppManager.getInstance().bzDriverData.Zip = zip.getText().toString();
 
             BZAppManager.getInstance().bzDriverData.PhoneNumber = PhoneNumber.getText().toString();
+            BZAppManager.getInstance().bzDriverData.dob = DOB.getText().toString();
             BZAppManager.getInstance().bzDriverData.SSN = SSN.getText().toString();
             //call EULA and if accepted start the reg
             Intent myIntent = new Intent(registerDriver.this, EULA.class);

@@ -6,6 +6,13 @@ define('SECRET_KEY', "zxcvbnmasdfghjkl");//16 digit key
 
 $BASE_URL = 'http://bzride.com/bzride/'; //change when production
 
+function getMYSQLDate($dateToFormat)
+{
+	$dateIn = strtotime($dateToFormat);
+	$new_date_format = date("Y-m-d H:i:s", $dateIn );  
+	$final = "'".$new_date_format."'";
+	return $final;
+}
 // For Android devices
 function androidpush($deviceToken,$pushMessage,$apiKey)
 {

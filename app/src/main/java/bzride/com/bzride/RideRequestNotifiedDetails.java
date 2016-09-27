@@ -35,7 +35,7 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
         setContentView(R.layout.activity_ride_request_notified_details);
         txtriderData = (TextView)  findViewById(R.id.txtrideRequest);
         txtTimer = (TextView)findViewById(R.id.txttimeremaining);
-        findViewById(R.id.btnContact).setOnClickListener(this);
+        //findViewById(R.id.btnContact).setOnClickListener(this);
         findViewById(R.id.btnAcceptRide).setOnClickListener(this);
 
         bRequestAccepted = false;
@@ -80,9 +80,9 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
             case R.id.btnAcceptRide:
                 acceptrideAction();
                 break;
-            case R.id.btnContact:
-                contactAction();
-                break;
+            //case R.id.btnContact:
+              //  contactAction();
+               // break;
         }
     }
     private void contactAction() {

@@ -33,6 +33,19 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
         setContentView(R.layout.activity_driver_bank_info);
         findViewById(R.id.btnBankDriverDone).setOnClickListener(this);
 
+
+        String Option;
+        Bundle extras = getIntent().getExtras();
+        Option= extras.getString("mode");
+        if (Option.equals("edit")){
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
+            BZAppManager.getInstance().currentUserId = userid;
+        }
+
+
+
         txtBankName =  (EditText)  findViewById(R.id.txtBankName);
         txtBankAccountNumber = (EditText)  findViewById(R.id.txtBankAccountNumber);
         txtBankAccountHolderName = (EditText)  findViewById(R.id.txtBankAccountHolderName);
@@ -87,16 +100,14 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
                 Utils.showInfoDialog(this, Utils.MSG_TITLE,e.getMessage(), null);
             }*/
 
-        BZRESTApiHandler api = new BZRESTApiHandler(this);
-        api.setMessage("updating bank details for driver...");
-        api.setPostExecuteListener(this);
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("updating bank details for driver...");
+            api.setPostExecuteListener(this);
 
-        String urlCall = Utils.BASE_URL + Utils.UPDATE_BANK_INITIAL_INFO_URL ;
-
-        String params = BZAppManager.getInstance().getDriverBankDataParamsFlat();
-        params = params + "&driverID=" + BZAppManager.getInstance().currentUserId;
-
-        api.putDetails(urlCall, Utils.UPDATE_BANK_INITIAL_INFO_URL, params);
+            String urlCall = Utils.BASE_URL + Utils.UPDATE_BANK_INITIAL_INFO_URL ;
+            String params = BZAppManager.getInstance().getDriverBankDataParamsFlat();
+            params = params + "&driverID=" + BZAppManager.getInstance().currentUserId;
+            api.putDetails(urlCall, Utils.UPDATE_BANK_INITIAL_INFO_URL, params);
 
 
     } else {

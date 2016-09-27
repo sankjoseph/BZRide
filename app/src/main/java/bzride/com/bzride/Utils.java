@@ -50,6 +50,8 @@ public class Utils {
     public static final String REGISTER_DRIVER_URL = "/RegisterDriver.php";
     public static final String GET_BANK_INFO_URL = "/GetBankInfo.php";
     public static final String UPDATE_BANK_INITIAL_INFO_URL = "/UpdateInitialBankInfo.php";
+
+
    // public static final String ACCEPT_EULA_DRIVER_URL = "/AcceptEULADriver.php";
 //
     public static final String UPDATE_DEVICE_TOKEN_URL = "/UpdateDeviceToken.php";
@@ -72,6 +74,11 @@ public class Utils {
     public static final String MSG_EMAIL_INVALID = "Please enter a valid email id.";
     public static final String MSG_NAME_EMPTY = "Please enter your name.";
     public static final String MSG_PHONE_EMPTY = "Please enter your phone number.";
+    public static final String MSG_DOB_EMPTY = "Please enter your date of birth.";
+
+    public static final String MSG_INVALID_DOB = "Please enter valid date of birth in mm/dd/yyyy format.";
+
+
     public static final String MSG_SSN_EMPTY = "Please enter your SSN.";
     public static final String MSG_ERROR_SERVER = "Some error occured while connecting to server.";
     public static final String MSG_ERROR_NOT_READY = "Not implemented now.Please wait for future release.";

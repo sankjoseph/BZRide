@@ -2,6 +2,7 @@
 include("includes/db.php");
 include("includes/common.php");
 
+
 function distanceCalculationGoogleAPI($point1_lat, $point1_long, $point2_lat, $point2_long, $unit = 'km', $decimals = 2) {
 	
 }
@@ -125,15 +126,18 @@ $rateforDistanceCents = $distancetraveledmi * 1.28; //cents
 $timetakenminutes = round(abs($ActualRideDateTimeEnd - $ActualRideDateTimeStart) / 60,2);
 
 // fare time
-$rateForTimeCents = $timetakenminutes * 15.0;
+$rateForTimeCents = $timetakenminutes * 15.0;//cents
 // calculate rate for above and fit in table
 $baseFare = 12.0;// 12Dollar
-$stateFee = 2.0;//dollar
-$finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)/100;
+$stateFee = 1.75;//dollar
+$finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)/100;//dollar
 // sum total fare and update in table
+// for night drive between 10- 6 
+
+$finalFare = ceil($finalFare);
 
 // update fare for table
-$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents where Id = " .$requestId ;
+$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents, FinalCharge = $finalFare where Id = " .$requestId ;
 LOGDATA($updateFareSQL);
 
 $result = mysql_query($updateFareSQL,$conn);

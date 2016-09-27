@@ -141,27 +141,16 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
                 new TokenCallback() {
                     public void onSuccess(Token token) {
                         // Send token to your server
-                        String tokenString =   tokenString = token.getId();
+                        String tokenString = token.getId();
 
                         BZAppManager.getInstance().bzRiderData.cardData.cardToken = tokenString;
                         Log.d("Stripesample", tokenString);
-                        try {
-                            Toast.makeText(getApplicationContext(),
-                                    "Success",
-                                    Toast.LENGTH_LONG
-                            ).show();
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                            // showAlert("Exception while charging the card!",
-                            // e.getLocalizedMessage());
-                        }
                     }
 
                     public void onError(Exception error) {
                         // Show localized error message
                         Toast.makeText(getApplicationContext(),
-                                "Some error",
+                                "Some error while getting credit cark token",
                                 Toast.LENGTH_LONG
                         ).show();
                     }

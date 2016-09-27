@@ -1,16 +1,31 @@
 package bzride.com.bzride;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
-public class BZLanding extends AppCompatActivity implements View.OnClickListener {
+public class BZLanding extends AppCompatActivity implements View.OnClickListener{
+// NavigationView.OnNavigationItemSelectedListener
+
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private String mActivityTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +37,29 @@ public class BZLanding extends AppCompatActivity implements View.OnClickListener
 
         findViewById(R.id.btnRegisterDriver).setOnClickListener(this);
         findViewById(R.id.btnRegisterRider).setOnClickListener(this);
+
+
+       /*  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
+
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
+       mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        addDrawerItems();
+        mActivityTitle = getTitle().toString();
+        setupDrawer();
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(BZLanding.this, "cliked!", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+
     }
 
     @Override
@@ -36,7 +74,7 @@ public class BZLanding extends AppCompatActivity implements View.OnClickListener
                 loginaction();
                 break;
             case R.id.btnRegisterDriver:
-                BZAppManager.getInstance().isDriver = false;
+                BZAppManager.getInstance().isDriver = true;
                 resgisteractionDriver();
                 break;
             case R.id.btnRegisterRider:
@@ -69,25 +107,5 @@ public class BZLanding extends AppCompatActivity implements View.OnClickListener
         BZLanding.this.startActivity(myIntent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

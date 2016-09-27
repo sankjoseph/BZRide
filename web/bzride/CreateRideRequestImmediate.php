@@ -16,7 +16,7 @@ $endLong = getIfSet($_REQUEST['endLong']);
 
 // insert ride request values in DB - I for immediate
 $ride_request_details="insert into bztbl_riderequests values('', 'I', $requestorId, '',$startLocation, $endLocation, 
-$startLat,$startLong,$endLat,$endLong,'','','','','','','', '', '','', now(),now())";
+$startLat,$startLong,$endLat,$endLong,'','','','','','','','', '', '','', now(),now())";
 
 																
 LOGDATA($ride_request_details);
@@ -32,8 +32,7 @@ if (!$last_id) {
 }
 
 $postData = http_build_query(array('rideRequestId' => $last_id,
-					'startLat' => getIfSet($_REQUEST['startLat']),
-					'startLong' => getIfSet($_REQUEST['startLong'])	));
+					'startLat' => $_REQUEST['startLat'],'startLong' => $_REQUEST['startLong']));		
 curl_setopt($ch, CURLOPT_URL, $bz_req_url);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 curl_setopt($ch, CURLOPT_POST, 1);																							

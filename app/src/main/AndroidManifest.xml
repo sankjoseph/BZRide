@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -22,6 +23,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="bzride.com.bzride.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,125 +35,124 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCeUKXWdk9-P8kapOznl3cWyWVppLk7w7M" />
+            android:value="AIzaSyB0Vcr-J6ZqU1qg-yQ04rP2avZdpBBBsA8" />
 
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <activity
-                    android:name=".MainActivity"
-                    android:label="@string/app_name"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".registeruser"
+            android:label="@string/title_activity_registeruser"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".usercarddetails"
+            android:label="@string/title_activity_usercarddetails"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".EULA"
+            android:label="@string/title_activity_eul"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity android:name=".Home" >
+        </activity>
+        <activity android:name=".Feedback" >
+        </activity>
+        <activity
+            android:name=".driverVehicleInfo"
+            android:label="@string/title_activity_driver_vehicle_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverInsuranceInfo"
+            android:label="@string/title_activity_driver_insurance_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverLicInfo"
+            android:label="@string/title_activity_driver_lic_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverVehicleRegInfo"
+            android:label="@string/title_activity_driver_vehicle_reg_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".registerDriver"
+            android:label="@string/title_activity_register_driver"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".driverBankInfo"
+            android:label="@string/title_activity_driver_bank_info"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".BZLanding"
+            android:label="@string/title_activity_bzlanding"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".PlaceFinder"
+            android:label="@string/title_activity_place_finder"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".HomeDriver"
+            android:label="@string/title_activity_home_driver"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
 
-                        <category android:name="android.intent.category.LAUNCHER" />
-                    </intent-filter>
-                </activity>
-                <activity
-                    android:name=".login"
-                    android:label="@string/title_activity_login"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".registeruser"
-                    android:label="@string/title_activity_registeruser"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".usercarddetails"
-                    android:label="@string/title_activity_usercarddetails"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".EULA"
-                    android:label="@string/title_activity_eul"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity android:name=".Home" >
-                </activity>
-                <activity android:name=".Feedback" >
-                </activity>
-                <activity
-                    android:name=".driverVehicleInfo"
-                    android:label="@string/title_activity_driver_vehicle_info"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".driverInsuranceInfo"
-                    android:label="@string/title_activity_driver_insurance_info"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".driverLicInfo"
-                    android:label="@string/title_activity_driver_lic_info"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".driverVehicleRegInfo"
-                    android:label="@string/title_activity_driver_vehicle_reg_info"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".registerDriver"
-                    android:label="@string/title_activity_register_driver"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".driverBankInfo"
-                    android:label="@string/title_activity_driver_bank_info"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".BZLanding"
-                    android:label="@string/title_activity_bzlanding"
-                    android:launchMode="singleTask"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".PlaceFinder"
-                    android:label="@string/title_activity_place_finder"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-                <activity
-                    android:name=".HomeDriver"
-                    android:label="@string/title_activity_home_driver"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <receiver
-                    android:name="com.google.android.gms.gcm.GcmReceiver"
-                    android:exported="true"
-                    android:permission="com.google.android.c2dm.permission.SEND" >
-                    <intent-filter>
-                        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="bzride.com.bzride" />
+            </intent-filter>
+        </receiver>
 
-                        <category android:name="bzride.com.bzride" />
-                    </intent-filter>
-                </receiver>
+        <service
+            android:name=".BZRideGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".MyInstanceIDListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".RegistrationIntentService"
+            android:exported="false" >
+        </service>
 
-                <service
-                    android:name=".BZRideGcmListenerService"
-                    android:exported="false" >
-                    <intent-filter>
-                        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                    </intent-filter>
-                </service>
-                <service
-                    android:name=".MyInstanceIDListenerService"
-                    android:exported="false" >
-                    <intent-filter>
-                        <action android:name="com.google.android.gms.iid.InstanceID" />
-                    </intent-filter>
-                </service>
-                <service
-                    android:name=".RegistrationIntentService"
-                    android:exported="false" >
-                </service>
+        <activity
+            android:name=".RideRequestNotifiedDetails"
+            android:label="@string/title_activity_ride_request_notified_details"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+    </application>
 
-                <activity
-                    android:name=".RideRequestNotifiedDetails"
-                    android:label="@string/title_activity_ride_request_notified_details"
-                    android:theme="@style/AppTheme.NoActionBar" >
-                </activity>
-            </application>
-
-        </manifest>
+</manifest>

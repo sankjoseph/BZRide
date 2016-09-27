@@ -22,7 +22,7 @@ $BankName = getIfSet($_REQUEST['BankName']);
 $AccountToken = getIfSet($_REQUEST['AccountToken']);
 
 									
-// insert driver values in DB
+// update driver bank values in DB
 $driver_details="UPDATE bztbl_driverbankdetails SET AccountType = $AccountType, BankName = $BankName, AccountToken = $AccountToken, LastModifiedDate=now() where userid = ".$driverID;
 									
 LOGDATA($driver_details);
