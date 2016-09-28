@@ -55,6 +55,19 @@ if ( $num_rows > 0) {
     while($row = mysql_fetch_array($result)) {
 		LOGDATA('fetching driver data');
 		$deviceType = $row["DeviceType"];
+		$driverID = $row["Id"];
+										
+		// update driver values in DB as S mean selected.
+		// This will prevent further notification if a request comes from another rider
+		
+		/*$driver_details="UPDATE bztbl_drivers SET Status = 'S' where Id = ".$driverID;
+										
+		LOGDATA($driver_details);
+		$result = mysql_query($driver_details,$conn);
+		if (!$result) {
+			showError(mysql_error());
+		}*/
+
 
 		/*if ($isLicenseAccepted != true) continue;*/
 		

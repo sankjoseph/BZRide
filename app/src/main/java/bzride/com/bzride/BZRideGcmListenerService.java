@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -22,6 +23,7 @@ public class BZRideGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("m");
+
 
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
@@ -51,32 +53,42 @@ public class BZRideGcmListenerService extends GcmListenerService {
         //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                // PendingIntent.FLAG_ONE_SHOT);*/
 
-        Intent intent = new Intent(this, RideRequestNotifiedDetails.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("message",message);
+        if (BZAppManager.getInstance().isDriver == true){
+            Intent intent = new Intent(this, RideRequestNotifiedDetails.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("message",message);
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-                //ic_stat_ic_notification todo
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setSmallIcon(R.drawable.ic_stat_ic_notification);
-        } else {
-            notificationBuilder.setSmallIcon(R.drawable.ic_stat_ic_notification);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+            //ic_stat_ic_notification todo
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                notificationBuilder.setSmallIcon(R.drawable.ic_stat_ic_notification);
+            } else {
+                notificationBuilder.setSmallIcon(R.drawable.ic_stat_ic_notification);
+            }
+
+            notificationBuilder.setContentTitle("BZ Ride");
+            notificationBuilder.setContentText(message);
+            notificationBuilder.setAutoCancel(true);
+            notificationBuilder.setSound(defaultSoundUri);
+            notificationBuilder.setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        }
+        else{// if rider just update home
+            Intent intent = new Intent("request_accepted");
+            intent.putExtra("message", message);
+            //add data you wnat to pass in intent
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
         }
 
-        notificationBuilder.setContentTitle("BZ Ride");
-        notificationBuilder.setContentText(message);
-        notificationBuilder.setAutoCancel(true);
-        notificationBuilder.setSound(defaultSoundUri);
-        notificationBuilder.setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

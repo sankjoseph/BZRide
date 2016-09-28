@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -109,20 +110,18 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        setTitle("BZRide");
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            setTitle("BZRide");
+        }
 
         //keep the token
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
@@ -221,7 +220,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         } else
          */
-        if (id == R.id.nav_bankinfo) {
+        if (id == R.id.nav_driver_bankinfo) {
             Intent myIntent = new Intent(HomeDriver.this, driverBankInfo.class);
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             myIntent.putExtra("mode", "edit");
@@ -229,13 +228,13 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         }
 
 
-        else if (id == R.id.nav_contact) {
+        else if (id == R.id.nav_driver_contact) {
 
         }
-        else if (id == R.id.nav_request_ride) {
+        else if (id == R.id.nav_driver_request_ride) {
 
         }
-        else if (id == R.id.nav_about) {
+        else if (id == R.id.nav_driver_about) {
 
         }
 
@@ -290,6 +289,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             {
                  EndRideRsp responsefare = (EndRideRsp)model;
                 Utils.showInfoDialog(this, Utils.MSG_TITLE, "last ride fare value $ " + responsefare.fare, null);
+                BZAppManager.getInstance().selectedPickUpLocation = new LatLng(0.0,0.0);
                 BZAppManager.getInstance().selectedDropLocation = new LatLng(0.0,0.0);
                 BZAppManager.getInstance().currentRideRequestId = "";
                 BZAppManager.getInstance().currentRideRequestMessage = "";
@@ -300,11 +300,13 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 if (isOffline)// offline
                 {
                     // change btn caption
-                    btnToggle.setText("Offline");
+                    btnToggle.setText("Go Offline");
+                    btnToggle.setBackgroundColor(Color.GREEN);
                     isOffline = false;
                 } else {//now online
                     // change btn caption
-                    btnToggle.setText("Online");
+                    btnToggle.setText("Go Online");//red
+                    btnToggle.setBackgroundColor(Color.RED);
                     isOffline = true;
                 }
             }
@@ -341,7 +343,6 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
         m_map.setTrafficEnabled(true);
-
         m_map.setOnMarkerClickListener(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

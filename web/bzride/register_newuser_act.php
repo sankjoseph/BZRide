@@ -22,6 +22,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, array('firstName' => $_POST["txtfirstname"]
 											'cardProvider' => $_POST["subtype"],
 											'cardBillingAddress1' => $_POST["txtbillingaddr1"],
 											'cardBillingAddress2' => $_POST["txtbillingaddr2"],
+											'cardBillingCity' => $_POST["txtbillingCity"],
+											'cardBillingState' => $_POST["txtbillingState"],
+											'cardBillingZip' => $_POST["txtbillingZip"],
 											'cardToken' => $_POST["cardToken"]));
 												
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

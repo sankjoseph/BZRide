@@ -34,6 +34,11 @@ $cardType = getIfSet($_REQUEST['cardType']);
 $cardProvider = getIfSet($_REQUEST['cardProvider']);
 $cardBillingAddress1 = getIfSet($_REQUEST['cardBillingAddress1']);
 $cardBillingAddress2 = getIfSet($_REQUEST['cardBillingAddress2']);
+
+$cardBillingCity = getIfSet($_REQUEST['cardBillingCity']);
+$cardBillingState = getIfSet($_REQUEST['cardBillingState']);
+$cardBillingZip = getIfSet($_REQUEST['cardBillingZip']);
+
 $cardToken = getIfSet($_REQUEST['cardToken']);
 
 
@@ -41,7 +46,7 @@ $cardToken = getIfSet($_REQUEST['cardToken']);
 // insert driver values in DB
 $driver_details="insert into bztbl_drivers values('', $firstName, $middleName, $lastName, $email, $password,
 									$address1, $address2,$city,$state,$zip, $phone,$final,$ssn, $deviceId,$devicetoken, $deviceType, 1,1,
-									'V', 0.0,0.0,$cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardToken, now(),now())";
+									'V', 0.0,0.0,$cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardBillingCity,$cardBillingState,$cardBillingZip,$cardToken, now(),now())";
 									
 LOGDATA($driver_details);
 $result = mysql_query($driver_details,$conn);

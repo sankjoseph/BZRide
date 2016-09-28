@@ -132,12 +132,12 @@ $baseFare = 12.0;// 12Dollar
 $stateFee = 1.75;//dollar
 $finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)/100;//dollar
 // sum total fare and update in table
-// for night drive between 10- 6 
+// for night drive between 10- 6 //todo
 
 $finalFare = ceil($finalFare);
-
+$FaretoCompany = $finalFare -  $stateFee;
 // update fare for table
-$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents, FinalCharge = $finalFare where Id = " .$requestId ;
+$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents, FinalCharge = $finalFare, FaretoCompany = $FaretoCompany where Id = " .$requestId ;
 LOGDATA($updateFareSQL);
 
 $result = mysql_query($updateFareSQL,$conn);
@@ -163,7 +163,7 @@ $bz_req_url = $BASE_URL . 'charge.php';
 $ch =  curl_init();
 
 $postData = http_build_query(array('token' => $CardToken,	
-					'amount' => $finalFare,
+					'amount' => $finalFare,//dollar
 					'currency' => 'usd'	));
 curl_setopt($ch, CURLOPT_URL, $bz_req_url);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -183,7 +183,7 @@ if (preg_match("/Could not/i", $result)) {
 
 $data = array();
 $data["status"] ="S";
-$data["fare"] =  "".$finalFare."";
+$data["fare"] =  "".$FaretoCompany."";
 $data["info"] = "End ride success for driver";
 echo json_encode($data);
 mysql_close();

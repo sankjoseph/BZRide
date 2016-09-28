@@ -24,6 +24,7 @@ import org.json.JSONObject;
 public class usercarddetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText txtCardDetailsNumber,txtCardDetailsAddress1,txtCardDetailsAddress2;
+    private EditText txtCardDetailsCity,txtCardDetailsState,txtCardDetailsZip;
     private EditText txtCardDetailsExpMonth,txtCardDetailsExpYear,txtCardDetailsCVV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +63,22 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         txtCardDetailsNumber = (EditText)findViewById(R.id.txtCardDetailsNumber);
         txtCardDetailsAddress1 = (EditText)findViewById(R.id.txtCardDetailsAddress1);
         txtCardDetailsAddress2 = (EditText)findViewById(R.id.txtCardDetailsAddress2);
+
         txtCardDetailsExpMonth = (EditText)findViewById(R.id.txtCardDetailsExpMonth);
         txtCardDetailsExpYear = (EditText)findViewById(R.id.txtCardDetailsExpYear);
         txtCardDetailsCVV = (EditText)findViewById(R.id.txtCardDetailsCVV);
+        txtCardDetailsCity = (EditText)findViewById(R.id.CardDetailsCity);
+        txtCardDetailsState = (EditText)findViewById(R.id.CardDetailsState);
+        txtCardDetailsZip = (EditText)findViewById(R.id.CardDetailsgZip);
 
         // load values if already fit in
         txtCardDetailsNumber.setText(BZAppManager.getInstance().bzRiderData.cardData.cardNumber);
         txtCardDetailsAddress1.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1);
         txtCardDetailsAddress2.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2);
+        txtCardDetailsCity.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingCity);
+        txtCardDetailsState.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingState);
+        txtCardDetailsZip.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingZip);
+
         txtCardDetailsExpMonth.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth);
         txtCardDetailsExpYear.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear);
         txtCardDetailsCVV.setText(BZAppManager.getInstance().bzRiderData.cardData.cardCVV);
@@ -160,6 +169,9 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         BZAppManager.getInstance().bzRiderData.cardData.cardNumber = txtCardDetailsNumber.getText().toString();
         BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
         BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardBillingCity = txtCardDetailsCity.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardBillingState = txtCardDetailsState.getText().toString();
+        BZAppManager.getInstance().bzRiderData.cardData.cardBillingZip = txtCardDetailsZip.getText().toString();
 
         BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
         BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear = txtCardDetailsExpYear.getText().toString();

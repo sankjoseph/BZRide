@@ -44,11 +44,15 @@ public class BZAppManager {
 
         retData += "&cardBillingAddress1=" + bzDriverData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzDriverData.cardData.cardBillingAddress2;
+        retData += "&cardBillingCity=" + bzDriverData.cardData.cardBillingCity;
+        retData += "&cardBillingState=" + bzDriverData.cardData.cardBillingState;
+        retData += "&cardBillingZip=" + bzDriverData.cardData.cardBillingZip;
+
         retData += "&cardToken=" +  bzDriverData.cardData.cardToken;
 
         // Bank info
-        retData += "&BankName=" + "testbank";//todo
-        retData += "&AccountToken=" + "bzzbbz";//todo
+        retData += "&BankName=" + "dummy";//todo
+        retData += "&AccountToken=" + "dummy";//todo
         // Insurance Info
         retData += "&insCompany=" + bzDriverData.driverInsuranceInfo.insuranceCompany;
         retData += "&insPolicyNumber=" + bzDriverData.driverInsuranceInfo.insuranceNumber;
@@ -112,6 +116,10 @@ public class BZAppManager {
         retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;
         retData += "&cardBillingAddress1=" + bzRiderData.cardData.cardBillingAddress1;
         retData += "&cardBillingAddress2=" + bzRiderData.cardData.cardBillingAddress2;
+        retData += "&cardBillingCity=" + bzRiderData.cardData.cardBillingCity;
+        retData += "&cardBillingState=" + bzRiderData.cardData.cardBillingState;
+        retData += "&cardBillingZip=" + bzRiderData.cardData.cardBillingZip;
+
         retData += "&cardToken=" + bzRiderData.cardData.cardToken;
         /*
         retData += "&cardexpirymonth=" + bzRiderData.userCardInfo.cardExpiryMonth;

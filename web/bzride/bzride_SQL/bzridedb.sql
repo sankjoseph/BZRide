@@ -98,6 +98,9 @@ CREATE TABLE IF NOT EXISTS `bztbl_drivers` (
   `CardProvider` varchar(20) NOT NULL,
   `cardBillingAddress1` varchar(500) NOT NULL,
   `cardBillingAddress2` varchar(500) NOT NULL,
+  `cardBillingCity` varchar(500) NOT NULL,
+  `cardBillingState` varchar(500) NOT NULL,
+  `cardBillingZip` varchar(50) NOT NULL,
   `CardToken` varchar(200) NOT NULL,
   `CreatedByDate` datetime NOT NULL,
   `LastModifiedDate` datetime NOT NULL,
@@ -176,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `bztbl_riderequests` (
   `ChargeDistance` FLOAT,
   `ChargeTime` FLOAT,
   `FinalCharge` FLOAT,
+  `FaretoCompany` FLOAT, 
   `Status` varchar(2) NOT NULL,
   `RideDateTime` datetime NOT NULL,
   `ActualRideDateTimeStart` datetime NOT NULL,
@@ -216,6 +220,9 @@ CREATE TABLE IF NOT EXISTS `bztbl_riders` (
   `CardProvider` varchar(20) NOT NULL,
   `cardBillingAddress1` varchar(500) NOT NULL,
   `cardBillingAddress2` varchar(500) NOT NULL,
+  `cardBillingCity` varchar(500) NOT NULL,
+  `cardBillingState` varchar(500) NOT NULL,
+  `cardBillingZip` varchar(50) NOT NULL,
   `CardToken` varchar(200) NOT NULL,
   `CreatedByDate` datetime NOT NULL,
   `LastModifiedDate` datetime NOT NULL,
@@ -230,7 +237,6 @@ CREATE TABLE IF NOT EXISTS `bztbl_riders` (
 --
 -- Table structure for table `bztbl_userbankdetails`
 --
-// new item
 CREATE TABLE IF NOT EXISTS `bztbl_driverbankdetails` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
   `userid` varchar(10) NOT NULL,

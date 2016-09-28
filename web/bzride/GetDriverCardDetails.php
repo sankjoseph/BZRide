@@ -17,7 +17,7 @@ $token = $_REQUEST['token'];
 LOGDATA($token);
 $driverID = GetIdByCheckforTimeout($token);
 
-$requestSQL = "SELECT CardType,CardProvider,cardBillingAddress1,cardBillingAddress2,CardToken FROM  bztbl_drivers where Id = " .$driverID ;
+$requestSQL = "SELECT CardType,CardProvider,cardBillingAddress1,cardBillingAddress2,cardBillingCity,cardBillingState,cardBillingZip,CardToken FROM  bztbl_drivers where Id = " .$driverID ;
 LOGDATA($requestSQL);
 
 $resultLogin = mysql_query($requestSQL,$conn);
@@ -32,6 +32,11 @@ if ( $num_rows > 0) {
 	$CardProvider = $rowIn["CardProvider"];
 	$cardBillingAddress1 = $rowIn["cardBillingAddress1"];
 	$cardBillingAddress2 = $rowIn["cardBillingAddress2"];
+	
+	$cardBillingCity = $rowIn["cardBillingCity"];
+	$cardBillingState = $rowIn["cardBillingState"];
+	$cardBillingZip = $rowIn["cardBillingZip"];
+	
 	$CardToken = $rowIn["CardToken"];
 
 	$data = array();
@@ -41,6 +46,10 @@ if ( $num_rows > 0) {
 	$data["CardProvider"] = $CardProvider;
 	$data["cardBillingAddress1"] = $cardBillingAddress1;
 	$data["cardBillingAddress2"] = $cardBillingAddress2;
+	$data["cardBillingCity"] = $cardBillingCity;
+	$data["cardBillingState"] = $cardBillingState;
+	$data["cardBillingZip"] = $cardBillingZip;
+	
 	$data["CardToken"] = $CardToken;
 	echo json_encode($data);
 }

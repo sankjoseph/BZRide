@@ -2,8 +2,11 @@ package bzride.com.bzride;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -71,9 +75,9 @@ import java.util.List;
 import java.util.Locale;
 
 //OnMapReadyCallback
-public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
+public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks ,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, LocationListener,OnPostExecuteListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,NavigationView.OnNavigationItemSelectedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
@@ -86,18 +90,27 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
 
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
-
-
-
+    private Context myContext;
+    FragmentManager fm = getSupportFragmentManager();
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Your request accepted by:Shenjin:9164263900:6TKH159:Q7
+            // Extract data included in the Intent
+            String message = intent.getStringExtra("message");
+            DFragment dFragment = new DFragment();
+            Bundle args = new Bundle();
+            args.putString("message",message);
+            dFragment.setArguments(args);
+            // Show DialogFragment
+            dFragment.show(fm, "Dialog Fragment");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
-
-
 
         findViewById(R.id.btnRequest).setOnClickListener(this);
         findViewById(R.id.btnSchedule).setOnClickListener(this);
@@ -107,6 +120,25 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
         String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
         String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
+
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_rider);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_rider);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_rider);
+            navigationView.setNavigationItemSelectedListener(this);
+           setTitle("BZRide");
+        }
+
 
         //keep the token
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
@@ -156,7 +188,58 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
 
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_rider);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+
+        if (id == R.id.nav_rider_profile) {
+            /*Intent myIntent = new Intent(Home.this, driverBankInfo.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            myIntent.putExtra("mode", "edit");
+            Home.this.startActivity(myIntent);*/
+        }
+
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_rider);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
     @Override
     public void onSuccess(BZJSONResp model) {
 
@@ -308,8 +391,10 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
         //update location in server
 
     }
+
     @Override
     protected void onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("request_accepted"));
         super.onResume();
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
@@ -318,6 +403,7 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
     @Override
     protected void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
@@ -413,34 +499,40 @@ public class Home extends /*AppCompatActivity*/ FragmentActivity  implements OnM
     }//onActivityResult
     private void requestNowAction() {
 
-        final CharSequence[] items = { "Automatically", "Manually",
-                "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-        builder.setTitle("Select Pickup location!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int index) {
-                String userChoosenTask;
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            final CharSequence[] items = { "Automatically", "Manually",
+                    "Cancel" };
+            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            builder.setTitle("Select Pickup location!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int index) {
+                    String userChoosenTask;
 
-                if (items[index].equals("Automatically")) {
-                    //start location as m_latLng
-                    BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
-                    Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-                    //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    myIntent.putExtra("LocationOption", "Drop");
-                    Home.this.startActivityForResult(myIntent, 2);
-                } else if (items[index].equals("Manually")) {
-                    //show place finder
-                    Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-                    //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    myIntent.putExtra("LocationOption", "PickUp");
-                    Home.this.startActivityForResult(myIntent, 1);
-                } else if (items[index].equals("Cancel")) {
-                    dialog.dismiss();
+                    if (items[index].equals("Automatically")) {
+                        //start location as m_latLng
+                        BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
+                        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        myIntent.putExtra("LocationOption", "Drop");
+                        Home.this.startActivityForResult(myIntent, 2);
+                    } else if (items[index].equals("Manually")) {
+                        //show place finder
+                        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        myIntent.putExtra("LocationOption", "PickUp");
+                        Home.this.startActivityForResult(myIntent, 1);
+                    } else if (items[index].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
                 }
-            }
-        });
-        builder.show();
+            });
+            builder.show();
+        }
+        else{
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+
     }
 
     public GoogleApiClient getAPIClient() {

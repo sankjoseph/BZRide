@@ -21,11 +21,16 @@ $CardType = getIfSet($_REQUEST['CardType']);
 $CardProvider = getIfSet($_REQUEST['CardProvider']);
 $cardBillingAddress1 = getIfSet($_REQUEST['cardBillingAddress1']);
 $cardBillingAddress2 = getIfSet($_REQUEST['cardBillingAddress2']);
+$cardBillingCity = getIfSet($_REQUEST['cardBillingCity']);
+$cardBillingState = getIfSet($_REQUEST['cardBillingState']);
+$cardBillingZip = getIfSet($_REQUEST['cardBillingZip']);
 $CardToken = getIfSet($_REQUEST['CardToken']);
 					
 // update driver values in DB
 $driver_details="UPDATE bztbl_drivers SET CardType = $CardType, CardProvider = $CardProvider,
-cardBillingAddress1 = $cardBillingAddress1,cardBillingAddress2=$cardBillingAddress2,CardToken=$CardToken, LastModifiedDate=now() where Id = ".$driverID;
+cardBillingAddress1 = $cardBillingAddress1,cardBillingAddress2=$cardBillingAddress2,
+cardBillingCity = $cardBillingCity,cardBillingState=$cardBillingState,cardBillingZip=$cardBillingZip,
+CardToken=$CardToken, LastModifiedDate=now() where Id = ".$driverID;
 
 									
 LOGDATA($driver_details);

@@ -37,8 +37,8 @@ android:orientation="vertical">
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:layout_weight="0.5"
-            android:text="Offline"
-            android:background="#2683c2"
+            android:text="Go Offline"
+            android:background="#00ff00"
             />
 
     </LinearLayout>

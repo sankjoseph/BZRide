@@ -10,7 +10,8 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
+// add 3 fileds in driver and rider
+// added faretocompany
 
 CREATE TABLE IF NOT EXISTS `bztbl_test` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,

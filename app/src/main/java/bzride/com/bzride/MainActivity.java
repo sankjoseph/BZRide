@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity  {
             BZAppManager.getInstance().isDriver = true;
         }
 
-       /* Intent myIntent = new Intent(MainActivity.this, Home.class);
+        /*Intent myIntent = new Intent(MainActivity.this, Home.class);
         //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW
         MainActivity.this.startActivity(myIntent);
         return;*/

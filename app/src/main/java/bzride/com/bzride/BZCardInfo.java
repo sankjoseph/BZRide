@@ -9,6 +9,9 @@ public class BZCardInfo {
     public String cardNumber;
     public String cardBillingAddress1;
     public String cardBillingAddress2;
+    public String cardBillingCity;
+    public String cardBillingState;
+    public String cardBillingZip;
     public String cardExpiryMonth;
     public String cardExpiryYear;
     public String cardCVV;

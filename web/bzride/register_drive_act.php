@@ -25,6 +25,9 @@ $postData = array('firstName' => $_POST["txtfirstname"],
 				'cardProvider' => '',
 				'cardBillingAddress1' => '',
 				'cardBillingAddress2' => '',
+				'cardBillingCity' => '',
+				'cardBillingState' => '',
+				'cardBillingZip' => '',
 				'cardToken' => '',
 
 	
