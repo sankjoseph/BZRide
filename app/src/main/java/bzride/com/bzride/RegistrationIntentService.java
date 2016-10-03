@@ -38,8 +38,6 @@ public class RegistrationIntentService extends IntentService implements  OnPostE
             // you can also leave it blank.
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(authorizedEntity,GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-
-            // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
             // Subscribe to topic channels
@@ -66,7 +64,13 @@ public class RegistrationIntentService extends IntentService implements  OnPostE
         // Add custom implementation, as needed.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+        String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
         sharedPreferences.edit().putString(QuickstartPreferences.DEVICE_TOKEN,token).apply();
+
+        BZRESTApiHandler api = new BZRESTApiHandler();
+        String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
+        String params = "&token="+ usertoken + "&devicetoken=" + token +"&usertype=" + usertype ;
+        api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
 
 
         //keep the token

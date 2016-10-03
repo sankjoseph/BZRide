@@ -6,12 +6,13 @@ session_start();
 
 $token = $_REQUEST['token'];
 $currency = $_REQUEST['currency'];
-$amount = $_REQUEST['amount'] *100;
+$amount = $_REQUEST['amount'] *100;//cents
+$requestRefNumber = $_REQUEST['requestId'];
 
 LOGDATA ('inside charge card operation');
 try {
 	
-	 \Stripe\Stripe::setApiKey("sk_test_2rCnQT2VGQl5ndFbgfEas7g2"); //Replace with your Secret Key
+	 \Stripe\Stripe::setApiKey($STRIPE_RUNNING_SECRET_KEY); //Replace with your Secret Key
 	 
 	  $result = \Stripe\Token::create(
                     array(
@@ -30,12 +31,12 @@ if (defined('TEST_CARD')) {
 				
   //echo $token;
  
- 
+  $description = "Charge for BZRide Inc. Ref number ".$requestRefNumber;
   $charge = \Stripe\Charge::create(array(
   "amount" => $amount,
   "currency" => $currency,
   "card" => $token,
-  "description" => "Charge for BZRide."
+  "description" => $description
 ));
  //send the file, this line will be reached if no error was thrown above
 $data = array();

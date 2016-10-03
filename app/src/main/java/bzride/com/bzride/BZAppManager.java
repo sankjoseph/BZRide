@@ -13,10 +13,47 @@ public class BZAppManager {
     public String currentUserId;
     public String currentRideRequestId;
     public String currentRideRequestMessage;
+    public String currentRideRequestUserName;
+    public String currentRideRequestUserPhone;
+    public String currentRideRequeststartLocation;
+    public String currentRideRequestendLocation;
     public BZDriverInfo bzDriverData;
+    public BZActiveRideRequestDriverInfo bzActiveRequestDriverData;
     public BZRiderInfo bzRiderData;
     public LatLng selectedPickUpLocation;
     public LatLng selectedDropLocation;
+
+    public  String getDriverDataParamsFlatForUpdateProfile()
+    {
+        String retData = "";
+        retData += "&firstName=" + bzDriverData.FirstName;
+        retData += "&middleName=" + bzDriverData.MiddleName;
+        retData += "&lastName=" + bzDriverData.LastName;
+        retData += "&email=" + bzDriverData.Email;
+        retData += "&address1=" + bzDriverData.Address1;
+        retData += "&address2=" + bzDriverData.Address2;
+        retData += "&city=" + bzDriverData.City;
+        retData += "&state=" + bzDriverData.State;
+        retData += "&zip=" + bzDriverData.Zip;
+
+        return retData;
+    }
+    public  String getRiderDataParamsFlatForUpdateProfile()
+    {
+        String retData = "";
+        retData += "&firstName=" + bzRiderData.FirstName;
+        retData += "&middleName=" + bzRiderData.MiddleName;
+        retData += "&lastName=" + bzRiderData.LastName;
+        retData += "&email=" + bzRiderData.Email;
+        retData += "&address1=" + bzRiderData.Address1;
+        retData += "&address2=" + bzRiderData.Address2;
+        retData += "&city=" + bzRiderData.City;
+        retData += "&state=" + bzRiderData.State;
+        retData += "&zip=" + bzRiderData.Zip;
+    
+
+        return retData;
+    }
     public  String getDriverDataParamsFlat()
     {
         String retData = "";
@@ -86,8 +123,33 @@ public class BZAppManager {
         retData += "&accountholdername=" + bzDriverData.driverBankInfo.BankAccountHolderName;
         retData += "&routingnumber=" + bzDriverData.driverBankInfo.BankAccountRoutingNumber;
         retData += "&accountnumber=" + bzDriverData.driverBankInfo.BankAccountNumber;
+        return retData;
+    }
+    public  String getRiderCardDataParamsFlat()
+    {
+        String retData = "";
+        retData += "&cardType=" + bzRiderData.cardData.cardType;
+        retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;
+        retData += "&cardBillingAddress1=" + bzRiderData.cardData.cardBillingAddress1;
+        retData += "&cardBillingAddress2=" + bzRiderData.cardData.cardBillingAddress2;
+        retData += "&cardBillingCity=" + bzRiderData.cardData.cardBillingCity;
+        retData += "&cardBillingState=" + bzRiderData.cardData.cardBillingState;
+        retData += "&cardBillingZip=" + bzRiderData.cardData.cardBillingZip;
+        retData += "&cardToken=" + bzRiderData.cardData.cardToken;
+        return retData;
+    }
 
-
+    public  String getDriverCardDataParamsFlat()
+    {
+        String retData = "";
+        retData += "&cardType=" + bzDriverData.cardData.cardType;
+        retData += "&cardProvider=" + bzDriverData.cardData.cardVendor;
+        retData += "&cardBillingAddress1=" + bzDriverData.cardData.cardBillingAddress1;
+        retData += "&cardBillingAddress2=" + bzDriverData.cardData.cardBillingAddress2;
+        retData += "&cardBillingCity=" + bzDriverData.cardData.cardBillingCity;
+        retData += "&cardBillingState=" + bzDriverData.cardData.cardBillingState;
+        retData += "&cardBillingZip=" + bzDriverData.cardData.cardBillingZip;
+        retData += "&cardToken=" + bzDriverData.cardData.cardToken;
         return retData;
     }
 
@@ -111,6 +173,7 @@ public class BZAppManager {
         retData += "&currentlong=" + bzRiderData.currentlong;
         retData += "&deviceType=A";
         retData += "&devicetoken=x";
+        retData += "&status=N";
 
         retData += "&cardType=" + bzRiderData.cardData.cardType;
         retData += "&cardProvider=" + bzRiderData.cardData.cardVendor;
@@ -139,6 +202,7 @@ public class BZAppManager {
     {
         bzDriverData =  new BZDriverInfo();
         bzRiderData = new BZRiderInfo();
+        bzActiveRequestDriverData = new BZActiveRideRequestDriverInfo();
     }
     public synchronized static BZAppManager getInstance()
     {

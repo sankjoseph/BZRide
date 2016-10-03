@@ -9,8 +9,6 @@
                 android:title="Profile" />
             <item android:id="@+id/nav_rider_card_details"
                 android:title="Card Details" />
-            <item android:id="@+id/nav_rider_ride_history"
-                android:title="Ride History" />
             <item android:id="@+id/nav_rider_ride_active"
                 android:title="Ride Active" />
         </menu>

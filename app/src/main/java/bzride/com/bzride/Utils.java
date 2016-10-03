@@ -50,7 +50,8 @@ public class Utils {
     public static final String REGISTER_DRIVER_URL = "/RegisterDriver.php";
     public static final String GET_BANK_INFO_URL = "/GetBankInfo.php";
     public static final String UPDATE_BANK_INITIAL_INFO_URL = "/UpdateInitialBankInfo.php";
-
+    public static final String UPDATE_RIDER_CARD_DETAILS_URL = "/UpdateRiderCardDetails.php";
+    public static final String UPDATE_DRIVER_CARD_DETAILS_URL = "/UpdateDriverCardDetails.php";
 
    // public static final String ACCEPT_EULA_DRIVER_URL = "/AcceptEULADriver.php";
 //
@@ -61,6 +62,14 @@ public class Utils {
     public static final String ACCEPT_RIDE_REQUEST_URL = "/AcceptRideRequest.php";
     public static final String START_RIDE_URL = "/StartRide.php";
     public static final String END_RIDE_URL = "/EndRide.php";
+    public static final String UPDATE_DRIVER_PROFILE_URL = "/UpdateDriverProfile.php";
+    public static final String GET_DRIVER_PROFILE_URL = "/GetDriverProfile.php";
+
+    public static final String UPDATE_RIDER_PROFILE_URL = "/UpdateRiderProfile.php";
+    public static final String GET_RIDER_PROFILE_URL = "/GetRiderProfile.php";
+
+    public static final String ARRIVE_RIDE_URL = "/ArriveRide.php";
+    public static final String CANCEL_RIDE_URL = "/CancelRide.php";
 
     public static final String REGISTER_SUCCESS = "Login Success";
 
@@ -76,6 +85,13 @@ public class Utils {
     public static final String MSG_PHONE_EMPTY = "Please enter your phone number.";
     public static final String MSG_DOB_EMPTY = "Please enter your date of birth.";
 
+    // for card
+    public static final String MSG_CARD_NUMBER_EMPTY = "Please enter card number.";
+    public static final String MSG_CARD_EXP_MONTH = "Please enter card expiry month.";
+    public static final String MSG_CARD_EXP_YEAR = "Please enter card expiry year.";
+    public static final String MSG_CARD_CVV = "Please enter card CVV.";
+
+
     public static final String MSG_INVALID_DOB = "Please enter valid date of birth in mm/dd/yyyy format.";
 
 
@@ -87,6 +103,15 @@ public class Utils {
     public static final String MSG_INVALID_CARD_CVV= "Invalid cvv code . Please try again.";
     public static final String MSG_INVALID_CARD_EXPDATE= "Invalid expiry date for card. Please try again.";
     public static final String MSG_ERROR_NO_ACTIVE_RIDE = "No active rides at this time.";
+    public static final String MSG_ERROR_SERVER_DATA_HANDLE = "Error handling server response.";
+    public static final String STRIPE_SANDBOX_PUBLIC_KEY = "pk_test_LL1jchCoTe2qzVPx5GfwGY4o";
+    public static final String STRIPE_LIVE_PUBLIC_KEY = "pk_live_YgyoxGbTgtqBh20JXGxLP4rU";
+    public static final String STRIPE_RUNNING_KEY = STRIPE_SANDBOX_PUBLIC_KEY;
+
+
+    public static final String MSG_REQUEST_CONFIRM= "Are you sure to make the ride request?. You will not be able to cancel the request from the App";
+
+
 
     public static void showInfoDialog(Context c, String title, String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(c)

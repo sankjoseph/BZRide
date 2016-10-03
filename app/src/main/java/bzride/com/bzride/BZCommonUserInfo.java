@@ -22,6 +22,7 @@ public class BZCommonUserInfo {
     public String DeviceType;
     public String currentlat;
     public String currentlong;
+    public String availableStatus;
     public BZCardInfo cardData;
     public BZCommonUserInfo()
     {

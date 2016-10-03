@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -72,6 +73,11 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int ACCESS_MAPS_PERMISSIONS_REQUEST = 1;
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
     public static final int gcm_defaultSenderId=0x7f060034;
     ////
@@ -87,10 +93,14 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
     private boolean onlineOption;
-    Button btnFinishStart;
+    Button btnArriveStartFinish;
+    Button btnToggle;
     boolean bFinishRide;
+    boolean bRequestAttended;
+    boolean bArriving;
+    boolean bArrived;
 
-
+    FragmentManager fm = getSupportFragmentManager();
 
 
     @Override
@@ -101,12 +111,15 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         findViewById(R.id.btnToggleOffline).setOnClickListener(this);
         findViewById(R.id.btnFinish).setOnClickListener(this);
 
-        btnFinishStart =  (Button) findViewById(R.id.btnFinish);
+        btnArriveStartFinish =  (Button) findViewById(R.id.btnFinish);
+        btnToggle  =  (Button)findViewById(R.id.btnToggleOffline);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
         String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
         String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
+
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -128,12 +141,17 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             BZRESTApiHandler api = new BZRESTApiHandler();
             api.setPostExecuteListener(this);
 
-            if (BZAppManager.getInstance().isDriver == true) {
+            /*if (BZAppManager.getInstance().isDriver == true) {
                 String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
                 String params = "&token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
                 api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
-            }
+            }*/
 
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.GET_DRIVER_PROFILE_URL;
+                String params = "&token="+ usertoken ;
+                api.putDetails(urlCall, Utils.GET_DRIVER_PROFILE_URL, params);
+            }
         } //update silent
 
 
@@ -207,35 +225,79 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-
-        /*if (id == R.id.nav_geninfo) {
-
-        } else if (id == R.id.nav_vehicle) {
-
-        } else if (id == R.id.nav_insurance) {
-
-        } else if (id == R.id.nav_registration) {
-
-        } else if (id == R.id.nav_license) {
-
-        } else
-         */
-        if (id == R.id.nav_driver_bankinfo) {
+        if (id == R.id.nav_driver_profile) {
+            Intent myIntent = new Intent(HomeDriver.this, updatedriverprofile.class);
+            HomeDriver.this.startActivity(myIntent);
+        }
+        else if (id == R.id.nav_driver_bankinfo) {
             Intent myIntent = new Intent(HomeDriver.this, driverBankInfo.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             myIntent.putExtra("mode", "edit");
             HomeDriver.this.startActivity(myIntent);
         }
+        else if (id == R.id.nav_driver_cardinfo) {
+            Intent myIntent = new Intent(HomeDriver.this, usercarddetails.class);// todo add param and edit for server
+            myIntent.putExtra("mode", "edit");
+            HomeDriver.this.startActivity(myIntent);
+        }
+        else if (id == R.id.nav_driver_ride_cancel) {
+            if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder
+                        .setTitle("BZRide")
+                        .setMessage("Do you want to cancel the ride now?")
+                        .setCancelable(false)
+                        .setPositiveButton("Cancel Now", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                CancelAction();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
 
+            }
+            else
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
+            }
+        }
+
+
+        /*else if (id == R.id.nav_driver_ride_history)
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
+        }*/
+
+        else if (id == R.id.nav_driver_ride_active)
+        {
+            if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
+                DFragmentDriveActive dFragment = new DFragmentDriveActive();
+                dFragment.show(fm, "Dialog Fragment");
+            }
+            else
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
+            }
+        }
 
         else if (id == R.id.nav_driver_contact) {
-
+            Intent myIntent = new Intent(HomeDriver.this, ContactInfo.class);
+            HomeDriver.this.startActivity(myIntent);
         }
+
         else if (id == R.id.nav_driver_request_ride) {
-
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
         }
-        else if (id == R.id.nav_driver_about) {
 
+
+        else if (id == R.id.nav_driver_about) {
+            // not required
         }
 
 
@@ -266,17 +328,176 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         return url;
     }
+    private void ArrivingRideNowAction() {
 
+        UpdateLocation();
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f", m_latLng.latitude, m_latLng.longitude,
+                BZAppManager.getInstance().selectedPickUpLocation.latitude, BZAppManager.getInstance().selectedPickUpLocation.longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+        //String url = getDirectionsUrl( BZAppManager.getInstance().selectedPickUpLocation , BZAppManager.getInstance().selectedDropLocation);
+        return;
+
+    }
+    private void startRideAction() {
+
+        UpdateLocation();
+        double currentLat = m_latLng.latitude;
+        double currentLong = m_latLng.longitude;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setPostExecuteListener(this);
+            api.setMessage("Starting ride...");
+            String urlCall = Utils.BASE_URL + Utils.START_RIDE_URL;
+            //driver uses currentRideRequestId to start ride;
+            String params = "token=" + usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId +
+                    "&currentLat=" +currentLat + "&currentLong=" +currentLong ;
+            api.putDetails(urlCall, Utils.START_RIDE_URL, params);
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+    }
+
+    private void endRideAction() {
+        if (BZAppManager.getInstance().isDriver == true) {
+            UpdateLocation();
+            double currentLat = m_latLng.latitude;
+            double currentLong = m_latLng.longitude;
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+            if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+                BZRESTApiHandler api = new BZRESTApiHandler(this);
+                api.setPostExecuteListener(this);
+                api.setMessage("Ending ride...");
+                String urlCall = Utils.BASE_URL + Utils.END_RIDE_URL;
+                //driver uses currentRideRequestId to end ride;
+                String params = "token=" + usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId +
+                        "&ActualEndLat=" + currentLat + "&ActualEndLong=" + currentLong;
+                api.putDetails(urlCall, Utils.END_RIDE_URL, params);
+            }
+        }
+    }
+
+    private void NotifyArrivedAction() {
+        //keep the token
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Notifying rider....");
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.ARRIVE_RIDE_URL;
+                String params= "token="+ usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId;
+                api.putDetails(urlCall, Utils.ARRIVE_RIDE_URL,params);
+            }
+
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+    }
+    private void CancelAction() {
+
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Cancelling ride...");
+            api.setPostExecuteListener(this);
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
+
+            if (BZAppManager.getInstance().isDriver == true) {
+                String urlCall = Utils.BASE_URL + Utils.CANCEL_RIDE_URL ;
+                String params =  "token="+ usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId;
+                api.putDetails(urlCall, Utils.CANCEL_RIDE_URL, params);
+            }
+
+        } else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+
+    }
+    private void StartAction() {
+        // call service for endride
+        //driver uses currentRideRequestId to end ride;
+        if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
+            if (bFinishRide )
+            {
+                endRideAction();
+                return;
+            }
+
+            if (bArriving )
+            {
+                // notify readiness to rider
+                NotifyArrivedAction();
+                bArriving = false;
+                return;
+            }
+
+            if (bArrived)
+            {
+                bArrived = false;
+                startRideAction();
+                return;
+            }
+            if (!bRequestAttended)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder
+                        .setTitle("BZRide")
+                        .setMessage(BZAppManager.getInstance().currentRideRequestMessage)
+                        .setCancelable(false)
+                        .setPositiveButton("Arrive Now", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                bRequestAttended =  true;
+                                ArrivingRideNowAction();
+                                btnArriveStartFinish.setText("Ready");
+                                bArriving  = true;
+                                bArrived =  false;
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
+        }
+    }
     @Override
     public void onSuccess(BZJSONResp model) {
 
-        Button btnToggle=  (Button)findViewById(R.id.btnToggleOffline);
+
 
         BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+
+            if (response.info.toString().contains("Arrive ride"))
+            {
+                btnArriveStartFinish.setText("Start");
+                bArriving = false;
+                bArrived = true;
+            }
+
             if (response.info.toString().contains("Start ride"))
             {
-                btnFinishStart.setText("Finish");
+                btnArriveStartFinish.setText("Finish");
                 bFinishRide = true;
                 String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f", m_latLng.latitude, m_latLng.longitude,
                         BZAppManager.getInstance().selectedDropLocation.latitude, BZAppManager.getInstance().selectedDropLocation.longitude);
@@ -285,38 +506,84 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 //String url = getDirectionsUrl( BZAppManager.getInstance().selectedPickUpLocation , BZAppManager.getInstance().selectedDropLocation);
                 return;
             }
+            if (response.info.toString().contains("Cancel ride")) {
+                btnArriveStartFinish.setText("Arrive");
+                bFinishRide = false;
+                clearCurrentRequestInfo();
+            }
             if (response.info.toString().contains("End ride"))
             {
-                 EndRideRsp responsefare = (EndRideRsp)model;
-                Utils.showInfoDialog(this, Utils.MSG_TITLE, "last ride fare value $ " + responsefare.fare, null);
-                BZAppManager.getInstance().selectedPickUpLocation = new LatLng(0.0,0.0);
-                BZAppManager.getInstance().selectedDropLocation = new LatLng(0.0,0.0);
-                BZAppManager.getInstance().currentRideRequestId = "";
-                BZAppManager.getInstance().currentRideRequestMessage = "";
+                btnArriveStartFinish.setText("Arrive");
+                bFinishRide = false;
+                EndRideRsp responsefare = (EndRideRsp)model;
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, "last ride fare value $ " + responsefare.faredriver, null);
+                clearCurrentRequestInfo();
+                return;
             }
 
-            if (onlineOption)
-            {
-                if (isOffline)// offline
+            if (response.info.toString().contains("Get Profile")) {
+                GetProfileInfoResp responseObj = (GetProfileInfoResp)model;
+                BZAppManager.getInstance().bzDriverData.FirstName = responseObj.firstName;
+                BZAppManager.getInstance().bzDriverData.MiddleName = responseObj.middleName;
+                BZAppManager.getInstance().bzDriverData.LastName = responseObj.lastName;
+                BZAppManager.getInstance().bzDriverData.Email = responseObj.email;
+                BZAppManager.getInstance().bzDriverData.availableStatus = responseObj.userStatus;
+                BZAppManager.getInstance().bzDriverData.Address1 = responseObj.address1;
+                BZAppManager.getInstance().bzDriverData.Address2 = responseObj.address2;
+                BZAppManager.getInstance().bzDriverData.City = responseObj.city;
+                BZAppManager.getInstance().bzDriverData.State = responseObj.state;
+                BZAppManager.getInstance().bzDriverData.Zip = responseObj.zip;
+
+                if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzDriverData.availableStatus, "A"))
                 {
-                    // change btn caption
                     btnToggle.setText("Go Offline");
                     btnToggle.setBackgroundColor(Color.GREEN);
                     isOffline = false;
-                } else {//now online
-                    // change btn caption
-                    btnToggle.setText("Go Online");//red
-                    btnToggle.setBackgroundColor(Color.RED);
+                }
+                else
+                {
+                    btnToggle.setText("Go Online");
+                    btnToggle.setBackgroundColor(Color.RED );
                     isOffline = true;
                 }
+
+
+                return;
             }
+
+
+           if (response.info.toString().contains("Update driver status")) {
+               if (onlineOption) {
+                   if (isOffline)// now offline
+                   {
+                       // change btn caption
+                       btnToggle.setText("Go Offline");
+                       btnToggle.setBackgroundColor(Color.GREEN);
+                       isOffline = false;
+                   } else {//now online
+                       // change btn caption
+                       btnToggle.setText("Go Online");//red
+                       btnToggle.setBackgroundColor(Color.RED);
+                       isOffline = true;
+                   }
+               }
+           }
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
         }
     }
 
-
+    public void clearCurrentRequestInfo() {
+        BZAppManager.getInstance().selectedPickUpLocation = new LatLng(0.0,0.0);
+        BZAppManager.getInstance().selectedDropLocation = new LatLng(0.0,0.0);
+        //driver uses currentRideRequestId to be cleared;
+        BZAppManager.getInstance().currentRideRequestId = "";
+        BZAppManager.getInstance().currentRideRequestUserPhone = "";
+        BZAppManager.getInstance().currentRideRequestMessage = "";
+        BZAppManager.getInstance().currentRideRequestUserName = "";
+        bRequestAttended = false;
+    }
     @Override
     public void onFailure() {
         Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);
@@ -428,7 +695,6 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -440,6 +706,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         double currentLongitude = location.getLongitude();
 
         m_latLng = new LatLng(currentLatitude, currentLongitude);
+
 
         String locationAddress = getAddress(m_latLng);
 
@@ -510,7 +777,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 ToggleAction();
                 break;
             case R.id.btnFinish:
-                FinishAction();
+                StartAction();
                 break;
         }
     }
@@ -568,79 +835,24 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
     }
 
 
-    private void endRideAction() {
-        if (BZAppManager.getInstance().isDriver == true) {
-            double currentLat = m_latLng.latitude;
-            double currentLong = m_latLng.longitude;
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
 
-            if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-                BZRESTApiHandler api = new BZRESTApiHandler(this);
-                api.setPostExecuteListener(this);
-                api.setMessage("Ending ride...");
-                String urlCall = Utils.BASE_URL + Utils.END_RIDE_URL;
-                String params = "token=" + usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId +
-                        "&ActualEndLat=" + currentLat + "&ActualEndLong=" + currentLong;
-                api.putDetails(urlCall, Utils.END_RIDE_URL, params);
+    private void UpdateLocation() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            if (location == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
+            else {
+                double currentLatitude = location.getLatitude();
+                double currentLongitude = location.getLongitude();
+                m_latLng = new LatLng(currentLatitude, currentLongitude);
             }
         }
     }
 
-
-    private void startRideAction() {
-        double currentLat = m_latLng.latitude;
-        double currentLong = m_latLng.longitude;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
-
-        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            BZRESTApiHandler api = new BZRESTApiHandler(this);
-            api.setPostExecuteListener(this);
-            api.setMessage("Starting ride...");
-            String urlCall = Utils.BASE_URL + Utils.START_RIDE_URL;
-            String params = "token=" + usertoken + "&rideRequestId=" + BZAppManager.getInstance().currentRideRequestId +
-                    "&currentLat=" +currentLat + "&currentLong=" +currentLong ;
-            api.putDetails(urlCall, Utils.START_RIDE_URL, params);
-        } else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
-        }
-    }
-    private void FinishAction() {
-        // call service for endride
-        if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
-            if (bFinishRide)
-            {
-                endRideAction();
-                return;
-            }
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder
-                    .setTitle("BZRide")
-                    .setMessage(BZAppManager.getInstance().currentRideRequestMessage)
-                    .setCancelable(false)
-                    .setPositiveButton("Start Now", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            startRideAction();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-        else {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
-        }
-    }
     public GoogleApiClient getAPIClient() {
         return mGoogleApiClient;
     }

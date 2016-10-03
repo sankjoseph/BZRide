@@ -27,6 +27,7 @@ import java.util.Map;
 public class driverBankInfo extends AppCompatActivity  implements   View.OnClickListener, OnPostExecuteListener {
 
     EditText txtBankName,txtBankAccountNumber,txtBankAccountHolderName,txtBankAccountRoutingNumber;
+    private String Option;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,6 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
         findViewById(R.id.btnBankDriverDone).setOnClickListener(this);
 
 
-        String Option;
         Bundle extras = getIntent().getExtras();
         Option= extras.getString("mode");
         if (Option.equals("edit")){
@@ -118,7 +118,14 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
     public void onSuccess(BZJSONResp model) {
         BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-            startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            if (Option.equals("edit"))
+            {
+                finish();//update and close
+            }
+            else
+            {// update and open landing
+                startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);

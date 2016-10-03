@@ -89,6 +89,7 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
     }
     private void cardDetailsAction() {
         Intent myIntent = new Intent(registeruser.this, usercarddetails.class);
+        myIntent.putExtra("mode", "new");
         registeruser.this.startActivity(myIntent);
     }
     private void registeraction() {
@@ -108,6 +109,7 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
                 Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_EMAIL_INVALID, null);
                 return;
             }
+
 
             pwd = (EditText)findViewById(R.id.txtriderPwd);
             confirmpwd = (EditText)findViewById(R.id.txtriderConfirmPwd);

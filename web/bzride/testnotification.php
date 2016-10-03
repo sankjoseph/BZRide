@@ -8,7 +8,7 @@ $deviceToken = 'eZ9SkTga1Ac:APA91bGYIEBrtHyYvHaxv6liHn0erZr8jeSTH_6h-BVeWpTlKhKx
 LOGDATA($deviceToken);			
 $pushMessage = "You have a ride request from santhosh";
 LOGDATA($pushMessage);
-$apiKey = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40'; // Give api key here.
+$apiKey = $ANDROID_GCM_KEY; // Give api key here.
 LOGDATA('Android notification');
 androidpush($deviceToken,$pushMessage,$apiKey);
 

@@ -34,9 +34,18 @@ ADD DOB date NOT NULL
 
 FinalCharge bztbl_riderequests added
 
+  `FareCommission` FLOAT,bztbl_riderequests added
+  `FarePayableToDriver` FLOAT,bztbl_riderequests added
+  
+
 ALTER TABLE bztbl_riderequests
 ADD FinalCharge FLOAT
 
+ALTER TABLE bztbl_riderequests
+ADD FareCommission FLOAT
+
+ALTER TABLE bztbl_riderequests
+ADD FarePayableToDriver FLOAT
 
 INSERT INTO `bztbl_drivers` (`Id`, `Firstname`, `MiddleName`,`Lastname`, `Email`, `Password`, `Address1`, `Address2`, `Phone`,`SSN`,`DeviceId`,`DeviceType`,`isLicenseAccepted`, 
  `isActive`,`status`, `currentlat`, `currentlong`, `CardType`, `CardProvider`, `cardBillingAddress1`, `cardBillingAddress2`, `CardToken`, CreatedByDate) VALUES

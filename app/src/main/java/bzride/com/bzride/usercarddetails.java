@@ -1,6 +1,9 @@
 package bzride.com.bzride;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,26 +24,41 @@ import com.stripe.exception.AuthenticationException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class usercarddetails extends AppCompatActivity implements View.OnClickListener {
+public class usercarddetails extends AppCompatActivity implements View.OnClickListener,OnPostExecuteListener {
 
     private EditText txtCardDetailsNumber,txtCardDetailsAddress1,txtCardDetailsAddress2;
     private EditText txtCardDetailsCity,txtCardDetailsState,txtCardDetailsZip;
     private EditText txtCardDetailsExpMonth,txtCardDetailsExpYear,txtCardDetailsCVV;
+    private String Option;
+    public BZCardInfo myCardData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usercarddetails);
         findViewById(R.id.btnCardDetailsDone).setOnClickListener(this);
 
+        if (BZAppManager.getInstance().isDriver == true){
+
+            myCardData = BZAppManager.getInstance().bzDriverData.cardData;
+        }
+        else
+        {
+            myCardData = BZAppManager.getInstance().bzRiderData.cardData;
+        }
         //load if data there
+
+        Bundle extras = getIntent().getExtras();
+        Option= extras.getString("mode");
+
+
         RadioGroup radiogrcardType = (RadioGroup) findViewById(R.id.radioGroupCardType);
 
-        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardType, "D"))
+        if (Utils.isEqualAndNotEmpty(myCardData.cardType, "D"))
         {
            RadioButton btn = (RadioButton) radiogrcardType.findViewById(R.id.radioButtonDC);
            btn.setChecked(true);
         }
-        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardType, "C"))
+        else if (Utils.isEqualAndNotEmpty(myCardData.cardType, "C"))
         {
            RadioButton btn = (RadioButton) radiogrcardType.findViewById(R.id.radioButtonCC);
            btn.setChecked(true);
@@ -49,14 +67,20 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         //card vendor
         RadioGroup radiogrcardVendor = (RadioGroup) findViewById(R.id.radioGroupVendor);
 
-        if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardVendor, "M"))
+        if (Utils.isEqualAndNotEmpty(myCardData.cardVendor, "M"))
         {
             RadioButton btn = (RadioButton) radiogrcardVendor.findViewById(R.id.radioButtonMC);
             btn.setChecked(true);
         }
-        else if (Utils.isEqualAndNotEmpty(BZAppManager.getInstance().bzRiderData.cardData.cardVendor,"V"))
+        else if (Utils.isEqualAndNotEmpty(myCardData.cardVendor,"V"))
         {
             RadioButton btn = (RadioButton) radiogrcardVendor.findViewById(R.id.radioButtonVISA);
+            btn.setChecked(true);
+        }
+
+        else if (Utils.isEqualAndNotEmpty(myCardData.cardVendor,"A"))
+        {
+            RadioButton btn = (RadioButton) radiogrcardVendor.findViewById(R.id.radioButtonAmex);
             btn.setChecked(true);
         }
 
@@ -72,16 +96,16 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         txtCardDetailsZip = (EditText)findViewById(R.id.CardDetailsgZip);
 
         // load values if already fit in
-        txtCardDetailsNumber.setText(BZAppManager.getInstance().bzRiderData.cardData.cardNumber);
-        txtCardDetailsAddress1.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1);
-        txtCardDetailsAddress2.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2);
-        txtCardDetailsCity.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingCity);
-        txtCardDetailsState.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingState);
-        txtCardDetailsZip.setText(BZAppManager.getInstance().bzRiderData.cardData.cardBillingZip);
+        txtCardDetailsNumber.setText(myCardData.cardNumber);
+        txtCardDetailsAddress1.setText(myCardData.cardBillingAddress1);
+        txtCardDetailsAddress2.setText(myCardData.cardBillingAddress2);
+        txtCardDetailsCity.setText(myCardData.cardBillingCity);
+        txtCardDetailsState.setText(myCardData.cardBillingState);
+        txtCardDetailsZip.setText(myCardData.cardBillingZip);
 
-        txtCardDetailsExpMonth.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth);
-        txtCardDetailsExpYear.setText(BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear);
-        txtCardDetailsCVV.setText(BZAppManager.getInstance().bzRiderData.cardData.cardCVV);
+        txtCardDetailsExpMonth.setText(myCardData.cardExpiryMonth);
+        txtCardDetailsExpYear.setText(myCardData.cardExpiryYear);
+        txtCardDetailsCVV.setText(myCardData.cardCVV);
 
 
     }
@@ -95,28 +119,55 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
     }
     private void cardDetailsDoneAction() {
         RadioGroup radiogrcardType = (RadioGroup) findViewById(R.id.radioGroupCardType);
-        int index = radiogrcardType.getCheckedRadioButtonId();
-        RadioButton btn = (RadioButton) radiogrcardType.findViewById(index);
-        switch (btn.getId()) {
+
+        /// card vendor
+        int indexType = radiogrcardType.getCheckedRadioButtonId();
+        RadioButton btnType = (RadioButton) radiogrcardType.findViewById(indexType);
+        switch (btnType.getId()) {
             case R.id.radioButtonCC:
-                BZAppManager.getInstance().bzRiderData.cardData.cardType = "C";
+                myCardData.cardType = "C";
                 break;
             case R.id.radioButtonDC:
-                BZAppManager.getInstance().bzRiderData.cardData.cardType = "D";
+                myCardData.cardType = "D";
                 break;
         }
+
     /// card vendor
         RadioGroup radiogrcardVendor = (RadioGroup) findViewById(R.id.radioGroupVendor);
         int indexVendor = radiogrcardVendor.getCheckedRadioButtonId();
         RadioButton btnVendor = (RadioButton) radiogrcardVendor.findViewById(indexVendor);
         switch (btnVendor.getId()) {
             case R.id.radioButtonMC:
-                BZAppManager.getInstance().bzRiderData.cardData.cardVendor = "M";
+                myCardData.cardVendor = "M";
                 break;
             case R.id.radioButtonVISA:
-                BZAppManager.getInstance().bzRiderData.cardData.cardVendor = "V";
+                myCardData.cardVendor = "V";
+                break;
+            case R.id.radioButtonAmex:
+                myCardData.cardVendor = "A";
                 break;
         }
+
+
+        if (Utils.isEmpty(txtCardDetailsNumber.getText().toString())) {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_CARD_NUMBER_EMPTY, null);
+            return;
+        }
+
+        if (Utils.isEmpty(txtCardDetailsExpMonth.getText().toString())) {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_CARD_EXP_MONTH, null);
+            return;
+        }
+        if (Utils.isEmpty(txtCardDetailsExpYear.getText().toString())) {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_CARD_EXP_YEAR, null);
+            return;
+        }
+
+        if (Utils.isEmpty(txtCardDetailsCVV.getText().toString())) {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_CARD_CVV, null);
+            return;
+        }
+
 
 
         Card card = new Card(txtCardDetailsNumber.getText().toString(),
@@ -146,13 +197,13 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         }
 
 
-        new Stripe().createToken(card, "pk_test_LL1jchCoTe2qzVPx5GfwGY4o",
+        new Stripe().createToken(card, Utils.STRIPE_RUNNING_KEY,
                 new TokenCallback() {
                     public void onSuccess(Token token) {
                         // Send token to your server
                         String tokenString = token.getId();
 
-                        BZAppManager.getInstance().bzRiderData.cardData.cardToken = tokenString;
+                        myCardData.cardToken = tokenString;
                         Log.d("Stripesample", tokenString);
                     }
 
@@ -166,19 +217,57 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
                 }
         );
         // other details
-        BZAppManager.getInstance().bzRiderData.cardData.cardNumber = txtCardDetailsNumber.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardBillingCity = txtCardDetailsCity.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardBillingState = txtCardDetailsState.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardBillingZip = txtCardDetailsZip.getText().toString();
+        myCardData.cardNumber = txtCardDetailsNumber.getText().toString();
+        myCardData.cardBillingAddress1 = txtCardDetailsAddress1.getText().toString();
+        myCardData.cardBillingAddress2 = txtCardDetailsAddress2.getText().toString();
+        myCardData.cardBillingCity = txtCardDetailsCity.getText().toString();
+        myCardData.cardBillingState = txtCardDetailsState.getText().toString();
+        myCardData.cardBillingZip = txtCardDetailsZip.getText().toString();
+        myCardData.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
+        myCardData.cardExpiryYear = txtCardDetailsExpYear.getText().toString();
+        myCardData.cardCVV = txtCardDetailsCVV.getText().toString();
 
-        BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth = txtCardDetailsExpMonth.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear = txtCardDetailsExpYear.getText().toString();
-        BZAppManager.getInstance().bzRiderData.cardData.cardCVV = txtCardDetailsCVV.getText().toString();
+        if (Option.equals("edit")) {
 
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
 
-      super.onBackPressed();
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("updating card details...");
+            api.setPostExecuteListener(this);
+
+            if (BZAppManager.getInstance().isDriver == true){
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_DRIVER_CARD_DETAILS_URL ;
+                String params = BZAppManager.getInstance().getDriverCardDataParamsFlat();
+                params = params + "&token="+ usertoken ;
+                api.putDetails(urlCall, Utils.UPDATE_DRIVER_CARD_DETAILS_URL, params);
+            }
+            else {
+                String urlCall = Utils.BASE_URL + Utils.UPDATE_RIDER_CARD_DETAILS_URL ;
+                String params = BZAppManager.getInstance().getRiderCardDataParamsFlat();
+                params = params + "&token="+ usertoken ;
+                api.putDetails(urlCall, Utils.UPDATE_RIDER_CARD_DETAILS_URL, params);
+            }
+
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
-
+    @Override
+    public void onSuccess(BZJSONResp model) {
+        BZJSONResp response = (BZJSONResp)model;
+        if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+           // if edit updated and close
+            finish();
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
+        }
+    }
+    @Override
+    public void onFailure() {
+        Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_SERVER, null);
+    }
 }

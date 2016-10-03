@@ -2,11 +2,30 @@
 include("includes/common.php");
 include("includes/db.php");
 session_start();
+LOGDATA ('inside request handler');
+$requestId = '';
+$reqSQL = "SELECT * FROM  bztbl_riderequests where Status = 'N' order by CreatedByDate desc LIMIT 1";
+LOGDATA($reqSQL);
 
-$requestId = $_REQUEST['rideRequestId'];
-$startLat = $_REQUEST['startLat'];
-$startLong = $_REQUEST['startLong'];
-
+$resultstat = mysql_query($reqSQL,$conn);
+if (!$resultstat) {
+	return false;
+}
+$num_rows = mysql_num_rows($resultstat);
+LOGDATA('no of active request going to be handled->'.$num_rows);
+if ( $num_rows > 0) {
+	$rowIn = mysql_fetch_array($resultstat);
+	$requestId = $rowIn["Id"];
+	$startLat = $rowIn["StartLat"];
+	$startLong = $rowIn["StartLong"];
+}
+else
+{
+	return false;
+}
+LOGDATA('active request going to be handled->id->'.$requestId);
+LOGDATA('active request going to be handled->startLat->'.$startLat);
+LOGDATA('active request going to be handled->startLong->'.$startLong);
 //fixed values testing
 //$requestId = '1';
 //$startLat = '38.7521';
@@ -25,11 +44,6 @@ $startLong = '76.7487';*/
 //$requestId = mysql_real_escape_string($requestId);
 //$startLat = mysql_real_escape_string($startLat);
 //$startLong = mysql_real_escape_string($startLong);
-
-LOGDATA ('inside request handler');
-LOGDATA($requestId);
-LOGDATA($startLat);
-LOGDATA($startLong);
 
 $startLatFloat = doubleval($startLat);
 $startLongFloat = doubleval($startLong);
@@ -108,9 +122,10 @@ if ( $num_rows > 0) {
 			//'dGxQW_4WW6M:APA91bHa_pRIqqH8SpO5LH7kiDAsFwErVkp4hYQTkxcZHSv0i-5FVByKKYhRIvybep6Q_X9rARa8VG5ycxbu6LEw4wihSA5MK4Yup6ZbchUAq2TdkLIjilKUXMnF8D_66hcb5-CHQfIi';
 			//$row["DeviceId"];	
 			LOGDATA($deviceToken);			
-			$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end. ":".$requestId. ":".$firstName.":".$phone.":".$startLat.":".$startLong.":".$endLat.":".$endLong;
+			$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end. ":".$requestId. ":".$firstName.":".$phone.":".$start.":".$end.
+			":".$startLat.":".$startLong.":".$endLat.":".$endLong;
 			LOGDATA($pushMessage);
-			$apiKey = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40'; // Give api key here.
+			$apiKey = $ANDROID_GCM_KEY; // Give api key here.
 			LOGDATA('Android notification');
 			androidpush($deviceToken,$pushMessage,$apiKey);
 			
@@ -166,5 +181,9 @@ function checkIfRequestAccepted($requestId,$conn )
 	return false;
 }
 
+function getLastRequest($conn )
+{
+
+}
 
 ?>

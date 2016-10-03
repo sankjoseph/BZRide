@@ -3,7 +3,7 @@ include("includes/db.php");
 include("includes/common.php");
 
 /////
-LOGDATA("Get Driver Profile");
+LOGDATA("Get Rider Profile");
 
 // Check connection
 if (!$conn) {
@@ -32,10 +32,13 @@ if ( $num_rows > 0) {
 	$firstName = $rowIn["FirstName"];
 	$middleName = $rowIn["MiddleName"];
 	$lastName = $rowIn["LastName"];
-	
-	LOGDATA($firstName);
-	LOGDATA($middleName);
-	LOGDATA($lastName);
+	$email = $rowIn["Email"];
+	$userStatus = $rowIn["status"];
+	$address1 = $rowIn["Address1"];
+	$address2 = $rowIn["Address2"];
+	$city = $rowIn["City"];
+	$state = $rowIn["State"];
+	$zip = $rowIn["Zip"];
 
 	$data = array();
 	$data["status"] ="S";
@@ -43,6 +46,15 @@ if ( $num_rows > 0) {
 	$data["firstName"] = $firstName;
 	$data["middleName"] = $middleName;
 	$data["lastName"] = $lastName;
+	$data["email"] = $email;
+	$data["userStatus"] = $userStatus;
+	$data["address1"] = $address1;
+	$data["address2"] = $address2;
+	$data["city"] = $city;
+	$data["state"] = $state;
+	$data["zip"] = $zip;
+
+
 	echo json_encode($data);
 }
 else

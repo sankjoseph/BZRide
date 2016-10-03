@@ -40,6 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,6 +51,7 @@
         <activity
             android:name=".login"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
@@ -60,16 +62,19 @@
         <activity
             android:name=".usercarddetails"
             android:label="@string/title_activity_usercarddetails"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".EULA"
             android:label="@string/title_activity_eul"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home_driver"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity android:name=".Feedback" >
@@ -77,47 +82,56 @@
         <activity
             android:name=".driverVehicleInfo"
             android:label="@string/title_activity_driver_vehicle_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".driverInsuranceInfo"
             android:label="@string/title_activity_driver_insurance_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".driverLicInfo"
             android:label="@string/title_activity_driver_lic_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".driverVehicleRegInfo"
             android:label="@string/title_activity_driver_vehicle_reg_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".registerDriver"
             android:label="@string/title_activity_register_driver"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".driverBankInfo"
             android:label="@string/title_activity_driver_bank_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".BZLanding"
             android:label="@string/title_activity_bzlanding"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".PlaceFinder"
             android:label="@string/title_activity_place_finder"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name=".HomeDriver"
             android:label="@string/title_activity_home_driver"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
@@ -154,6 +168,22 @@
         <activity
             android:name=".RideRequestNotifiedDetails"
             android:label="@string/title_activity_ride_request_notified_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".updatedriverprofile"
+            android:label="@string/title_activity_updatedriverprofile"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".updateriderprofile"
+            android:label="@string/title_activity_updateriderprofile"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ContactInfo"
+            android:label="@string/title_activity_contact_info"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

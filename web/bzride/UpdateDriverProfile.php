@@ -24,13 +24,11 @@ $address2 = getIfSet($_REQUEST['address2']);
 $city = getIfSet($_REQUEST['city']);
 $state = getIfSet($_REQUEST['state']);
 $zip = getIfSet($_REQUEST['zip']);
-$phone = getIfSet($_REQUEST['phone']);
-$ssn = getIfSet($_REQUEST['ssn']);
 
 								
 // update driver values in DB
-$driver_details="UPDATE bztbl_drivers SET FirstName = $firstName, MiddleName = $middleName,lastName= $lastName, email=$email,address1=$address1
-address2=$address2,City = $city, State = $state,Zip = $zip, phone=$phone, ssn = $ssn,LastModifiedDate=now() where Id = ".$driverID;
+$driver_details="UPDATE bztbl_drivers SET FirstName = $firstName, MiddleName = $middleName,lastName= $lastName, email=$email,address1=$address1,
+address2=$address2,City = $city, State = $state,Zip = $zip, LastModifiedDate=now() where Id = ".$driverID;
 									
 LOGDATA($driver_details);
 $result = mysql_query($driver_details,$conn);

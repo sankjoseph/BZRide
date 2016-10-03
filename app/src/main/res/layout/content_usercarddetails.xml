@@ -97,16 +97,20 @@
                         android:text="Master Card"
                         android:id="@+id/radioButtonMC"
                         android:layout_below="@+id/radioButton"
-
                         android:checked="true" />
-
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="VISA"
                         android:id="@+id/radioButtonVISA"
                         android:layout_below="@+id/radioButtonMC"
-
+                        android:checked="false" />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Amex"
+                        android:id="@+id/radioButtonAmex"
+                        android:layout_below="@+id/radioButtonVISA"
                         android:checked="false" />
                 </RadioGroup>
 

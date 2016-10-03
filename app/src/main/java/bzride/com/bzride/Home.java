@@ -87,6 +87,8 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
     private static final LatLngBounds BOUNDS_INDIA  = new LatLngBounds (new LatLng(-0,0), new LatLng(-0,0));
 
     LatLng m_latLng;
+    LatLng selectedpick;
+    LatLng selecteddrop;
 
     private GoogleMap m_map;
     private LocationRequest mLocationRequest;
@@ -95,14 +97,28 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Your request accepted by:Shenjin:9164263900:6TKH159:Q7
+            //Your request accepted by:09:Shenjin:9164263900:6TKH159:Q7
             // Extract data included in the Intent
             String message = intent.getStringExtra("message");
+
+
+            String[] separated = message.split(":");//0,1,2,3,4,5,6,7
+            if (separated.length > 1) {
+                BZAppManager.getInstance().bzActiveRequestDriverData.RequestID = separated[1].toString();
+                BZAppManager.getInstance().bzActiveRequestDriverData.FirstName = separated[2].toString();
+                BZAppManager.getInstance().bzActiveRequestDriverData.Phone = separated[3].toString();
+                BZAppManager.getInstance().bzActiveRequestDriverData.VehicleNumber = separated[4].toString();
+                BZAppManager.getInstance().bzActiveRequestDriverData.VehicleModel = separated[5].toString();
+
+                BZAppManager.getInstance().currentRideRequestId = BZAppManager.getInstance().bzActiveRequestDriverData.RequestID;
+            }
+
+
             DFragment dFragment = new DFragment();
             Bundle args = new Bundle();
             args.putString("message",message);
             dFragment.setArguments(args);
-            // Show DialogFragment
+
             dFragment.show(fm, "Dialog Fragment");
         }
     };
@@ -145,9 +161,14 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
             BZRESTApiHandler api = new BZRESTApiHandler();
             api.setPostExecuteListener(this);
 
-            String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
+            /*String urlCall = Utils.BASE_URL + Utils.UPDATE_DEVICE_TOKEN_URL;
             String params = "&token="+ usertoken + "&devicetoken=" + devicetoken +"&usertype=" + usertype ;
-            api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);
+            api.putDetails(urlCall, Utils.UPDATE_DEVICE_TOKEN_URL, params);*/
+
+            String urlCall = Utils.BASE_URL + Utils.GET_RIDER_PROFILE_URL;
+            String params = "&token="+ usertoken ;
+            api.putDetails(urlCall, Utils.GET_RIDER_PROFILE_URL, params);
+
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
@@ -228,13 +249,45 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
 
 
         if (id == R.id.nav_rider_profile) {
-            /*Intent myIntent = new Intent(Home.this, driverBankInfo.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intent myIntent = new Intent(Home.this, updateriderprofile.class);
+            Home.this.startActivity(myIntent);
+
+        }
+        else if (id == R.id.nav_rider_card_details) {
+            Intent myIntent = new Intent(Home.this, usercarddetails.class);
             myIntent.putExtra("mode", "edit");
-            Home.this.startActivity(myIntent);*/
+            Home.this.startActivity(myIntent);
         }
 
+        /*else if (id == R.id.nav_rider_ride_history)
+        {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NOT_READY, null);
+        }*/
 
+        else if (id == R.id.nav_rider_ride_active)
+        {
+            if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
+                DFragment dFragment = new DFragment();
+                Bundle args = new Bundle();
+                args.putString("message", BZAppManager.getInstance().currentRideRequestMessage);
+                dFragment.setArguments(args);
+                dFragment.show(fm, "Dialog Fragment");
+            }
+            else
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_ERROR_NO_ACTIVE_RIDE, null);
+            }
+
+        }
+
+        else if (id == R.id.nav_rider_contact) {
+            Intent myIntent = new Intent(Home.this, ContactInfo.class);
+            Home.this.startActivity(myIntent);
+        }
+
+        else if (id == R.id.nav_rider_about) {
+            // not required
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_rider);
         drawer.closeDrawer(GravityCompat.START);
@@ -246,6 +299,18 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         BZJSONResp response = (BZJSONResp)model;
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
 
+            if (response.info.toString().contains("Get Profile")) {
+                GetProfileInfoResp responseObj = (GetProfileInfoResp)model;
+                BZAppManager.getInstance().bzRiderData.FirstName = responseObj.firstName;
+                BZAppManager.getInstance().bzRiderData.MiddleName = responseObj.middleName;
+                BZAppManager.getInstance().bzRiderData.LastName = responseObj.lastName;
+                BZAppManager.getInstance().bzRiderData.Email = responseObj.email;
+                BZAppManager.getInstance().bzRiderData.Address1 = responseObj.address1;
+                BZAppManager.getInstance().bzRiderData.Address2 = responseObj.address2;
+                BZAppManager.getInstance().bzRiderData.City = responseObj.city;
+                BZAppManager.getInstance().bzRiderData.State = responseObj.state;
+                BZAppManager.getInstance().bzRiderData.Zip = responseObj.zip;
+            }
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);
@@ -289,14 +354,15 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         }
 
     }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         connectedstatus = true;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
                  ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        ACCESS_MAPS_PERMISSIONS_REQUEST);
+                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                         ACCESS_MAPS_PERMISSIONS_REQUEST);
         }
         else {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -365,7 +431,6 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
 
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -458,45 +523,68 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
                 return;
             }
 
-            LatLng selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
+            selectedpick =  BZAppManager.getInstance().selectedPickUpLocation;
 
             if(Utils.isEmptyLocation(selectedpick))
             {
                 Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify pickup location", null);
                 return;
             }
-            LatLng selecteddrop = BZAppManager.getInstance().selectedDropLocation;
+            selecteddrop = BZAppManager.getInstance().selectedDropLocation;
 
             if(Utils.isEmptyLocation(selecteddrop))
             {
                 Utils.showInfoDialog(this, Utils.MSG_TITLE, "Please specify drop location", null);
                 return;
             }
-            //call web service
-            if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-                BZRESTApiHandler api = new BZRESTApiHandler(this);
-                api.setMessage("Creating ride request...");
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int choice) {
+                    switch (choice) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            createRequest();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            return;
+                    }
+                }
+            };
 
-                String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            builder.setMessage(Utils.MSG_REQUEST_CONFIRM)
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
 
-                String locationStartAddress = getAddress(selectedpick);
-                String locationEndAddress = getAddress(selecteddrop);
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
 
-                String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
-                        "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
-                        "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
-
-                api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
-                api.setPostExecuteListener(this);
-            }
-            else {
-                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
-            }
 
         }
     }//onActivityResult
+
+    private void createRequest() {
+
+        //call web service
+        if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            BZRESTApiHandler api = new BZRESTApiHandler(this);
+            api.setMessage("Creating ride request...");
+
+            String urlCall = Utils.BASE_URL + Utils.RIDE_REQUEST_I_URL ;
+
+            String locationStartAddress = getAddress(selectedpick);
+            String locationEndAddress = getAddress(selecteddrop);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String userid = sharedPreferences.getString(QuickstartPreferences.USER_ID, null);
+
+            String params = "&requestorId="+ userid + "&startLocation=" + locationStartAddress + "&endLocation=" + locationEndAddress +
+                    "&startLat=" + selectedpick.latitude +  "&startLong=" + selectedpick.longitude +
+                    "&endLat=" +selecteddrop.latitude +  "&endLong=" + selecteddrop.longitude;//todo fix
+
+            api.putDetails(urlCall, Utils.RIDE_REQUEST_I_URL, params);
+            api.setPostExecuteListener(this);
+        }
+        else {
+            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
+        }
+    }
     private void requestNowAction() {
 
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {

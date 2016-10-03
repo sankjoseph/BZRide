@@ -2,7 +2,7 @@
 include("includes/db.php");
 include("includes/common.php");
 
-LOGDATA("Update driver card details");
+LOGDATA("Update rider card details");
 
 // Check connection
 if (!$conn) {
@@ -14,7 +14,7 @@ else
 
 $token = $_REQUEST['token'];
 LOGDATA($token);
-$driverID = GetIdByCheckforTimeout($token);
+$riderID = GetIdByCheckforTimeout($token);
 
 
 $CardType = getIfSet($_REQUEST['cardType']);
@@ -27,10 +27,10 @@ $cardBillingZip = getIfSet($_REQUEST['cardBillingZip']);
 $CardToken = getIfSet($_REQUEST['cardToken']);
 					
 // update driver values in DB
-$driver_details="UPDATE bztbl_drivers SET CardType = $CardType, CardProvider = $CardProvider,
+$driver_details="UPDATE bztbl_riders SET CardType = $CardType, CardProvider = $CardProvider,
 cardBillingAddress1 = $cardBillingAddress1,cardBillingAddress2=$cardBillingAddress2,
 cardBillingCity = $cardBillingCity,cardBillingState=$cardBillingState,cardBillingZip=$cardBillingZip,
-CardToken=$CardToken, LastModifiedDate=now() where Id = ".$driverID;
+CardToken=$CardToken, LastModifiedDate=now() where Id = ".$riderID;
 
 									
 LOGDATA($driver_details);
@@ -41,7 +41,7 @@ if (!$result) {
 
 $data = array();
 $data["status"] ="S";
-$data["info"] = "Update driver card details success";
+$data["info"] = "Update rider card details success";
 echo json_encode($data);
 
 mysql_close();

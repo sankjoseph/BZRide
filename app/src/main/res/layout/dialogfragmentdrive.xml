@@ -8,17 +8,30 @@
         android:layout_height="25dp"
         android:text="You have driver coming now"
         android:textColor="#000000"
-        android:id="@+id/txtDriverComing"
+        android:id="@+id/txtRiderName"
         android:textAlignment="center"
         android:textSize="14sp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="25dp" />
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="25dp"
+        android:text="You have driver coming now"
         android:textColor="#000000"
-        android:id="@+id/txtDriverComingPhone"
+        android:id="@+id/txtRiderPhone"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="25dp" />
+
+
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:text="You have driver coming now"
+        android:textColor="#000000"
+        android:id="@+id/txtStartLocation"
         android:textAlignment="center"
         android:textSize="14sp"
         android:layout_gravity="center_vertical"
@@ -26,28 +39,21 @@
         android:layout_marginLeft="25dp" />
     <TextView android:layout_width="wrap_content"
         android:layout_height="25dp"
+        android:text="You have driver coming now"
         android:textColor="#000000"
-        android:id="@+id/txtDriverComingVNumber"
+        android:id="@+id/txtEndLocation"
         android:textAlignment="center"
         android:textSize="14sp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="25dp" />
-    <TextView android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:textColor="#000000"
-        android:id="@+id/txtDriverComingVmodel"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="25dp" />
+
     <Button android:layout_width="190dp"
-        android:id="@+id/btnContactDriver"
+        android:id="@+id/btnActiveRideDone"
         android:layout_height="38dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="Done"
+        android:text="Contact"
         android:textColor="#fff"
         android:textSize="13dp"
         android:background="#2683c2"/>

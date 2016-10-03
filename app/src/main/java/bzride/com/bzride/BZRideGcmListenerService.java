@@ -64,7 +64,7 @@ public class BZRideGcmListenerService extends GcmListenerService {
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-            //ic_stat_ic_notification todo
+            //ic_stat_ic_notification todo fix icon
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 notificationBuilder.setSmallIcon(R.drawable.ic_stat_ic_notification);
             } else {
@@ -85,6 +85,7 @@ public class BZRideGcmListenerService extends GcmListenerService {
         else{// if rider just update home
             Intent intent = new Intent("request_accepted");
             intent.putExtra("message", message);
+            BZAppManager.getInstance().currentRideRequestMessage = message;
             //add data you wnat to pass in intent
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 

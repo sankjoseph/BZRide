@@ -21,6 +21,7 @@ $city = getIfSet($_REQUEST['city']);
 $state = getIfSet($_REQUEST['state']);
 $zip = getIfSet($_REQUEST['zip']);
 $phone = getIfSet($_REQUEST['phone']);
+$status = getIfSet($_REQUEST['status']);
 $deviceId = getIfSet($_REQUEST['deviceId']);
 $devicetoken = getIfSet($_REQUEST['devicetoken']);
 $deviceType = getIfSet($_REQUEST['deviceType']);
@@ -38,7 +39,7 @@ $cardToken = getIfSet($_REQUEST['cardToken']);
 // insert rider values in DB
 //(1, 'Ameer', '22','name' 'myemail', 'newpassword', 'my addr1', 'myaddr2', '234466', '44455588', 'android', 0, 0, 'debit', 'mastro', '', now()),
 $rider_details="insert into bztbl_riders values('', $firstName,$middleName, $lastName, $email, $password,
-									$address1, $address2,$city,$state,$zip, $phone, $deviceId,$devicetoken, $deviceType,1,1, $cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardBillingCity,$cardBillingState,$cardBillingZip,$cardToken, now(),now() )"; 
+									$address1, $address2,$city,$state,$zip, $phone, $deviceId,$devicetoken, $deviceType,1,1,$status, $cardType, $cardProvider, $cardBillingAddress1,$cardBillingAddress2,$cardBillingCity,$cardBillingState,$cardBillingZip,$cardToken, now(),now() )"; 
 									
 $result = mysql_query($rider_details,$conn);
 LOGDATA($rider_details);

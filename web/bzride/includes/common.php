@@ -4,7 +4,55 @@ define("DEBUG_F","File");
 define("TEST_CARD","CARD");
 define('SECRET_KEY', "zxcvbnmasdfghjkl");//16 digit key
 
+$ANDROID_GCM_KEY = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40';
+$STRIPE_SANDBOX_SECRET_KEY = "sk_test_2rCnQT2VGQl5ndFbgfEas7g2";
+$STRIPE_LIVE_SECRET_KEY = "sk_live_XeSRUrmQRkfeohItbtPFfTjF";
+
+$STRIPE_RUNNING_SECRET_KEY = $STRIPE_SANDBOX_SECRET_KEY;
+
 $BASE_URL = 'http://bzride.com/bzride/'; //change when production
+
+
+
+function isweekend($date){
+    $date = strtotime($date);
+    $date = date("l", $date);
+    $date = strtolower($date);
+    if($date == "friday" || $date == "saturday" || $date == "sunday") {
+        return "true";
+    } else {
+        return "false";
+    }
+}
+
+function FindTimeDiff($start,$end = false) { 
+ 	
+	$startTime = date("H:i:s",strtotime($start ));
+	$endTime = date("H:i:s",strtotime($end ));
+	
+
+	$diff = $endTime - $startTime;
+	
+	$hour = abs($diff);
+	
+	$min = $hour * 60 ;
+   
+    return  $min; 
+} 
+
+
+function isNightRide($datetimeIn)
+{
+	$currentTime = date("H:i:s",strtotime($datetimeIn ));
+	if ((((int) date('H', strtotime($currentTime))) >= 22) && (((int) date('H', strtotime($currentTime))) <= 24))
+	{
+		return true;
+	}
+	if ((((int) date('H', strtotime($currentTime))) >= 0) && (((int) date('H', strtotime($currentTime))) <= 6))
+	{
+		return true;
+	}
+}
 
 function getMYSQLDate($dateToFormat)
 {
@@ -50,7 +98,7 @@ function androidpush($deviceToken,$pushMessage,$apiKey)
 	
 	
 		if (!$result)
-			showError("Ride request message not delivered. Please retry.");
+			showError("Android push message not delivered. Please retry.");
 		else
 			//showSuccess("Ride request message successfully delivered.");
 		return true;
@@ -59,7 +107,7 @@ function androidpush($deviceToken,$pushMessage,$apiKey)
 	else
 	{
 		showError("Message or device token not set. Please retry.");
-		 return false;
+		return false;
 	}
     return true;
 }
@@ -116,8 +164,8 @@ function GetIdByCheckforTimeout($token)
 	$tokenGeneric = SECRET_KEY;
 	$decToken = bz_crypt($tokenGeneric,$token,'decrypt');
 	LOGDATA($decToken);
-
-	$driverID = after(':', $decToken);
+	LOGDATA('token decrypted for user is ->'.$decToken);
+	$userid = after(':', $decToken);
 	$timecreated = before(':', $decToken);
 	LOGDATA('time created'. $timecreated);
 
@@ -131,7 +179,8 @@ function GetIdByCheckforTimeout($token)
 	$diff = $curtime-$time;
 
 	LOGDATA('diff'.$diff);
-	return $driverID;
+	LOGDATA('useridretruning'.$userid);
+	return $userid;
 	
 	/*if($diff > 600) {   
 		showError('Session time out. Please login again.');

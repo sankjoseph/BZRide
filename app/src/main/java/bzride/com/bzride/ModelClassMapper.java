@@ -25,8 +25,14 @@ public class ModelClassMapper {
         classHashMap.put(Utils.ACCEPT_RIDE_REQUEST_URL, BZJSONResp.class);
         classHashMap.put(Utils.START_RIDE_URL, BZJSONResp.class);
         classHashMap.put(Utils.END_RIDE_URL, EndRideRsp.class);
-
-
+        classHashMap.put(Utils.UPDATE_DRIVER_PROFILE_URL, BZJSONResp.class);
+        classHashMap.put(Utils.GET_DRIVER_PROFILE_URL, GetProfileInfoResp.class);
+        classHashMap.put(Utils.UPDATE_RIDER_PROFILE_URL, BZJSONResp.class);
+        classHashMap.put(Utils.GET_RIDER_PROFILE_URL, GetProfileInfoResp.class);
+        classHashMap.put(Utils.UPDATE_DRIVER_CARD_DETAILS_URL, BZJSONResp.class);
+        classHashMap.put(Utils.UPDATE_RIDER_CARD_DETAILS_URL, BZJSONResp.class);
+        classHashMap.put(Utils.ARRIVE_RIDE_URL, BZJSONResp.class);
+        classHashMap.put(Utils.CANCEL_RIDE_URL, BZJSONResp.class);
 
 
         //classHashMap.put(Utils.NOTIFICATION_LIST_URL, NotificationRsp.class);

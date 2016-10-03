@@ -117,27 +117,64 @@ $ActualRideDateTimeEnd = $row["ActualRideDateTimeEnd"];
 
 $riderId = $row["RequestorId"];
 
+$saftyandTrustFee = 1.75;//dollar
+
+$baseFare = 4.0;// 4Dollar defaukt
+$rateForTimeCents = 0.0;
+$rateforDistanceCents = 0.0;
+$pickUpCharge = 0.95; // pick up charge
 // find distance
 $distancetraveledmi = distanceCalculation($ActualStartLat,$ActualStartLong,$ActualEndLat,$ActualEndLong,'mi');
 
-$rateforDistanceCents = $distancetraveledmi * 1.28; //cents
+if (distancetraveledmi >3 )// greater than 3 miles
+{
+	$rateforDistanceCents = $distancetraveledmi * 0.85; //dollar//0.85 per mile
+}
 
 // find time difference
-$timetakenminutes = round(abs($ActualRideDateTimeEnd - $ActualRideDateTimeStart) / 60,2);
+$timetakenminutes  = FindTimeDiff($ActualRideDateTimeStart,$ActualRideDateTimeEnd);
+//$timetakenminutes = round(abs($ActualRideDateTimeEnd - $ActualRideDateTimeStart) / 60,2);
 
-// fare time
-$rateForTimeCents = $timetakenminutes * 15.0;//cents
+if (distancetraveledmi >3 )// greater than 3 miles consider time also
+{
+	// fare time
+	$rateForTimeCents = $timetakenminutes * 0.14;//dollar//0.14 dollar per minute
+}
+
 // calculate rate for above and fit in table
-$baseFare = 12.0;// 12Dollar
-$stateFee = 1.75;//dollar
-$finalFare = $baseFare + $stateFee + ($rateforDistanceCents + $rateForTimeCents)/100;//dollar
+$travelFare = ($rateforDistanceCents + $rateForTimeCents); //dollar
+
+// for night drive between 10- 6 
+if (isNightRide($ActualRideDateTimeStart))
+{
+	$travelFare = $travelFare + ($travelFare *0.3);
+}
+
+// for friday saturday sunday
+if (isweekend ($ActualRideDateTimeStart))
+{
+	$travelFare = $travelFare + ($travelFare *0.3);
+}
+
+if (distancetraveledmi <=3 )
+{
+	$pickUpCharge = 0.0;// not applicable for short distance
+}
+if (distancetraveledmi >3 )// greater than 3 miles basefare not appicable
+{
+	$baseFare = 0.0;
+}
+$finalFare = $pickUpCharge + $saftyandTrustFee  + $baseFare + $travelFare;//dollar
 // sum total fare and update in table
-// for night drive between 10- 6 //todo
+
 
 $finalFare = ceil($finalFare);
-$FaretoCompany = $finalFare -  $stateFee;
+$FaretoCompany = $finalFare -  $saftyandTrustFee;
+
+$FareCommission = $FaretoCompany * 0.20;// 20 percent commission
+$FarePayableToDriver =  $FaretoCompany * 0.80;// 80 percent 
 // update fare for table
-$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents, FinalCharge = $finalFare, FaretoCompany = $FaretoCompany where Id = " .$requestId ;
+$updateFareSQL = "UPDATE bztbl_riderequests SET ChargeDistance = $rateforDistanceCents, ChargeTime = $rateForTimeCents, FinalCharge = $finalFare, FaretoCompany = $FaretoCompany,FareCommission = $FareCommission, FarePayableToDriver = $FarePayableToDriver where Id = " .$requestId ;
 LOGDATA($updateFareSQL);
 
 $result = mysql_query($updateFareSQL,$conn);
@@ -146,8 +183,8 @@ if (!$result) {
 }
 
 // get card details
-// get data from request table for calculation
-$requestCardSQL = "Select CardToken from bztbl_riders where Id = " .$riderId ;//RequestorId
+// get data from request table for calculation and notification
+$requestCardSQL = "Select DeviceToken,DeviceType, CardToken from bztbl_riders where Id = " .$riderId ;//RequestorId
 LOGDATA($requestCardSQL);
 $result = mysql_query($requestCardSQL,$conn);
 if (!$result) {
@@ -164,6 +201,7 @@ $ch =  curl_init();
 
 $postData = http_build_query(array('token' => $CardToken,	
 					'amount' => $finalFare,//dollar
+					'requestId' => $requestId,
 					'currency' => 'usd'	));
 curl_setopt($ch, CURLOPT_URL, $bz_req_url);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -181,9 +219,22 @@ if (preg_match("/Could not/i", $result)) {
     showError("Failed to handle charge, Please retry.");
  } 
 
+$deviceType = $rowToken["DeviceType"];
+if ($deviceType == 'A')
+{
+	//notify rider with details
+	$deviceToken = $rowToken["DeviceToken"];//rider device token
+	LOGDATA($deviceToken);			
+	$pushMessage = "Your card is charged by USD ". $finalFare;
+	LOGDATA($pushMessage);
+	$apiKey = $ANDROID_GCM_KEY; // Give api key here.
+	LOGDATA('Android notification');
+	androidpush($deviceToken,$pushMessage,$apiKey);
+}
+
 $data = array();
 $data["status"] ="S";
-$data["fare"] =  "".$FaretoCompany."";
+$data["faredriver"] =  "".$FarePayableToDriver."";
 $data["info"] = "End ride success for driver";
 echo json_encode($data);
 mysql_close();

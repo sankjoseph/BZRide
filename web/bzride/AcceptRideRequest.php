@@ -60,27 +60,45 @@ if (!$resultUpdateDriver) {
 
 // RequestorId
 
-$requestSQL = "select U.DeviceToken, U.DeviceType from bztbl_riderequests as R INNER JOIN  bztbl_riders U ON R.RequestorId = U.Id where R.Id = ".$requestId;
+$requestSQL = "SELECT R.Id, R.RequestorId, R.DriverId, D.FirstName,D.Phone,U.DeviceToken, U.DeviceType, V.VehicleNumber, V.VehicleModel FROM  bztbl_riderequests AS R INNER JOIN  bztbl_riders U ON R.RequestorId = U.Id INNER JOIN bztbl_drivers as D ON  D.Id =  R.DriverId  INNER JOIN bztbl_drivervehicledetails V ON V.DriverId = D.Id where R.Id = ".$requestId;
+
 LOGDATA($requestSQL);
-$resultSQL = mysql_query($requestSQL,$conn);
-if (!$resultSQL) {
+
+$resultIn = mysql_query($requestSQL,$conn);
+if (!$resultIn) {
 	showError(mysql_error());
 }
-$num_rows = mysql_num_rows($resultSQL);
+$num_rows = mysql_num_rows($resultIn);
 LOGDATA($num_rows);
 if ( $num_rows > 0) {
-	$row = mysql_fetch_array($resultSQL);
-}
-$deviceType = $row["DeviceType"];
-$DeviceToken = $row["DeviceToken"];
-if ($deviceType == 'A')
-{
-	$pushMessage = "You request is accepted and driver will reach soon";
-	$apiKey = 'AIzaSyDpkMnJYFvd41lI7Bz8IrTZTw6V8WNOm40'; // Give api key here.
-	LOGDATA('Android notification start');
-	if (!androidpush($DeviceToken,$pushMessage,$apiKey)){
-		LOGDATA('Android notification failed');
+	$rowIn = mysql_fetch_array($resultIn);
+	$deviceToken = $rowIn["DeviceToken"];//rider device token
+	// get driver and vehicle data
+	$FirstName = $rowIn["FirstName"];
+	$Phone = $rowIn["Phone"];
+	$VehicleNumber = $rowIn["VehicleNumber"];
+	$VehicleModel = $rowIn["VehicleModel"];
+	$requestID = $rowIn["Id"];
+	//notify rider with details
+	LOGDATA('notify rider with details');	
+	$deviceType = $rowIn["DeviceType"];
+	if ($deviceType == 'A')
+	{
+		LOGDATA($deviceToken);			
+		$pushMessage = "Your request accepted by".":".$requestID.":".$FirstName.":".$Phone.":".$VehicleNumber. ":".$VehicleModel;
+		LOGDATA($pushMessage);
+		$apiKey = $ANDROID_GCM_KEY; // Give api key here.
+		LOGDATA('Android notification');
+		androidpush($deviceToken,$pushMessage,$apiKey);		
 	}
+	else if ($deviceType == 'I')
+	{
+		// ios notifications
+	}
+}
+else
+{
+	LOGDATA('notify rider failed');
 }
 $data = array();
 $data["status"] ="S";

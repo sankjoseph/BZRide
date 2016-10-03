@@ -33,4 +33,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_overlay">overlay</string>
+    <string name="title_activity_updatedriverprofile">updatedriverprofile</string>
+    <string name="title_activity_updateriderprofile">updateriderprofile</string>
+    <string name="title_activity_contact_info">ContactInfo</string>
 </resources>

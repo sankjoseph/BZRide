@@ -33,14 +33,14 @@ if ( $num_rows > 0) {
 	
 	$tokenGeneric = SECRET_KEY;
 	
-	LOGDATA($tokenGeneric);
-	LOGDATA($Id);
-	LOGDATA($DeviceId);
+	LOGDATA('generic key is ->'.$tokenGeneric);
+	LOGDATA('id ->'.$Id);
+	LOGDATA('device id ->'.$DeviceId);
 	$text = time(). ":". $Id;
-	LOGDATA($text);
-	
+	LOGDATA('time and id->'. $text);
 	$token = bz_crypt($tokenGeneric,$text,'encrypt');
-	LOGDATA($token);
+	LOGDATA('encrypted token created for user is ->'.$token);
+	
 	
 	$data = array();
 	$data["status"] ="S";

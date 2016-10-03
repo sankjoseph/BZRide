@@ -21,8 +21,7 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
     TextView txtTimer;
     String requestId = "0";
     String phone = "0";
-    String name = "";
-    String messageHeader = "";
+    String messageHeader= "";
     boolean bRequestAccepted;
     double startLat;
     double startLong ;
@@ -35,7 +34,7 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
         setContentView(R.layout.activity_ride_request_notified_details);
         txtriderData = (TextView)  findViewById(R.id.txtrideRequest);
         txtTimer = (TextView)findViewById(R.id.txttimeremaining);
-        //findViewById(R.id.btnContact).setOnClickListener(this);
+
         findViewById(R.id.btnAcceptRide).setOnClickListener(this);
 
         bRequestAccepted = false;
@@ -57,21 +56,26 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
 
-        //$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end.
-        // ":".$requestId. ":".$firstName.":".$phone.":".$startLat.":".$startLong.":".$endLat.":".$endLong;
-        String[] separated = message.split(":");//0,1,2,3,4,5,6,7
+      //$pushMessage = "You have a ride request from ". $firstName. " start from ". $start. " to ". $end.
+      // ":".$requestId. ":".$firstName.":".$phone.":".$start.":".$end.
+       // ":".$startLat.":".$startLong.":".$endLat.":".$endLong;
+
+        //"You have a ride request from jessy start from Thalanadu, Kerala to T.B Road:31:jessy:8281038708:Thalanadu, Kerala:T.B Road:9.75345:76.7897:9.68581:76.7751"
+        String[] separated = message.split(":");//0,1,2,3,4,5,6,7,8,9
 
         messageHeader = separated[0];
         requestId = separated[1];
-        name = separated[2];
+        BZAppManager.getInstance().currentRideRequestUserName =  separated[2].toString();
         phone = separated[3];
+        BZAppManager.getInstance().currentRideRequeststartLocation = (separated[4].toString());
+        BZAppManager.getInstance().currentRideRequestendLocation = (separated[5].toString());
+
+        startLat = Double.parseDouble(separated[6].toString());
+        startLong = Double.parseDouble(separated[7].toString());
+        endLat =  Double.parseDouble(separated[8].toString());
+        endLong = Double.parseDouble(separated[9].toString());
+
         txtriderData.setText(messageHeader);
-        startLat = Double.parseDouble(separated[4].toString());
-        startLong = Double.parseDouble(separated[5].toString());
-        endLat =  Double.parseDouble(separated[6].toString());
-        endLong = Double.parseDouble(separated[7].toString());
-
-
 
 
     }
@@ -118,6 +122,7 @@ public class RideRequestNotifiedDetails extends AppCompatActivity implements  Vi
             bRequestAccepted=true;
             BZAppManager.getInstance().currentRideRequestId = requestId;
             BZAppManager.getInstance().currentRideRequestMessage = messageHeader;
+            BZAppManager.getInstance().currentRideRequestUserPhone = phone;
             BZAppManager.getInstance().selectedPickUpLocation = new LatLng(startLat,startLong);
             BZAppManager.getInstance().selectedDropLocation = new LatLng(endLat,endLong);
 

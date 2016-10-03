@@ -22,6 +22,10 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+
 public class login extends AppCompatActivity implements View.OnClickListener, OnPostExecuteListener  {
     private EditText loginmobiletext;
     private EditText passwordtext;
@@ -57,11 +61,7 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
         // Registering BroadcastReceiver
         registerReceiver();
 
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+
     }
     @Override
     public void onClick(View v) {
@@ -132,8 +132,16 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         LoginResp response = (LoginResp)model;
-        if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
-            sharedPreferences.edit().putString(QuickstartPreferences.USER_TOKEN, response.token).apply();
+         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+            //sharedPreferences.edit().putString(QuickstartPreferences.USER_TOKEN, response.token).apply();
+
+            try {
+                String encodedString = URLEncoder.encode(response.token, "UTF-8");
+                sharedPreferences.edit().putString(QuickstartPreferences.USER_TOKEN, encodedString).apply();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
             sharedPreferences.edit().putString(QuickstartPreferences.USER_ID,response.userid).apply();
 
             BZAppManager.getInstance().currentUserId = response.userid;
@@ -151,6 +159,11 @@ public class login extends AppCompatActivity implements View.OnClickListener, On
                 sharedPreferences.edit().putString(QuickstartPreferences.USER_TYPE, "Rider").apply();
             }
 
+             if (checkPlayServices()) {
+                 // Start IntentService to register this application with GCM.
+                 Intent intent = new Intent(this, RegistrationIntentService.class);
+                 startService(intent);
+             }
         }
         else {
             sharedPreferences.edit().putString(QuickstartPreferences.USER_TOKEN, "").apply();

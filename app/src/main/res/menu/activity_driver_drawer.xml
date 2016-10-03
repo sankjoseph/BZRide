@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single" android:title = "Update">
     </group>
-    <item android:title="Main">
+    <item android:title="Profile">
         <menu>
             <item android:id="@+id/nav_driver_profile"
                 android:title="Profile" />
@@ -11,6 +11,10 @@
                 android:title="Bank Details" />
             <item android:id="@+id/nav_driver_cardinfo"
                 android:title="Card Details" />
+            <item android:id="@+id/nav_driver_ride_cancel"
+                android:title="Cancel Ride" />
+            <item android:id="@+id/nav_driver_ride_active"
+                android:title="Ride Active" />
         </menu>
     </item>
     <item android:title="Support">
