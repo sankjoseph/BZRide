@@ -27,7 +27,7 @@ android:orientation="vertical">
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:layout_weight="0.5"
-            android:text="Arrive"
+            android:text="Start"
             android:background="#2683c2"
             />
 

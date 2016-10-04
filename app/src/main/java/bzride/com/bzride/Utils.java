@@ -84,7 +84,10 @@ public class Utils {
     public static final String MSG_NAME_EMPTY = "Please enter your name.";
     public static final String MSG_PHONE_EMPTY = "Please enter your phone number.";
     public static final String MSG_DOB_EMPTY = "Please enter your date of birth.";
-
+    public static final String MSG_VEHICLE_EMPTY = "Please enter complete vehicle details";
+    public static final String MSG_REG_EMPTY = "Please enter complete registration details";
+    public static final String MSG_LIC_EMPTY = "Please enter complete license details";
+    public static final String MSG_INS_EMPTY = "Please enter complete insurance details";
     // for card
     public static final String MSG_CARD_NUMBER_EMPTY = "Please enter card number.";
     public static final String MSG_CARD_EXP_MONTH = "Please enter card expiry month.";

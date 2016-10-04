@@ -448,31 +448,11 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             }
             if (!bRequestAttended)
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder
-                        .setTitle("BZRide")
-                        .setMessage(BZAppManager.getInstance().currentRideRequestMessage)
-                        .setCancelable(false)
-                        .setPositiveButton("Arrive Now", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                                bRequestAttended =  true;
-                                ArrivingRideNowAction();
-                                btnArriveStartFinish.setText("Ready");
-                                bArriving  = true;
-                                bArrived =  false;
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                bRequestAttended =  true;
+                ArrivingRideNowAction();
+                btnArriveStartFinish.setText("Arrived");
+                bArriving  = true;
+                bArrived =  false;
             }
 
         }
@@ -490,7 +470,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
             if (response.info.toString().contains("Arrive ride"))
             {
-                btnArriveStartFinish.setText("Start");
+                btnArriveStartFinish.setText("Start Ride");
                 bArriving = false;
                 bArrived = true;
             }
@@ -507,16 +487,17 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 return;
             }
             if (response.info.toString().contains("Cancel ride")) {
-                btnArriveStartFinish.setText("Arrive");
+                btnArriveStartFinish.setText("Start");
                 bFinishRide = false;
                 clearCurrentRequestInfo();
             }
             if (response.info.toString().contains("End ride"))
             {
-                btnArriveStartFinish.setText("Arrive");
+                btnArriveStartFinish.setText("Start");
                 bFinishRide = false;
                 EndRideRsp responsefare = (EndRideRsp)model;
-                Utils.showInfoDialog(this, Utils.MSG_TITLE, "last ride fare value $ " + responsefare.faredriver, null);
+                String  fareMessage =  "last ride fare value $ " + responsefare.faredriver + "\n" + "Todays total " + responsefare.faredriverdaytotal;
+                Utils.showInfoDialog(this, Utils.MSG_TITLE,fareMessage , null);
                 clearCurrentRequestInfo();
                 return;
             }
@@ -609,12 +590,13 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         settings.setMyLocationButtonEnabled(true);
         settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
+
         m_map.setTrafficEnabled(true);
         m_map.setOnMarkerClickListener(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            m_map.setMyLocationEnabled(true);
+           m_map.setMyLocationEnabled(true);
 
         }
 
@@ -629,7 +611,8 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                     ACCESS_MAPS_PERMISSIONS_REQUEST);
         }
         else {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            m_map.setMyLocationEnabled(true);
+             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
             if (location == null) {
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -657,6 +640,8 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                m_map.setMyLocationEnabled(true);
 
                 if (location == null) {
                     LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);

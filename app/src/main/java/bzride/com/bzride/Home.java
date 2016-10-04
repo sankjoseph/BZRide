@@ -1,7 +1,6 @@
 package bzride.com.bzride;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,19 +9,16 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,36 +28,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -102,25 +83,28 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
             String message = intent.getStringExtra("message");
 
 
-            String[] separated = message.split(":");//0,1,2,3,4,5,6,7
+            String[] separated = message.split(":");//0,1,2,3,4,5
             if (separated.length > 1) {
                 BZAppManager.getInstance().bzActiveRequestDriverData.RequestID = separated[1].toString();
                 BZAppManager.getInstance().bzActiveRequestDriverData.FirstName = separated[2].toString();
                 BZAppManager.getInstance().bzActiveRequestDriverData.Phone = separated[3].toString();
                 BZAppManager.getInstance().bzActiveRequestDriverData.VehicleNumber = separated[4].toString();
                 BZAppManager.getInstance().bzActiveRequestDriverData.VehicleModel = separated[5].toString();
-
                 BZAppManager.getInstance().currentRideRequestId = BZAppManager.getInstance().bzActiveRequestDriverData.RequestID;
+
+                DFragmentRideActive dFragment = new DFragmentRideActive();
+                /*Bundle args = new Bundle();
+                args.putString("message",message);
+                dFragment.setArguments(args);*/
+                dFragment.show(fm, "Dialog Fragment");
+            }
+            else
+            {
+                DFragmentNotifiedAlert dFragment = new DFragmentNotifiedAlert();
+                dFragment.show(fm, "Dialog Fragment");
             }
 
-
-            DFragment dFragment = new DFragment();
-            Bundle args = new Bundle();
-            args.putString("message",message);
-            dFragment.setArguments(args);
-
-            dFragment.show(fm, "Dialog Fragment");
-        }
+      }
     };
 
     @Override
@@ -134,9 +118,6 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String usertoken = sharedPreferences.getString(QuickstartPreferences.USER_TOKEN, null);
-        String devicetoken = sharedPreferences.getString(QuickstartPreferences.DEVICE_TOKEN, null);
-        String usertype = sharedPreferences.getString(QuickstartPreferences.USER_TYPE, null);
-
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_rider);
@@ -154,6 +135,10 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
             navigationView.setNavigationItemSelectedListener(this);
            setTitle("BZRide");
         }
+
+
+
+// testing
 
 
         //keep the token
@@ -267,10 +252,10 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         else if (id == R.id.nav_rider_ride_active)
         {
             if  (!Utils.isEmpty(BZAppManager.getInstance().currentRideRequestId)){
-                DFragment dFragment = new DFragment();
-                Bundle args = new Bundle();
+                DFragmentRideActive dFragment = new DFragmentRideActive();
+                /*Bundle args = new Bundle();
                 args.putString("message", BZAppManager.getInstance().currentRideRequestMessage);
-                dFragment.setArguments(args);
+                dFragment.setArguments(args);*/
                 dFragment.show(fm, "Dialog Fragment");
             }
             else
@@ -344,8 +329,8 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         settings.setMyLocationButtonEnabled(true);
         settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
-        m_map.setTrafficEnabled(true);
 
+        m_map.setTrafficEnabled(true);
         m_map.setOnMarkerClickListener(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -365,6 +350,7 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
                          ACCESS_MAPS_PERMISSIONS_REQUEST);
         }
         else {
+            m_map.setMyLocationEnabled(true);
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
             if (location == null) {
@@ -393,7 +379,7 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
+                m_map.setMyLocationEnabled(true);
                 if (location == null) {
                     LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
                 }

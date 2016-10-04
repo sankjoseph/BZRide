@@ -5,4 +5,6 @@ package bzride.com.bzride;
  */
 public class EndRideRsp extends BZJSONResp {
     public String faredriver;
+    public String faredriverdaytotal;
+
 }

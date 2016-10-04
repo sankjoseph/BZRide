@@ -39,10 +39,10 @@ public class DFragmentDriveActive extends DialogFragment implements  View.OnClic
         txtRiderPhone = (TextView) rootView.findViewById(R.id.txtRiderPhone);
 
 
-        txtRiderName.setText(BZAppManager.getInstance().currentRideRequestUserName);
-        txtStartLocation.setText(   BZAppManager.getInstance().currentRideRequeststartLocation );
-        txtEndLocation.setText( BZAppManager.getInstance().currentRideRequestendLocation);
-        txtRiderPhone.setText( BZAppManager.getInstance().currentRideRequestUserPhone);
+        txtRiderName.setText("Name: " + BZAppManager.getInstance().currentRideRequestUserName);
+        txtStartLocation.setText( "Pick up: " +   BZAppManager.getInstance().currentRideRequeststartLocation );
+        txtEndLocation.setText( "Drop: " + BZAppManager.getInstance().currentRideRequestendLocation);
+        txtRiderPhone.setText( "Phone: " + BZAppManager.getInstance().currentRideRequestUserPhone);
         //"Your request accepted by".":".$requestID.":".$FirstName.":".$Phone.":".$VehicleNumber. ":".$VehicleModel;
 
 

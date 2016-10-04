@@ -181,6 +181,18 @@ $result = mysql_query($updateFareSQL,$conn);
 if (!$result) {
 	showError(mysql_error());
 }
+//
+
+// get daily amount got
+$requestDailySQL = "Select sum(FarePayableToDriver) AS DayTotal from bztbl_riderequests where DriverId = " .$driverID. " GROUP BY date(CreatedByDate)" ;//driver id
+LOGDATA($requestDailySQL);
+$result = mysql_query($requestDailySQL,$conn);
+if (!$result) {
+	showError(mysql_error());
+}
+$rowDay = mysql_fetch_array($result);
+$DayTotal = $rowDay["DayTotal"];
+$DayTotal = round($DayTotal,2);
 
 // get card details
 // get data from request table for calculation and notification
@@ -235,6 +247,7 @@ if ($deviceType == 'A')
 $data = array();
 $data["status"] ="S";
 $data["faredriver"] =  "".$FarePayableToDriver."";
+$data["faredriverdaytotal"] =  "".$DayTotal."";
 $data["info"] = "End ride success for driver";
 echo json_encode($data);
 mysql_close();

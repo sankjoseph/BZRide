@@ -33,6 +33,20 @@ $cardBillingCity = getIfSet($_REQUEST['cardBillingCity']);
 $cardBillingState = getIfSet($_REQUEST['cardBillingState']);
 $cardBillingZip = getIfSet($_REQUEST['cardBillingZip']);
 $cardToken = getIfSet($_REQUEST['cardToken']);
+
+//check if same user exist for phone and email.
+$requestSQL = "SELECT * FROM  bztbl_riders where Phone = ".$phone ;
+LOGDATA($requestSQL);
+
+$resultUser = mysql_query($requestSQL,$conn);
+if (!$resultUser) {
+	showError(mysql_error());
+}
+$num_rows = mysql_num_rows($resultUser);
+LOGDATA($num_rows);
+if ( $num_rows > 0) {
+	showError("User with given phone already registered. Registration failed.");
+}
 //date taken as current time
 //$date = date("D M d, Y G:i", time());
 

@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Santhosh.Joseph on 31-08-2016.
@@ -89,6 +90,14 @@ public class BZRideGcmListenerService extends GcmListenerService {
             //add data you wnat to pass in intent
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
+            if (message.contains("charged by")) {//ending ride
+                BZAppManager.getInstance().selectedPickUpLocation = new LatLng(0.0,0.0);
+                BZAppManager.getInstance().selectedDropLocation = new LatLng(0.0,0.0);
+                //driver uses currentRideRequestId to be cleared;
+                BZAppManager.getInstance().currentRideRequestId = "";
+                BZAppManager.getInstance().currentRideRequestUserPhone = "";
+                BZAppManager.getInstance().currentRideRequestUserName = "";
+            }
         }
 
     }
