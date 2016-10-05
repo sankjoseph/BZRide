@@ -10,6 +10,9 @@ public class BZInsuranceInfo {
     public String insurancedateOfExpiry;
     public BZInsuranceInfo()
     {
-
+        insuranceCompany = "";
+        insuranceNumber= "";
+        insurancedateFrom= "";
+        insurancedateOfExpiry= "";
     }
 }

@@ -10,6 +10,9 @@ public class BZVehicleInfo {
     public String vehicleColor;
     public BZVehicleInfo()
     {
-
+         vehicleYearOfManufacture = "";
+         vehicleModel  = "";
+         vehicleMake = "";
+         vehicleColor = "";
     }
 }

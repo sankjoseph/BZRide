@@ -54,7 +54,8 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void validateVehicleDetails() {
+    private boolean validVehicleDetails() {
+
         String year =  BZAppManager.getInstance().bzDriverData.driverVehicleInfo.vehicleYearOfManufacture;
         String color =  BZAppManager.getInstance().bzDriverData.driverVehicleInfo.vehicleColor;
         String make =  BZAppManager.getInstance().bzDriverData.driverVehicleInfo.vehicleMake;
@@ -62,23 +63,24 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
 
         if (Utils.isEmpty(year) || Utils.isEmpty(color) ||
                 Utils.isEmpty(make) || Utils.isEmpty(model) ) {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_VEHICLE_EMPTY, null);
-            return;
+            return false;
         }
+        return true;
     }
-    private void validateRegistrationDetails() {
+    private boolean validateRegistrationDetails() {
 
         String expdate =  BZAppManager.getInstance().bzDriverData.driverVehRegInfo.vehicledateOfExpiry;
         String regdate =  BZAppManager.getInstance().bzDriverData.driverVehRegInfo.vehicledateOfRegistration;
         String numberplate =  BZAppManager.getInstance().bzDriverData.driverVehRegInfo.vehicleNumberPlateNumber;
         String state =  BZAppManager.getInstance().bzDriverData.driverVehRegInfo.vehicleRegistrationState;
         if (Utils.isEmpty(expdate) || Utils.isEmpty(regdate) ||
-                Utils.isEmpty(numberplate) || Utils.isEmpty(state) ) {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_REG_EMPTY, null);
-            return;
+                Utils.isEmpty(numberplate) || Utils.isEmpty(state) )
+        {
+            return false;
         }
+        return true;
     }
-    private void validateInsuranceDetails() {
+    private boolean validateInsuranceDetails() {
 
 
         String company =  BZAppManager.getInstance().bzDriverData.driverInsuranceInfo.insuranceCompany;
@@ -86,23 +88,24 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
         String expdate =  BZAppManager.getInstance().bzDriverData.driverInsuranceInfo.insurancedateOfExpiry;
         String number =  BZAppManager.getInstance().bzDriverData.driverInsuranceInfo.insuranceNumber;
         if (Utils.isEmpty(fromdate) || Utils.isEmpty(expdate) ||
-                Utils.isEmpty(company) || Utils.isEmpty(number) ) {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INS_EMPTY, null);
-            return;
+                Utils.isEmpty(company) || Utils.isEmpty(number) )
+        {
+            return false;
         }
+        return true;
     }
-    private void validateLicenseDetails() {
+    private boolean validateLicenseDetails() {
 
         String expdate =  BZAppManager.getInstance().bzDriverData.driverLicenseInfo.licensedateofExpiry;
         String fromdate =  BZAppManager.getInstance().bzDriverData.driverLicenseInfo.licensedateOfIssue;
         String state =  BZAppManager.getInstance().bzDriverData.driverLicenseInfo.licensestateIssued;
         String number =  BZAppManager.getInstance().bzDriverData.driverLicenseInfo.licenseNumber;
         if (Utils.isEmpty(expdate) || Utils.isEmpty(fromdate) ||
-                Utils.isEmpty(state) || Utils.isEmpty(number) ) {
-            Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_LIC_EMPTY, null);
-            return;
+                Utils.isEmpty(state) || Utils.isEmpty(number) )
+        {
+            return false;
         }
-
+        return true;
     }
     private void registeraction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
@@ -171,10 +174,27 @@ public class registerDriver extends AppCompatActivity implements View.OnClickLis
                 return;
             }
 
-            validateVehicleDetails();
-            validateInsuranceDetails();
-            validateRegistrationDetails();
-            validateInsuranceDetails();
+           if (!validVehicleDetails())
+           {
+               Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_VEHICLE_EMPTY, null);
+               return;
+           }
+            if (!validateRegistrationDetails())
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_REG_EMPTY, null);
+                return;
+            }
+            if (!validateInsuranceDetails())
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_INS_EMPTY, null);
+                return;
+            }
+
+            if (!validateLicenseDetails())
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_LIC_EMPTY, null);
+                return;
+            }
 
             BZAppManager.getInstance().bzDriverData.FirstName = firstName.getText().toString();
             BZAppManager.getInstance().bzDriverData.MiddleName = middleName.getText().toString();

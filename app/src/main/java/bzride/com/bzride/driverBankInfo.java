@@ -124,7 +124,7 @@ public class driverBankInfo extends AppCompatActivity  implements   View.OnClick
             }
             else
             {// update and open landing
-                //startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();
             }
         }

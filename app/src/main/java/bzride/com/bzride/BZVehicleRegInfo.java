@@ -10,6 +10,9 @@ public class BZVehicleRegInfo {
     public String vehicledateOfExpiry;
     public BZVehicleRegInfo()
     {
-
+         vehicleNumberPlateNumber = "";
+         vehicleRegistrationState = "";
+         vehicledateOfRegistration = "";
+         vehicledateOfExpiry = "";
     }
 }

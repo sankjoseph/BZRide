@@ -261,6 +261,13 @@ public class usercarddetails extends AppCompatActivity implements View.OnClickLi
         if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
            // if edit updated and close
             finish();
+            if (BZAppManager.getInstance().isDriver == true){
+                startActivity(new Intent(getApplicationContext(), HomeDriver.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+            else
+            {
+                startActivity(new Intent(getApplicationContext(), Home.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
         }
         else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);

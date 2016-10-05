@@ -10,6 +10,9 @@ public class BZLicenseInfo {
     public String licensedateofExpiry;
     public BZLicenseInfo()
     {
-
+        licenseNumber = "";
+        licensestateIssued= "";
+        licensedateOfIssue= "";
+        licensedateofExpiry= "";
     }
 }

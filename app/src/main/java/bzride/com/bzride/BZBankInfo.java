@@ -8,8 +8,10 @@ public class BZBankInfo {
     public String BankAccountNumber;
     public String BankAccountHolderName;
     public String BankAccountRoutingNumber;
-    public BZBankInfo()
-    {
-
+    public BZBankInfo() {
+        BankName = "";
+        BankAccountNumber = "";
+        BankAccountHolderName = "";
+        BankAccountRoutingNumber = "";
     }
 }

@@ -112,6 +112,7 @@ public void onClick(View v) {
         try {
             BZJSONResp response = (BZJSONResp)model;
             if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
+                finish();
                 startActivity(new Intent(getApplicationContext(), HomeDriver.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
             else {

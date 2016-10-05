@@ -77,6 +77,7 @@ public class Utils {
     public static final String STATUS_FAILED = "F";
 
     public static final String MSG_TITLE = "BZRide";
+    public static final String MSG_NO_BZRIDE = "Currently BZRide is not available in your country. Please try later.";
     public static final String MSG_NO_INTERNET = "You are not connected to Internet. Please try later.";
     public static final String MSG_ACC_EULA= "Please accept the license agreement to continue registration.";
     public static final String MSG_PWD_MISMATCH = "Password mismatch.";
@@ -88,6 +89,7 @@ public class Utils {
     public static final String MSG_REG_EMPTY = "Please enter complete registration details";
     public static final String MSG_LIC_EMPTY = "Please enter complete license details";
     public static final String MSG_INS_EMPTY = "Please enter complete insurance details";
+    public static final String MSG_CARD_EMPTY = "Please enter your card details";
     // for card
     public static final String MSG_CARD_NUMBER_EMPTY = "Please enter card number.";
     public static final String MSG_CARD_EXP_MONTH = "Please enter card expiry month.";

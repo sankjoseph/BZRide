@@ -105,6 +105,7 @@ public class updateriderprofile extends AppCompatActivity implements View.OnClic
             BZJSONResp response = (BZJSONResp)model;
             if (response.status.toString().equalsIgnoreCase(Utils.STATUS_SUCCESS)) {
                 finish();
+                startActivity(new Intent(getApplicationContext(), Home.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
             else {
                 Utils.showInfoDialog(this, Utils.MSG_TITLE, response.info, null);

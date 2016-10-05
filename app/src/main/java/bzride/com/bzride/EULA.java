@@ -94,7 +94,7 @@ public class EULA extends AppCompatActivity implements View.OnClickListener, OnP
             else {//rider response
 
                 BZAppManager.getInstance().currentUserId = response.Id;
-                //startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                startActivity(new Intent(getApplicationContext(), BZLanding.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();
             }
 

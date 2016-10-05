@@ -135,6 +135,12 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
                 return;
             }
 
+            if (!validCardDetails())
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_CARD_EMPTY, null);
+                return;
+            }
+
             BZAppManager.getInstance().bzRiderData.FirstName = firstName.getText().toString();
             BZAppManager.getInstance().bzRiderData.MiddleName = middleName.getText().toString();
             BZAppManager.getInstance().bzRiderData.LastName = lastName.getText().toString();
@@ -156,6 +162,25 @@ public class registeruser extends AppCompatActivity  implements View.OnClickList
         } else {
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
+    }
+
+
+    private boolean validCardDetails() {
+
+        String cardType =  BZAppManager.getInstance().bzRiderData.cardData.cardType;
+        String cardVendor =  BZAppManager.getInstance().bzRiderData.cardData.cardVendor;
+        String cardNumber =  BZAppManager.getInstance().bzRiderData.cardData.cardNumber;
+        String cardExpiryMonth =  BZAppManager.getInstance().bzRiderData.cardData.cardExpiryMonth;
+        String cardExpiryYear =  BZAppManager.getInstance().bzRiderData.cardData.cardExpiryYear;
+        String cardCVV =  BZAppManager.getInstance().bzRiderData.cardData.cardCVV;
+
+        if (Utils.isEmpty(cardType) || Utils.isEmpty(cardVendor) ||
+                Utils.isEmpty(cardNumber) || Utils.isEmpty(cardExpiryMonth) ||
+                Utils.isEmpty(cardExpiryYear) || Utils.isEmpty(cardCVV))
+        {
+            return  false;
+        }
+        return  true;
     }
     @Override
     public void onSuccess(BZJSONResp model) {

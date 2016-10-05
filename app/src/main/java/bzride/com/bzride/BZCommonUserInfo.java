@@ -26,6 +26,24 @@ public class BZCommonUserInfo {
     public BZCardInfo cardData;
     public BZCommonUserInfo()
     {
+        FirstName = "";
+        MiddleName = "";
+        LastName = "";
+        Email = "";
+        Password = "";
+        ConfirmPassword = "";
+        Address1 = "";
+        Address2 = "";
+        City = "";
+        State = "";
+        Zip = "";
+        dob = "";
+        SSN = "";
+        DeviceId = "";
+        DeviceType = "";
+        currentlat = "";
+        currentlong = "";
+        availableStatus = "";
         cardData = new BZCardInfo();
     }
 

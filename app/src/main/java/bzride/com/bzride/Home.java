@@ -397,6 +397,19 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
 
     }
 
+    public String getCountryCode(LatLng latlong) {
+        String countryReturn = "";
+        Geocoder geocoder = new Geocoder(Home.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latlong.latitude, latlong.longitude, 1);
+            Address obj = addresses.get(0);
+            countryReturn = obj.getCountryCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return countryReturn;
+    }
     public String getAddress(LatLng latlong) {
         String addressReturn = "";
         Geocoder geocoder = new Geocoder(Home.this, Locale.getDefault());
@@ -572,41 +585,47 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         }
     }
     private void requestNowAction() {
-
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
-            final CharSequence[] items = { "Automatically", "Manually",
-                    "Cancel" };
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-            builder.setTitle("Select Pickup location!");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int index) {
-                    String userChoosenTask;
+            String countryCode =  getCountryCode(m_latLng);
+            if (countryCode.equals("US"))
+            {
+                final CharSequence[] items = { "Automatically", "Manually",
+                        "Cancel" };
+                AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+                builder.setTitle("Select Pickup location!");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int index) {
+                        String userChoosenTask;
 
-                    if (items[index].equals("Automatically")) {
-                        //start location as m_latLng
-                        BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
-                        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-                        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        myIntent.putExtra("LocationOption", "Drop");
-                        Home.this.startActivityForResult(myIntent, 2);
-                    } else if (items[index].equals("Manually")) {
-                        //show place finder
-                        Intent myIntent = new Intent(Home.this, PlaceFinder.class);
-                        //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        myIntent.putExtra("LocationOption", "PickUp");
-                        Home.this.startActivityForResult(myIntent, 1);
-                    } else if (items[index].equals("Cancel")) {
-                        dialog.dismiss();
+                        if (items[index].equals("Automatically")) {
+                            //start location as m_latLng
+                            BZAppManager.getInstance().selectedPickUpLocation = m_latLng;
+                            Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                            //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            myIntent.putExtra("LocationOption", "Drop");
+                            Home.this.startActivityForResult(myIntent, 2);
+                        } else if (items[index].equals("Manually")) {
+                            //show place finder
+                            Intent myIntent = new Intent(Home.this, PlaceFinder.class);
+                            //myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            myIntent.putExtra("LocationOption", "PickUp");
+                            Home.this.startActivityForResult(myIntent, 1);
+                        } else if (items[index].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
                     }
-                }
-            });
-            builder.show();
+                });
+                builder.show();
+            }
+            else
+            {
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_BZRIDE, null);
+            }
         }
         else{
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
-
     }
 
     public GoogleApiClient getAPIClient() {

@@ -18,6 +18,17 @@ public class BZCardInfo {
     public String cardToken;
     public BZCardInfo()
     {
-
+        cardType = "";
+        cardVendor = "";
+        cardNumber = "";
+        cardBillingAddress1 = "";
+        cardBillingAddress2 = "";
+        cardBillingCity = "";
+        cardBillingState = "";
+        cardBillingZip = "";
+        cardExpiryMonth = "";
+        cardExpiryYear = "";
+        cardCVV = "";
+        cardToken = "";
     }
 }
