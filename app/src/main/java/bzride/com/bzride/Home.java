@@ -321,6 +321,10 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
 
         m_map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        m_map.setTrafficEnabled(true);
+        m_map.setOnMarkerClickListener(this);
+        enableMyLocation();
+
         UiSettings settings = m_map.getUiSettings();
         settings.setScrollGesturesEnabled(true);
         settings.setRotateGesturesEnabled(true);
@@ -330,14 +334,18 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
 
-        m_map.setTrafficEnabled(true);
-        m_map.setOnMarkerClickListener(this);
-
+    }
+    private void enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission to access the location is missing.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    ACCESS_MAPS_PERMISSIONS_REQUEST);
+        } else if (m_map != null) {
+            // Access to the location has been granted to the app.
             m_map.setMyLocationEnabled(true);
         }
-
     }
 
     @Override
@@ -376,8 +384,7 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
         // Make sure it's our original ACCESS_MAPS_PERMISSIONS_REQUEST
         if (requestCode == ACCESS_MAPS_PERMISSIONS_REQUEST) {
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 m_map.setMyLocationEnabled(true);
                 if (location == null) {
@@ -584,8 +591,35 @@ public class Home extends AppCompatActivity /*FragmentActivity*/  implements OnM
             Utils.showInfoDialog(this, Utils.MSG_TITLE, Utils.MSG_NO_INTERNET, null);
         }
     }
+    private boolean isLocationEnabled()
+    {
+
+        LocationManager lm =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            return false   ;
+        }
+        return true;
+    }
     private void requestNowAction() {
         if (NetworkListener.isConnectingToInternet(getApplicationContext())) {
+            if (!isLocationEnabled())
+            {
+                Toast.makeText(this, "GPS signal not found", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+                return;
+            }
             String countryCode =  getCountryCode(m_latLng);
             if (countryCode.equals("US"))
             {

@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single" android:title = "Update">
     </group>
-    <item android:title="Profile">
+    <item android:title="Menu">
         <menu>
             <item android:id="@+id/nav_driver_profile"
                 android:title="Profile" />

@@ -497,7 +497,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                 bFinishRide = false;
                 EndRideRsp responsefare = (EndRideRsp)model;
                 String  fareMessage =  "last ride fare value $ " + responsefare.faredriver + "\n" + "Todays total " + responsefare.faredriverdaytotal;
-                Utils.showInfoDialog(this, Utils.MSG_TITLE,fareMessage , null);
+                Utils.showInfoDialog(this, Utils.MSG_TITLE, fareMessage, null);
                 clearCurrentRequestInfo();
                 return;
             }
@@ -582,6 +582,13 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
 
         m_map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+
+
+        m_map.setTrafficEnabled(true);
+        m_map.setOnMarkerClickListener(this);
+        enableMyLocation();
+
+
         UiSettings settings = m_map.getUiSettings();
         settings.setScrollGesturesEnabled(true);
         settings.setRotateGesturesEnabled(true);
@@ -591,15 +598,18 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         settings.setAllGesturesEnabled(true);
         settings.setCompassEnabled(true);
 
-        m_map.setTrafficEnabled(true);
-        m_map.setOnMarkerClickListener(this);
-
+    }
+    private void enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-           m_map.setMyLocationEnabled(true);
-
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission to access the location is missing.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    ACCESS_MAPS_PERMISSIONS_REQUEST);
+        } else if (m_map != null) {
+            // Access to the location has been granted to the app.
+            m_map.setMyLocationEnabled(true);
         }
-
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -610,7 +620,7 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     ACCESS_MAPS_PERMISSIONS_REQUEST);
         }
-        else {
+        else {//permission there
             m_map.setMyLocationEnabled(true);
              Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
@@ -637,12 +647,9 @@ public class HomeDriver extends AppCompatActivity  implements OnMapReadyCallback
         // Make sure it's our original ACCESS_MAPS_PERMISSIONS_REQUEST
         if (requestCode == ACCESS_MAPS_PERMISSIONS_REQUEST) {
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
                 m_map.setMyLocationEnabled(true);
-
                 if (location == null) {
                     LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
                 }
